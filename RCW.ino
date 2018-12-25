@@ -1,4 +1,4 @@
-const bool IS_SKY = true;
+const bool IS_SKY = false;
 
 const uint8_t P_START = 28;
 bool canRun;
