@@ -1,6 +1,6 @@
-#include "advMath.h"
+#include "AdvMath.h"
 
-#include "actuator.h"
+#include "Actuator.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
 uint8_t P_M_PWR[4] = {5, 6, 9, 10};
 Actuator Actuator(true, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73, 29, 54, 30, 3, 40);
@@ -35,12 +35,12 @@ Ball Ball(16, P_IR, MAX_IR, AVG_IR, 0.1, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
 // 	QTY_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
 // 	P_CATCH, BORDER_CATCH, MAX_C_CATCH);
 
-#include "line.h"
+#include "Line.h"
 uint8_t P_LINE[16] = {A9, A8, A7, A6, A5, A4, A3, A2, A1, A0, A22, A21, A10, A11, A26, A25};
 Line Line(true, 16, P_LINE, 5, 100, 400, 12, 0.5);
 // CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, BORDER_BLACK, BORDER_WHITE, BORDER_IS_IN_AIR, MULTI_AVG
 
-#include "cam.h"
+#include "Cam.h"
 Cam Cam(1, 56, 3, 3, 15, 10);
 // X, P_ONOFF, CENTER_OPP_GOAL, CENTER_OWN_GOAL, SLOPE_RG, INTERCEPT_RG
 
@@ -51,19 +51,19 @@ Cam Cam(1, 56, 3, 3, 15, 10);
 #define SIZE_SRG 3
 int16_t SLOPE_RG[SIZE_SRG] = {0, 10, 30};
 int16_t POINT_RG[SIZE_SRG - 1] = {5, 25};
-#include "gyro.h"
+#include "Gyro.h"
 
-#include "psd.h"
+#include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
 PSD backPSD(2, 0.7, 700, 3);
 // X, MULTI_AVG, BORDER_IS_CLOSE, MAX_CC
 
-#include "comc.h"
+#include "Comc.h"
 Comc Comc(5, 57, 10, 20);
 // X, P_ONOFF, MAX_C_SND, MAX_C_NR
 
-#include "ina219.h"
-Ina219 Ina219(2, 10.2, 10.4, 10, 10);
+#include "INA219.h"
+INA219 INA219(2, 10.2, 10.4, 10, 10);
 // X, LOW_VOLT, HIGH_VOLT, MAX_CR, MAX_CVL
 
 #include "LCD.h"

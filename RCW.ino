@@ -30,7 +30,7 @@ uint32_t timeStartCB;
 uint16_t countCatchFreely = 0;
 uint16_t MAX_CCF;
 
-#include "includes.h"
+#include "Include.h"
 
 void setup() {
 	delay(1000);
@@ -53,7 +53,7 @@ void loop() {
 	countBecomeFW = max(countBecomeFW - 1, 0);
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
-	if(Ina219.checkVolt() && !Actuator.getIsKicking()) {
+	if(INA219.checkVolt() && !Actuator.getIsKicking()) {
 		//電池残量少
 		canRun = false;
 		stop();
@@ -158,7 +158,7 @@ void loop() {
 			//待機
 			//LCD表示
 			LCD.run(gyro, line, Actuator.getCanUseKicker(), Cam.getCanUse(), getCanUseGyro(), isFW, Comc.getCanUse(), fellow,
-				Line.getQTY(), Line.getValue(), Line.getState(),Ina219.getValue(), goal,
+				Line.getQTY(), Line.getValue(), Line.getState(),INA219.getValue(), goal,
 				ball, Ball.getQTY(), Ball.getValue(),
 				Ball.getValueCatch(), catchingBall, Ball.getForward(), isBallForward, isBallClose,
 				frontPSD.getValue(), enemyStandsFront, backPSD.getValue(), isGoalCloseLazer);

@@ -5,7 +5,7 @@ double avgIR[16];
 void setIR() {
 	while(digitalRead(P_START)) {
 		LCD.run4IR(Ball.getQTY(), maxIR, minIR, avgIR);
-		if(Ina219.checkVolt()) {
+		if(INA219.checkVolt()) {
 			//電池残量少
 			stop();
 		}
@@ -13,7 +13,7 @@ void setIR() {
 	}
 	while(!digitalRead(P_START)) {
 		LCD.run4IR(Ball.getQTY(), maxIR, minIR, avgIR);
-		if(Ina219.checkVolt()) {
+		if(INA219.checkVolt()) {
 			//電池残量少
 			stop();
 		}
@@ -31,7 +31,7 @@ void setIR() {
 	Actuator.run(-1, 80, 0);
 	delay(1000);
 	for(int count = 0; count < 1000; count ++) {
-		if(Ina219.checkVolt()) {
+		if(INA219.checkVolt()) {
 			//電池残量少
 			stop();
 		}else {
