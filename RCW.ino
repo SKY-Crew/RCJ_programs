@@ -143,7 +143,7 @@ void loop() {
 					}
 				}else {
 					ball.t = ball.t < 0 ? -1 : simplifyDeg(ball.t - gyro);
-					int dirGK = isGoalCloseLazer ? 110 : goal.distGK > 0 ? 70 : 90;
+					uint16_t dirGK = isGoalCloseLazer ? 110 : goal.distGK > 0 ? 70 : 90;
 					dir = ball.t < 0 ? -1 : signum(ball.t - 180) * dirGK + 180;
 
 					rot = multiRotGyro(gyro);
