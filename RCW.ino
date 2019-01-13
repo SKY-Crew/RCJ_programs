@@ -59,7 +59,7 @@ void loop() {
 		stop();
 	}else {
 		//get
-		vectorRT_t ball = Ball.get(true);
+		vectorRT_t ball = Ball.get();
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
 		bool catchingBall = Ball.getCatching() && ball.t.inside(330, 30) && isBallClose;

@@ -27,7 +27,7 @@ double POINT_DIR[4][2] = {{10, 20}, {60, 45}, {150, 90}, {180, 180}};
 
 Ball Ball(16, P_IR, MAX_IR, AVG_IR, 0.1, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
 // QTY, PORT, SLOPE_IR, INTERCEPR_IR, MULTI_AVG,
-// 	QTY_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
+// 	SIZE_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
 // 	P_CATCH, BORDER_CATCH, MAX_C_CATCH);
 
 #include "Line.h"
@@ -43,9 +43,9 @@ Cam Cam(1, 56, 3, 3, 15, 10);
 #define GYRO_ONOFF_PIN 55
 #define GYRO_RESET_PIN 2
 #define CAMERA_I2C_WIRE Wire1
-#define SIZE_SRG 3
-int16_t SLOPE_RG[SIZE_SRG] = {0, 10, 30};
-int16_t POINT_RG[SIZE_SRG - 1] = {5, 25};
+#define SIZE_SLOPE_RG 3
+int16_t SLOPE_RG[SIZE_SLOPE_RG] = {0, 10, 30};
+int16_t POINT_RG[SIZE_SLOPE_RG - 1] = {5, 25};
 #include "Gyro.h"
 
 #include "PSD.h"
