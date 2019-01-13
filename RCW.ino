@@ -62,8 +62,8 @@ void loop() {
 		vectorRT_t ball = Ball.get(true);
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
-		bool catchingBall = Ball.getCatching() && insideAngle(ball.t, 330, 30) && isBallClose;
-		int16_t gyro = simplifyDeg(getGyro() + 180) -180;
+		bool catchingBall = Ball.getCatching() && ball.t.inside(330, 30) && isBallClose;
+		Angle gyro = getGyro();
 		line_t line = Line.get(isFW, getCanUseGyro(), gyro);
 		cam_t goal = Cam.get();
 		bool isGoalClose = false;
@@ -88,39 +88,39 @@ void loop() {
 				//ライン復帰
 				Actuator.run(line.dirInside, rot, 150);
 			}else{
-				double dir = Ball.getDir(ball.t, isBallClose);
+				Angle dir = Ball.getDir(ball.t, isBallClose);
 				if(!isFW) {
 					isFW = (catchFreely || line.isInAir) && fellow.exists;
 				}
 				if(isFW) {
 					if(fellow.exists) {
-						if(insideAngle(ball.t, 90, 270)) {
+						if(ball.t.inside(90, 270)) {
 							switch (goal.distFW) {
-							case 1: dir = insideAngle(ball.t, 170, 190) ? -1
-										: insideAngle(ball.t, 90, 180) ? 90 : 270;
+							case 1: dir = ball.t.inside(170, 190) ? -1
+										: ball.t.inside(90, 180) ? 90 : 270;
 									isGoalClose = true;
 									break;
-							case 0: dir = insideAngle(ball.t, 170, 190) ? 0
-										: insideAngle(ball.t, 90, 180) ? 50 : 310;
+							case 0: dir = ball.t.inside(170, 190) ? 0
+										: ball.t.inside(90, 180) ? 50 : 310;
 									isGoalClose = false;
 									break;
 							}
 						}
 					}
-					if(line.dirInside != -1) {
-						if(insideAngle(line.dirInside, 45, 135)) {
-							if(insideAngle(dir, line.dirInside + 170, line.dirInside + 200)
+					if(bool(line.dirInside)) {
+						if(line.dirInside.inside(45, 135)) {
+							if(dir.inside(line.dirInside + 170, line.dirInside + 200)
 							&& line.canPause) {
-								dir = -1;
-							}else if(insideAngle(dir, line.dirInside + 90, line.dirInside + 180)) {
-								dir = simplifyDeg(line.dirInside + 90);
+								dir = false;
+							}else if(dir.inside(line.dirInside + 90, line.dirInside + 180)) {
+								dir = line.dirInside + 90;
 							}
-						}else if(insideAngle(line.dirInside, 225, 315)) {
-							if(insideAngle(dir, line.dirInside + 160, line.dirInside + 190)
+						}else if(line.dirInside.inside(225, 315)) {
+							if(dir.inside(line.dirInside + 160, line.dirInside + 190)
 							&& line.canPause) {
-								dir = -1;
-							}else if(insideAngle(dir, line.dirInside - 180, line.dirInside - 90)) {
-								dir = simplifyDeg(line.dirInside - 90);
+								dir = false;
+							}else if(dir.inside(line.dirInside - 180, line.dirInside - 90)) {
+								dir = line.dirInside - 90;
 							}
 						}
 					}
@@ -131,9 +131,9 @@ void loop() {
 							: multiRotGyro(gyro);
 						if(goal.isInCorner) {
 							if(signum(goal.rotOpp) > 0) {
-								goal.isInCorner = insideAngle(dir, - 120 + gyro, 15 + gyro);
+								goal.isInCorner = dir.inside(- 120 + gyro, 15 + gyro);
 							}else {
-								goal.isInCorner = insideAngle(dir, - 15 + gyro, 120 + gyro);
+								goal.isInCorner = dir.inside(- 15 + gyro, 120 + gyro);
 							}
 						}
 					}else if(Cam.getCanUse()) {
@@ -142,7 +142,7 @@ void loop() {
 						rot = multiRotGyro(gyro);
 					}
 				}else {
-					ball.t = ball.t < 0 ? -1 : simplifyDeg(ball.t - gyro);
+					ball.t = bool(ball.t) ? (ball.t - gyro) : false;
 					uint16_t dirGK = isGoalCloseLazer ? 110 : goal.distGK > 0 ? 70 : 90;
 					dir = ball.t < 0 ? -1 : signum(ball.t - 180) * dirGK + 180;
 
@@ -163,7 +163,7 @@ void loop() {
 				Ball.getValueCatch(), catchingBall, Ball.getForward(), isBallForward, isBallClose,
 				frontPSD.getValue(), enemyStandsFront, backPSD.getValue(), isGoalCloseLazer);
 			//駆動
-			Actuator.run(-1, 0, 0);
+			Actuator.run(false, 0, 0);
 			Actuator.checkKick();
 			//FW or GK
 			if(digitalRead(P_CHANGE_ROLE)) {
