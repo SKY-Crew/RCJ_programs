@@ -10,8 +10,7 @@ const uint8_t P_CHANGE_ROLE = 32;
 const uint8_t P_IS_FW = 31;
 bool isFW = IS_SKY;
 bool prvIsFW;
-uint8_t countBecomeFW = 0;
-const uint16_t MAX_CBF = 100;
+Count cBecomeFW(100, false);
 
 uint16_t BORDER_IF;
 uint16_t BORDER_IC;
@@ -47,9 +46,9 @@ void loop() {
 	canRun = digitalRead(P_START);
 
 	if((isFW && isFW != prvIsFW) || (canRun && !prvCanRun && isFW)) {
-		countBecomeFW = MAX_CBF;
+		cBecomeFW.reset();
 	}
-	countBecomeFW = max(countBecomeFW - 1, 0);
+	cBecomeFW.increment();
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
 	if(INA219.checkVolt() && !Actuator.getIsKicking()) {
@@ -71,7 +70,7 @@ void loop() {
 		bool isGoalCloseLazer = backPSD.get();
 		countESF = frontPSD.get() ? MAX_CESF : max(countESF - 1, 0);
 		bool enemyStandsFront = countESF > 0;
-		checkRole(countBecomeFW <= 0, fellow);
+		checkRole(!bool(cBecomeFW), fellow);
 		cCatchFreely.increment(catchingBall && !enemyStandsFront);
 		bool catchFreely = bool(cCatchFreely) && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
 
