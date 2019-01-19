@@ -20,8 +20,7 @@ bool correctingRot = false;
 uint16_t BORDER_INCREASE_CCR;
 uint16_t BORDER_DECREASE_CCR;
 
-uint16_t countESF = 0;
-const uint16_t MAX_CESF = 8;
+Count cEnemyStandsFront(8, false);
 
 bool carryingBall = false;
 bool willCarryBall = false;
@@ -67,8 +66,8 @@ void loop() {
 		int16_t rot = 0;
 		comc_t fellow = Comc.communicate(canRun, isFW);
 		bool isGoalCloseLazer = backPSD.get();
-		countESF = frontPSD.get() ? MAX_CESF : max(countESF - 1, 0);
-		bool enemyStandsFront = countESF > 0;
+		cEnemyStandsFront.increment(!frontPSD.get());
+		bool enemyStandsFront = bool(cEnemyStandsFront);
 		checkRole(!bool(cBecomeFW), fellow);
 		cCatchFreely.increment(catchingBall && !enemyStandsFront);
 		bool catchFreely = bool(cCatchFreely) && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
