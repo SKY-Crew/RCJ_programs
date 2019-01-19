@@ -15,11 +15,10 @@ Count cBecomeFW(100, false);
 uint16_t BORDER_IF;
 uint16_t BORDER_IC;
 
+Count cCorrectRot(3);
 bool correctingRot = false;
-uint16_t countCorrectRot = 0;
 uint16_t BORDER_INCREASE_CCR;
 uint16_t BORDER_DECREASE_CCR;
-const uint16_t MAX_CCR = 3;
 
 uint16_t countESF = 0;
 const uint16_t MAX_CESF = 8;

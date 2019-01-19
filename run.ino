@@ -27,23 +27,20 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	BORDER_IC = isFW ? 350 : fellow.exists ? 400 : 350;
 	BORDER_INCREASE_CCR = isFW ? 60 : 30;
 	BORDER_DECREASE_CCR = isFW ? 40 : 5;
-	cCatchFreely.set(isFW ? 3 : 1);
+	cCatchFreely.set_MAX(isFW ? 3 : 1);
 }
 
 void correctRot(bool isFW, Angle gyro) {
-	correctingRot = correctingRot ? countCorrectRot > 0 : countCorrectRot >= MAX_CCR;
+	cCorrectRot.set_COUNT_UP(!correctingRot);
+	correctingRot = bool(cCorrectRot);
 	if(correctingRot) {
 		int16_t powerCorrectRot = absAngle(gyro) >= BORDER_INCREASE_CCR
 			? signum(gyro) * (isFW ? 120 : 60)
 			: signum(gyro) * (isFW ? 20 : 20);
 		Actuator.run(false, powerCorrectRot, 0);
-		countCorrectRot = absAngle(gyro) < BORDER_DECREASE_CCR
-			? countCorrectRot - 1
-			: MAX_CCR;
+		cCorrectRot.increment(absAngle(gyro) < BORDER_DECREASE_CCR);
 	}else {
-		countCorrectRot = absAngle(gyro) >= BORDER_INCREASE_CCR
-			? min(MAX_CCR, countCorrectRot + 1)
-			: 0;
+		cCorrectRot.increment(absAngle(gyro) >= BORDER_INCREASE_CCR);
 	}
 }
 
