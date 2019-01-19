@@ -75,6 +75,7 @@ void loop() {
 		checkRole(countBecomeFW <= 0, fellow);
 		countCatchFreely = (catchingBall && !enemyStandsFront) ? min(countCatchFreely + 1, MAX_CCF) : 0;
 		bool catchFreely = countCatchFreely >= MAX_CCF && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
+		Serial.println(string(ball.t));
 
 		if(canRun) {
 			//走行中

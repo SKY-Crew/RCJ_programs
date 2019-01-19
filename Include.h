@@ -1,5 +1,6 @@
 #include "AdvMath.h"
 #include "Angle.h"
+#include "Count.h"
 
 #include "Actuator.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
