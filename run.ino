@@ -10,7 +10,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 		if(fellow.exists && isFW == fellow.isFW) {
 			if(canBecomeGK && isFW) {
 				isFW = false;
-				countCatchFreely = 0;
+				cCatchFreely.reset();
 			}else if(!isFW && !canRun) {
 				isFW = true;
 			}else if(!isFW && IS_SKY) {
@@ -19,7 +19,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 		}
 		if(canRun && !fellow.exists && isFW && canBecomeGK) {
 			isFW = false;
-			countCatchFreely = 0;
+			cCatchFreely.reset();
 		}
 	}
 
@@ -27,7 +27,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	BORDER_IC = isFW ? 350 : fellow.exists ? 400 : 350;
 	BORDER_INCREASE_CCR = isFW ? 60 : 30;
 	BORDER_DECREASE_CCR = isFW ? 40 : 5;
-	MAX_CCF = isFW ? 3 : 1;
+	cCatchFreely.set(isFW ? 3 : 1);
 }
 
 void correctRot(bool isFW, Angle gyro) {

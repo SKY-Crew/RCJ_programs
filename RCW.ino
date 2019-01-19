@@ -1,3 +1,5 @@
+#include "Include.h"
+
 const bool IS_SKY = false;
 
 const uint8_t P_START = 28;
@@ -27,10 +29,7 @@ bool carryingBall = false;
 bool willCarryBall = false;
 uint32_t timeStartCB;
 
-uint16_t countCatchFreely = 0;
-uint16_t MAX_CCF;
-
-#include "Include.h"
+Count cCatchFreely;
 
 void setup() {
 	delay(1000);
@@ -73,9 +72,8 @@ void loop() {
 		countESF = frontPSD.get() ? MAX_CESF : max(countESF - 1, 0);
 		bool enemyStandsFront = countESF > 0;
 		checkRole(countBecomeFW <= 0, fellow);
-		countCatchFreely = (catchingBall && !enemyStandsFront) ? min(countCatchFreely + 1, MAX_CCF) : 0;
-		bool catchFreely = countCatchFreely >= MAX_CCF && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
-		Serial.println(string(ball.t));
+		cCatchFreely.increment(catchingBall && !enemyStandsFront);
+		bool catchFreely = bool(cCatchFreely) && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
 
 		if(canRun) {
 			//走行中
