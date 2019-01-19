@@ -24,6 +24,7 @@ Count cEnemyStandsFront(8, false);
 
 bool carryingBall = false;
 bool willCarryBall = false;
+const bool BORDER_CONTINUE_CARRY = 0.3;
 uint32_t timeStartCB;
 
 Count cCatchFreely;
@@ -58,7 +59,7 @@ void loop() {
 		vectorRT_t ball = Ball.get(false);
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
-		bool catchingBall = Ball.getCatching() && ball.t.inside(330, 30) && isBallClose;
+		bool catchingBall = Ball.getCatch() && ball.t.inside(330, 30) && isBallClose;
 		Angle gyro = getGyro();
 		line_t line = Line.get(isFW, getCanUseGyro(), gyro);
 		cam_t goal = Cam.get();

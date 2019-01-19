@@ -47,7 +47,7 @@ void correctRot(bool isFW, Angle gyro) {
 void carryBall(bool isFW, bool onLine, int16_t rot, Angle gyro, bool catchingBall, bool enemyStandsFront) {
 	willCarryBall = carryingBall;
 	if(carryingBall) {
-		if(Ball.getCountCatch() >= Ball.getMAX_C_CATCH() * 0.3 && millis() - timeStartCB < 1500) {
+		if(Ball.compareCatch(BORDER_CONTINUE_CARRY) && millis() - timeStartCB < 1500) {
 			if(absAngle(gyro) >= 30) {
 				Actuator.run(simplifyDeg(signum(rot) * 40), 0, onLine ? 150 : isFW ? 230 : 200);
 			}else {
@@ -56,7 +56,7 @@ void carryBall(bool isFW, bool onLine, int16_t rot, Angle gyro, bool catchingBal
 		}else {
 			Actuator.run(false, 0, 0);
 		}
-		willCarryBall = Ball.getCountCatch() >= Ball.getMAX_C_CATCH() * 0.3;
+		willCarryBall = Ball.compareCatch(BORDER_CONTINUE_CARRY);
 	}else {
 		willCarryBall = catchingBall;
 		if(willCarryBall) {
