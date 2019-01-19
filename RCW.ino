@@ -43,11 +43,7 @@ void loop() {
 	Actuator.setHaveRun(false);
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
-
-	if((isFW && isFW != prvIsFW) || (canRun && !prvCanRun && isFW)) {
-		cBecomeFW.reset();
-	}
-	cBecomeFW.increment();
+	cBecomeFW.increment(!(isFW && (!prvIsFW || (canRun && !prvCanRun))));
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
 	if(INA219.checkVolt() && !Actuator.getIsKicking()) {
