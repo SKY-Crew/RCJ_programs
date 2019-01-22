@@ -1,6 +1,6 @@
 #include "Include.h"
 
-const bool IS_SKY = false;
+const bool IS_SKY = true;
 
 const uint8_t P_START = 28;
 bool canRun;
@@ -41,17 +41,21 @@ void setup() {
 
 void loop() {
 	Actuator.setHaveRun(false);
+
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
-	cBecomeFW.increment(!(isFW && (!prvIsFW || (canRun && !prvCanRun))));
+
+	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
+
 	if(INA219.checkVolt() && !Actuator.getIsKicking()) {
 		//電池残量少
 		canRun = false;
 		stop();
 	}else {
 		//get
+		long time = micros();
 		vectorRT_t ball = Ball.get(false);
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
@@ -62,13 +66,14 @@ void loop() {
 		bool isGoalClose = false;
 		int16_t rot = 0;
 		comc_t fellow = Comc.communicate(canRun, isFW);
+		Serial.println(micros() - time);
 		bool isGoalCloseLazer = backPSD.get();
-		cEnemyStandsFront.increment(!frontPSD.get());
+		cEnemyStandsFront.increase(frontPSD.get());
 		bool enemyStandsFront = bool(cEnemyStandsFront);
-		checkRole(!bool(cBecomeFW), fellow);
-		cCatchFreely.increment(catchingBall && !enemyStandsFront);
+		cCatchFreely.increase(catchingBall && !enemyStandsFront);
 		bool catchFreely = bool(cCatchFreely) && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
-
+		
+		checkRole(!bool(cBecomeFW), fellow);
 		if(canRun) {
 			//走行中
 			if(!prvCanRun) {
@@ -89,7 +94,7 @@ void loop() {
 					if(fellow.exists) {
 						if(ball.t.inside(90, 270)) {
 							switch (goal.distFW) {
-							case 1: dir = ball.t.inside(170, 190) ? -1
+							case 1: dir = ball.t.inside(170, 190) ? Angle(false)
 										: ball.t.inside(90, 180) ? 90 : 270;
 									isGoalClose = true;
 									break;
@@ -104,14 +109,14 @@ void loop() {
 						if(line.dirInside.inside(45, 135)) {
 							if(dir.inside(line.dirInside + 170, line.dirInside + 200)
 							&& line.canPause) {
-								dir = false;
+								dir = Angle(false);
 							}else if(dir.inside(line.dirInside + 90, line.dirInside + 180)) {
 								dir = line.dirInside + 90;
 							}
 						}else if(line.dirInside.inside(225, 315)) {
 							if(dir.inside(line.dirInside + 160, line.dirInside + 190)
 							&& line.canPause) {
-								dir = false;
+								dir = Angle(false);
 							}else if(dir.inside(line.dirInside - 180, line.dirInside - 90)) {
 								dir = line.dirInside - 90;
 							}
@@ -135,10 +140,9 @@ void loop() {
 						rot = multiRotGyro(gyro);
 					}
 				}else {
-					ball.t = bool(ball.t) ? (ball.t - gyro) : false;
-					uint16_t dirGK = isGoalCloseLazer ? 110 : goal.distGK > 0 ? 70 : 90;
-					dir = ball.t < 0 ? -1 : signum(ball.t - 180) * dirGK + 180;
-
+					ball.t = bool(ball.t) ? ball.t - gyro : Angle(false);
+					Angle dirGK = isGoalCloseLazer ? 110 : goal.distGK > 0 ? 70 : 90;
+					dir = bool(ball.t) ? dirGK * signum(ball.t) : Angle(false);
 					rot = multiRotGyro(gyro);
 				}
 				if(!carryingBall) {

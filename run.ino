@@ -38,9 +38,9 @@ void correctRot(bool isFW, Angle gyro) {
 			? signum(gyro) * (isFW ? 120 : 60)
 			: signum(gyro) * (isFW ? 20 : 20);
 		Actuator.run(false, powerCorrectRot, 0);
-		cCorrectRot.increment(absAngle(gyro) < BORDER_DECREASE_CCR);
+		cCorrectRot.increase(absAngle(gyro) >= BORDER_DECREASE_CCR);
 	}else {
-		cCorrectRot.increment(absAngle(gyro) >= BORDER_INCREASE_CCR);
+		cCorrectRot.increase(absAngle(gyro) >= BORDER_INCREASE_CCR);
 	}
 }
 
@@ -108,7 +108,7 @@ void run(bool isFW, vectorRT_t ball, Angle dir, int16_t rot, Angle gyro, cam_t g
 			||	ball.t.inside(150, 210)
 			||	ball.t.inside(355, 5)) {
 			//ボールない・ボール外側・ボール後ろ(150~210)・ボール前方遠く
-			Actuator.run(isGoalCloseLazer ? 0 : goal.distGK > 0 ? 180 : false,
+			Actuator.run(isGoalCloseLazer ? 0 : goal.distGK > 0 ? 180 : Angle(false),
 				(!isGoalCloseLazer && goal.distGK <= 0) ? signum(rot) * 60 : 0, 80);
 		}else if(ball.t.inside(340, 20) || signum(goal.rot) != signum(dir)) {
 			//ボールある程度前方・少し横
