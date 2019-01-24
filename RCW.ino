@@ -1,6 +1,6 @@
 #include "Include.h"
 
-const bool IS_SKY = true;
+const bool IS_SKY = false;
 
 const uint8_t P_START = 28;
 bool canRun;
@@ -55,7 +55,6 @@ void loop() {
 		stop();
 	}else {
 		//get
-		long time = micros();
 		vectorRT_t ball = Ball.get(false);
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
@@ -66,7 +65,6 @@ void loop() {
 		bool isGoalClose = false;
 		int16_t rot = 0;
 		comc_t fellow = Comc.communicate(canRun, isFW);
-		Serial.println(micros() - time);
 		bool isGoalCloseLazer = backPSD.get();
 		cEnemyStandsFront.increase(frontPSD.get());
 		bool enemyStandsFront = bool(cEnemyStandsFront);
