@@ -2,12 +2,10 @@
 
 const bool IS_SKY = false;
 
-const uint8_t P_START = 28;
 bool canRun;
 bool prvCanRun;
 
-const uint8_t P_CHANGE_ROLE = 32;
-const uint8_t P_IS_FW = 31;
+bool prvChangeRole = false;
 bool isFW = IS_SKY;
 bool prvIsFW;
 Count cBecomeFW(100, false);
@@ -40,11 +38,12 @@ void setup() {
 }
 
 void loop() {
+	//駆動重複リセット
 	Actuator.setHaveRun(false);
-
+	//走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
-
+	//Role強制変更
 	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
@@ -70,7 +69,7 @@ void loop() {
 		bool enemyStandsFront = bool(cEnemyStandsFront);
 		cCatchFreely.increase(catchingBall && !enemyStandsFront);
 		bool catchFreely = bool(cCatchFreely) && (isFW || goal.distGK >= 2 || !Cam.getCanUse());
-		
+		//Role受動的変更
 		checkRole(!bool(cBecomeFW), fellow);
 		if(canRun) {
 			//走行中
@@ -84,18 +83,24 @@ void loop() {
 				//ライン復帰
 				Actuator.run(line.dirInside, rot, 150);
 			}else{
+				//dir計算
 				Angle dir = Ball.getDir(ball.t, isBallClose);
 				if(!isFW) {
+					//Role能動的変更
 					isFW = (catchFreely || line.isInAir) && fellow.exists;
 				}
 				if(isFW) {
+					//FW
 					if(fellow.exists) {
+						//マルチ対策
 						if(ball.t.inside(90, 270)) {
 							switch (goal.distFW) {
+							//少し後ろ
 							case 1: dir = ball.t.inside(170, 190) ? Angle(false)
 										: ball.t.inside(90, 180) ? 90 : 270;
 									isGoalClose = true;
 									break;
+							//後ろ過ぎ
 							case 0: dir = ball.t.inside(170, 190) ? 0
 										: ball.t.inside(90, 180) ? 50 : 310;
 									isGoalClose = false;
@@ -104,28 +109,36 @@ void loop() {
 						}
 					}
 					if(bool(line.dirInside)) {
+						//ライン上
+						////gyro考慮 absolute 角検知易しく
 						if(line.dirInside.inside(45, 135)) {
 							if(dir.inside(line.dirInside + 170, line.dirInside + 200)
-							&& line.canPause) {
+								&& line.canPause) {
+								//停止
 								dir = Angle(false);
 							}else if(dir.inside(line.dirInside + 90, line.dirInside + 180)) {
+								//後退
 								dir = line.dirInside + 90;
 							}
 						}else if(line.dirInside.inside(225, 315)) {
 							if(dir.inside(line.dirInside + 160, line.dirInside + 190)
-							&& line.canPause) {
+								&& line.canPause) {
+								//停止
 								dir = Angle(false);
 							}else if(dir.inside(line.dirInside - 180, line.dirInside - 90)) {
+								//後退
 								dir = line.dirInside - 90;
 							}
 						}
 					}
-
+					//rot計算
 					if(Cam.getCanUse() && getCanUseGyro()) {
+						//両方使用可
 						rot = (catchingBall || isBallForward) && abs(goal.rotOpp) <= 3
 							? Cam.multiRotGoal(goal.rotOpp)
 							: multiRotGyro(gyro);
 						if(goal.isInCorner) {
+							//角検知
 							if(signum(goal.rotOpp) > 0) {
 								goal.isInCorner = dir.inside(- 120 + gyro, 15 + gyro);
 							}else {
@@ -133,19 +146,26 @@ void loop() {
 							}
 						}
 					}else if(Cam.getCanUse()) {
+						//camのみ
 						rot = Cam.multiRotGoal(goal.rotOpp);
 					}else if(getCanUseGyro()) {
+						//gyroのみ
 						rot = multiRotGyro(gyro);
 					}
 				}else {
+					//GK
+					//dir計算
 					ball.t = bool(ball.t) ? ball.t - gyro : Angle(false);
 					Angle dirGK = isGoalCloseLazer ? 110 : goal.distGK > 0 ? 70 : 90;
 					dir = bool(ball.t) ? dirGK * signum(ball.t) : Angle(false);
+					//rot計算
 					rot = multiRotGyro(gyro);
 				}
 				if(!carryingBall) {
+					//姿勢その場修正
 					correctRot(isFW, gyro);
 				}
+				//駆動
 				run(isFW, ball, dir, rot, gyro, goal, isGoalCloseLazer, isGoalClose, fellow,
 					catchingBall, catchFreely, isBallForward, isBallClose, enemyStandsFront, line);
 			}
@@ -160,11 +180,11 @@ void loop() {
 			//駆動
 			Actuator.run(false, 0, 0);
 			Actuator.checkKick();
-			//FW or GK
-			if(digitalRead(P_CHANGE_ROLE)) {
+			//Role強制変更
+			if(digitalRead(P_CHANGE_ROLE) && !prvChangeRole) {
 				isFW = !isFW;
-				while(digitalRead(P_CHANGE_ROLE)) {  }
 			}
+			prvChangeRole = digitalRead(P_CHANGE_ROLE);
 		}
 	}
 }
@@ -172,5 +192,6 @@ void loop() {
 
 
 void loop2() {
+	//IR調整
 	setIR();
 }
