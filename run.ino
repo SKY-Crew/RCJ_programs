@@ -1,5 +1,7 @@
 void stop() {
+	//駆動
 	Actuator.run(false, 0, 0);
+	//LCD表示
 	LCD.clear(true);
 	LCD.write("THE VOLTAGE", 5, 1);
 	LCD.write("IS TOO LOW!!!", 4, 2);
@@ -9,20 +11,24 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	if(Comc.getCanUse()) {
 		if(fellow.exists && isFW == fellow.isFW) {
 			if(canBecomeGK && isFW) {
+				//fellowがGK→FW
 				isFW = false;
 				cCatchFreely.reset();
 			}else if(!isFW && !canRun) {
+				//停止状態
 				isFW = true;
 			}else if(!isFW && IS_SKY) {
+				//両方GK
 				isFW = true;
 			}
 		}
 		if(canRun && !fellow.exists && isFW && canBecomeGK) {
+			//fellowいなくなる
 			isFW = false;
 			cCatchFreely.reset();
 		}
 	}
-
+	//閾値変更
 	BORDER_IF = isFW ? 610 : fellow.exists ? 670 : 610;
 	BORDER_IC = isFW ? 350 : fellow.exists ? 400 : 350;
 	BORDER_INCREASE_CCR = isFW ? 60 : 30;
@@ -34,32 +40,40 @@ void correctRot(bool isFW, Angle gyro) {
 	cCorrectRot.set_COUNT_UP(!correctingRot);
 	correctingRot = bool(cCorrectRot);
 	if(correctingRot) {
+		//駆動
 		int16_t powerCorrectRot = absAngle(gyro) >= BORDER_INCREASE_CCR
 			? signum(gyro) * (isFW ? 120 : 60)
 			: signum(gyro) * (isFW ? 20 : 20);
 		Actuator.run(false, powerCorrectRot, 0);
+		//correctRotを続けるか
 		cCorrectRot.increase(absAngle(gyro) >= BORDER_DECREASE_CCR);
 	}else {
+		//correctRotを始めるか
 		cCorrectRot.increase(absAngle(gyro) >= BORDER_INCREASE_CCR);
 	}
 }
 
-void carryBall(bool isFW, bool onLine, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
+void carryBall(bool isFW, bool leavingLine, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
 	willCarryBall = carryingBall;
 	if(carryingBall) {
 		if(Ball.compareCatch(BORDER_CONTINUE_CARRY) && millis() - timeStartCB < 1500) {
 			if(absAngle(gyro) >= 30) {
-				Actuator.run(enemyStandsFront ? - signum(gyro) * 40 : 0, rot, onLine ? 150 : isFW ? 230 : 200);
+				//斜め移動
+				Actuator.run(enemyStandsFront ? - signum(gyro) * 40 : 0, rot, leavingLine ? 150 : isFW ? 230 : 200);
 			}else {
+				//敵よけ回転
 				Actuator.run(0,
 					enemyStandsFront ? signum(goal.rotOpp) * 100 : 0,
-					onLine ? 150 : isFW ? 230 : 200);
+					leavingLine ? 150 : isFW ? 230 : 200);
 			}
 		}else {
+			//スタック
 			Actuator.run(false, 0, 0);
 		}
+		//carry続けるか
 		willCarryBall = Ball.compareCatch(BORDER_CONTINUE_CARRY);
 	}else {
+		//carry始めるか
 		willCarryBall = catchingBall;
 		if(willCarryBall) {
 			timeStartCB = millis();
@@ -72,22 +86,24 @@ void run(bool isFW, vectorRT_t ball, Angle dir, int16_t rot, Angle gyro, cam_t g
 	bool isBallForward, bool isBallClose, bool enemyStandsFront, line_t line) {
 	willCarryBall = false;
 	if(isFW) {
-		bool onLine = bool(line.dirInside) && dir.inside(line.dirInside + 90, line.dirInside - 90);
-		carryBall(isFW, onLine, rot, goal, gyro, catchingBall, enemyStandsFront);
+		//FW
+		bool leavingLine = bool(line.dirInside) && dir.inside(line.dirInside + 90, line.dirInside - 90);
+		carryBall(isFW, leavingLine, rot, goal, gyro, catchingBall, enemyStandsFront);
 		if(goal.isInCorner) {
 			Actuator.run(false, rot * 1.5, 0);
 		}else if(isBallForward) {
 			//ボール前方直線上
-			Actuator.run(dir, rot * 1.5, onLine ? 120 : 210);
+			Actuator.run(dir, rot * 1.5, leavingLine ? 120 : 210);
 		}else if(dir.inside(90, 270)) {
 			//ボール後方
-			Actuator.run(dir, min(rot * 1.5, 60), (onLine || isGoalClose) ? 100 : 180);
+			Actuator.run(dir, min(rot * 1.5, 60), (leavingLine || isGoalClose) ? 100 : 180);
 		}else {
 			//ボール前方
-			Actuator.run(dir, min(rot * 1.5, 60), onLine ? 100 : 140);
+			Actuator.run(dir, min(rot * 1.5, 60), leavingLine ? 100 : 140);
 		}
 		Actuator.kick(catchFreely && goal.isWide);
 	}else {
+		//GK
 		isBallForward |= ball.t.inside(350, 10) && isBallClose;
 		bool isTooFarGoal = goal.distGK >= 2 && !isGoalCloseLazer;
 		bool isOnSide = abs(goal.rot) >= 3 || (isTooFarGoal && abs(goal.rot) >= 2);
