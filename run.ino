@@ -49,10 +49,10 @@ void carryBall(bool isFW, bool onLine, int16_t rot, cam_t goal, Angle gyro, bool
 	if(carryingBall) {
 		if(Ball.compareCatch(BORDER_CONTINUE_CARRY) && millis() - timeStartCB < 1500) {
 			if(absAngle(gyro) >= 30) {
-				Actuator.run(- signum(gyro) * 40, 0, onLine ? 150 : isFW ? 230 : 200);
+				Actuator.run(enemyStandsFront ? - signum(gyro) * 40 : 0, rot, onLine ? 150 : isFW ? 230 : 200);
 			}else {
 				Actuator.run(0,
-					rot * 1.5 + (enemyStandsFront ? signum(goal.rotOpp) * 200 : 0),
+					enemyStandsFront ? signum(goal.rotOpp) * 100 : 0,
 					onLine ? 150 : isFW ? 230 : 200);
 			}
 		}else {
