@@ -68,7 +68,5 @@ LCD LCD(7, 13, 11, 8, 12, 0, 100, Line.getQTY());
 // P_REDRAW, P_SCK, P_MOSI, P_CS, P_DI, WAIT, MAX_CP, QTY_LINE
 
 const uint8_t P_START = 28;
-
 const uint8_t P_CHANGE_ROLE = 32;
-
 const uint8_t P_IS_FW = 31;
