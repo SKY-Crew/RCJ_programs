@@ -36,7 +36,8 @@ void setup() {
 	pinMode(P_CHANGE_ROLE, INPUT);
 	pinMode(P_IS_FW, OUTPUT);
 }
-
+Angle prvBall;////
+Count cBallUp(5, false);
 void loop() {
 	//駆動重複リセット
 	Actuator.setHaveRun(false);
@@ -55,6 +56,14 @@ void loop() {
 	}else {
 		//get
 		vectorRT_t ball = Ball.get(false);
+
+		cBallUp.increase(bool(prvBall) && diff(ball.t, prvBall) > 10);
+		prvBall = ball.t;
+		if(bool(cBallUp)) {
+			ball.t = false;
+		}
+		Serial.println(int16_t(cBallUp));
+
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
 		bool catchingBall = Ball.getCatch() && ball.t.inside(330, 30) && isBallClose;
