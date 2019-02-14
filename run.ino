@@ -53,18 +53,21 @@ void correctRot(bool isFW, Angle gyro) {
 	}
 }
 
-void carryBall(bool isFW, bool leavingLine, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
+void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
 	willCarryBall = carryingBall;
 	if(carryingBall) {
 		if(Ball.compareCatch(BORDER_CONTINUE_CARRY) && millis() - timeStartCB < 1500) {
 			if(absAngle(gyro) >= 30) {
 				//斜め移動
-				Actuator.run(enemyStandsFront ? - signum(gyro) * 40 : 0, rot, leavingLine ? 150 : isFW ? 230 : 200);
+				Actuator.run(enemyStandsFront ? - signum(gyro) * 40 : 0, rot, isFW ? 230 : 200);
+			}else if(bool(line.dirInside)) {
+				////ライン上斜め移動
+				// Actuator.run(signum(line.dirInside) * 20, rot, isFW ? 230 : 200);
+				Actuator.run(- signum(line.dirInside) * 10, signum(line.dirInside) * 100, 250);
 			}else {
 				//敵よけ回転
 				Actuator.run(0,
-					enemyStandsFront ? signum(goal.rotOpp) * 100 : 0,
-					leavingLine ? 150 : isFW ? 230 : 200);
+					enemyStandsFront ? signum(goal.rotOpp) * 100 : 0, isFW ? 230 : 200);
 			}
 		}else {
 			//スタック
@@ -88,7 +91,7 @@ void run(bool isFW, vectorRT_t ball, Angle dir, int16_t rot, Angle gyro, cam_t g
 	if(isFW) {
 		//FW
 		bool leavingLine = bool(line.dirInside) && dir.inside(line.dirInside + 90, line.dirInside - 90);
-		carryBall(isFW, leavingLine, rot, goal, gyro, catchingBall, enemyStandsFront);
+		carryBall(isFW, line, rot, goal, gyro, catchingBall || isBallForward, enemyStandsFront);
 		if(goal.isInCorner) {
 			Actuator.run(false, rot * 1.5, 0);
 		}else if(isBallForward) {
@@ -101,7 +104,7 @@ void run(bool isFW, vectorRT_t ball, Angle dir, int16_t rot, Angle gyro, cam_t g
 			//ボール前方
 			Actuator.run(dir, min(rot * 1.5, 60), leavingLine ? 100 : 140);
 		}
-		Actuator.kick(catchFreely && goal.isWide);
+		Actuator.kick(catchFreely && goal.isWide && (Cam.getCanUse() || signum(gyro) >= 30 || !bool(line.dirInside)));
 	}else {
 		//GK
 		isBallForward |= ball.t.inside(350, 10) && isBallClose;
@@ -115,7 +118,7 @@ void run(bool isFW, vectorRT_t ball, Angle dir, int16_t rot, Angle gyro, cam_t g
 			Actuator.run(180, rot, 160);
 		}
 		//ボール捕獲
-		carryBall(isFW, false, rot, goal, gyro, catchingBall, false);
+		carryBall(isFW, line, rot, goal, gyro, catchingBall, false);
 		if(isBallForward) {
 			//ボール前方
 			Actuator.run(0, rot, fellow.exists ? 40 : 100);

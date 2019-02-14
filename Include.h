@@ -70,3 +70,21 @@ LCD LCD(7, 13, 11, 8, 12, 0, 100, Line.getQTY());
 const uint8_t P_START = 28;
 const uint8_t P_CHANGE_ROLE = 32;
 const uint8_t P_IS_FW = 31;
+
+typedef struct {
+	vectorRT_t ball;
+	bool isBallClose;
+	bool isBallForward;
+	bool catchingBall;
+	Angle gyro;
+	line_t line;
+	cam_t goal;
+	bool isGoalClose;
+	int16_t rot;
+	comc_t fellow;
+	bool isGoalCloseLazer;
+	bool enemyStandsFront;
+	bool catchFreely;
+} data_t;
+
+data_t d;

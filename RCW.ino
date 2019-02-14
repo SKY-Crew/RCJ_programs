@@ -30,7 +30,8 @@ Count cCatchFreely;
 void setup() {
 	delay(1000);
 	Serial.begin(9600);
-	gyroSetup();
+	gyroSetup(0);
+	gyroSetup(1);
 
 	pinMode(P_START, INPUT);
 	pinMode(P_CHANGE_ROLE, INPUT);
@@ -58,7 +59,10 @@ void loop() {
 		bool isBallClose = ball.r >= BORDER_IC;
 		bool isBallForward = Ball.getForward() >= BORDER_IF && isBallClose;
 		bool catchingBall = Ball.getCatch() && ball.t.inside(330, 30) && isBallClose;
-		Angle gyro = getGyro();
+		Angle gyro = getGyro(0);
+		Serial.println(string(gyro));
+		Serial.println(string(getGyro(1)));
+		Serial.println();
 		line_t line = Line.get(isFW, getCanUseGyro(), gyro);
 		cam_t goal = Cam.get();
 		bool isGoalClose = false;
