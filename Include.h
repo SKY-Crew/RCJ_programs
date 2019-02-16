@@ -42,13 +42,14 @@ Cam Cam(1, 56, 3, 3, 15, 10);
 // X, P_ONOFF, CENTER_OPP_GOAL, CENTER_OWN_GOAL, SLOPE_RG, INTERCEPT_RG
 
 
-#define GYRO_ONOFF_PIN 55
-#define GYRO_RESET_PIN 2
-#define CAMERA_I2C_WIRE Wire1
-#define SIZE_SLOPE_RG 3
-int16_t SLOPE_RG[SIZE_SLOPE_RG] = {0, 10, 30};
-int16_t POINT_RG[SIZE_SLOPE_RG - 1] = {5, 25};
+// #define GYRO_ONOFF_PIN 55
+// #define GYRO_RESET_PIN 2
+// #define CAMERA_I2C_WIRE Wire1
+// #define SIZE_SLOPE_RG 3
+int16_t SLOPE_RG[3] = {0, 10, 30};
+int16_t POINT_RG[2] = {5, 25};
 #include "Gyro.h"
+Gyro Gyro(1, 0x68, 55, 2, 3, SLOPE_RG, POINT_RG);
 
 #include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
@@ -72,19 +73,19 @@ const uint8_t P_CHANGE_ROLE = 32;
 const uint8_t P_IS_FW = 31;
 
 typedef struct {
+	Angle gyro;
+	cam_t goal;
+	bool isGoalClose;
+	bool isGoalCloseLazer;
+
+	bool enemyStandsFront;
+	comc_t fellow;
+
 	vectorRT_t ball;
 	bool isBallClose;
 	bool isBallForward;
 	bool catchingBall;
-	Angle gyro;
-	line_t line;
-	cam_t goal;
-	bool isGoalClose;
-	int16_t rot;
-	comc_t fellow;
-	bool isGoalCloseLazer;
-	bool enemyStandsFront;
 	bool catchFreely;
-} data_t;
 
-data_t d;
+	line_t line;
+} data_t;

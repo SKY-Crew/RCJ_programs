@@ -84,61 +84,59 @@ void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool
 	}
 }
 
-void run(bool isFW, vectorRT_t ball, Angle dir, int16_t rot, Angle gyro, cam_t goal,
-	bool isGoalCloseLazer, bool isGoalClose, comc_t fellow, bool catchingBall, bool catchFreely,
-	bool isBallForward, bool isBallClose, bool enemyStandsFront, line_t line) {
+void run(data_t d, bool isFW, Angle dir, int16_t rot) {
 	willCarryBall = false;
 	if(isFW) {
 		//FW
-		bool leavingLine = bool(line.dirInside) && dir.inside(line.dirInside + 90, line.dirInside - 90);
-		carryBall(isFW, line, rot, goal, gyro, catchingBall || isBallForward, enemyStandsFront);
-		if(goal.isInCorner) {
+		bool leavingLine = bool(d.line.dirInside) && dir.inside(d.line.dirInside + 90, d.line.dirInside - 90);
+		carryBall(isFW, d.line, rot, d.goal, d.gyro, d.catchingBall || d.isBallForward, d.enemyStandsFront);
+		if(d.goal.isInCorner) {
 			Actuator.run(false, rot * 1.5, 0);
-		}else if(isBallForward) {
+		}else if(d.isBallForward) {
 			//ボール前方直線上
 			Actuator.run(dir, rot * 1.5, leavingLine ? 120 : 210);
 		}else if(dir.inside(90, 270)) {
 			//ボール後方
-			Actuator.run(dir, min(rot * 1.5, 60), (leavingLine || isGoalClose) ? 100 : 180);
+			Actuator.run(dir, min(rot * 1.5, 60), (leavingLine || d.isGoalClose) ? 100 : 180);
 		}else {
 			//ボール前方
 			Actuator.run(dir, min(rot * 1.5, 60), leavingLine ? 100 : 140);
 		}
-		Actuator.kick(catchFreely && goal.isWide && (Cam.getCanUse() || signum(gyro) >= 30 || !bool(line.dirInside)));
+		Actuator.kick(d.catchFreely && d.goal.isWide && (Cam.getCanUse() || signum(d.gyro) >= 30 || !bool(d.line.dirInside)));
 	}else {
 		//GK
-		isBallForward |= ball.t.inside(350, 10) && isBallClose;
-		bool isTooFarGoal = goal.distGK >= 2 && !isGoalCloseLazer;
-		bool isOnSide = abs(goal.rot) >= 3 || (isTooFarGoal && abs(goal.rot) >= 2);
+		d.isBallForward |= d.ball.t.inside(350, 10) && d.isBallClose;
+		bool isTooFarGoal = d.goal.distGK >= 2 && !d.isGoalCloseLazer;
+		bool isOnSide = abs(d.goal.rot) >= 3 || (isTooFarGoal && abs(d.goal.rot) >= 2);
 		if(isOnSide) {
 			//横行きすぎ
-			Actuator.run(180 - signum(goal.rot) * (isTooFarGoal ? 60 : 100), rot, 120);
+			Actuator.run(180 - signum(d.goal.rot) * (isTooFarGoal ? 60 : 100), rot, 120);
 		}else if(isTooFarGoal) {
 			//ゴールとても遠すぎ・仲間がいてゴール遠すぎ
 			Actuator.run(180, rot, 160);
 		}
 		//ボール捕獲
-		carryBall(isFW, line, rot, goal, gyro, catchingBall, false);
-		if(isBallForward) {
+		carryBall(isFW, d.line, rot, d.goal, d.gyro, d.catchingBall, false);
+		if(d.isBallForward) {
 			//ボール前方
-			Actuator.run(0, rot, fellow.exists ? 40 : 100);
-		}else if(isBallClose && abs(goal.rot) >= 1 && signum(ball.t - 180) == signum(goal.rot)) {
-			Actuator.run(Ball.getDir(ball.t, isBallClose), 0, 40);
+			Actuator.run(0, rot, d.fellow.exists ? 40 : 100);
+		}else if(d.isBallClose && abs(d.goal.rot) >= 1 && signum(d.ball.t - 180) == signum(d.goal.rot)) {
+			Actuator.run(Ball.getDir(d.ball.t, d.isBallClose), 0, 40);
 		}else if(!bool(dir)
-			||	(signum(ball.t - 180) == signum(goal.rot) && abs(goal.rot) >= 2)
-			||	ball.t.inside(150, 210)
-			||	ball.t.inside(355, 5)) {
+			||	(signum(d.ball.t - 180) == signum(d.goal.rot) && abs(d.goal.rot) >= 2)
+			||	d.ball.t.inside(150, 210)
+			||	d.ball.t.inside(355, 5)) {
 			//ボールない・ボール外側・ボール後ろ(150~210)・ボール前方遠く
-			Actuator.run(isGoalCloseLazer ? 0 : goal.distGK > 0 ? 180 : Angle(false),
-				(!isGoalCloseLazer && goal.distGK <= 0) ? signum(rot) * 60 : 0, 80);
-		}else if(ball.t.inside(340, 20) || signum(goal.rot) != signum(dir)) {
+			Actuator.run(d.isGoalCloseLazer ? 0 : d.goal.distGK > 0 ? 180 : Angle(false),
+				(!d.isGoalCloseLazer && d.goal.distGK <= 0) ? signum(rot) * 60 : 0, 80);
+		}else if(d.ball.t.inside(340, 20) || signum(d.goal.rot) != signum(dir)) {
 			//ボールある程度前方・少し横
 			Actuator.run(dir, rot, 120);
 		}else {
 			//ボール斜め前方
 			Actuator.run(dir, rot, 210);
 		}
-		Actuator.kick(catchFreely && !fellow.exists);
+		Actuator.kick(d.catchFreely && !d.fellow.exists);
 	}
-	carryingBall = willCarryBall && ball.t.inside(340, 20) && isBallClose;
+	carryingBall = willCarryBall && d.ball.t.inside(340, 20) && d.isBallClose;
 }
