@@ -1,12 +1,3 @@
-void stop() {
-	//駆動
-	Actuator.run(false, 0, 0);
-	//LCD表示
-	LCD.clear(true);
-	LCD.write("THE VOLTAGE", 5, 1);
-	LCD.write("IS TOO LOW!!!", 4, 2);
-}
-
 void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get();
@@ -25,18 +16,6 @@ void get(data_t *d) {
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->goal.distGK >= 2 || !Cam.getCanUse());
 
 	d->line = Line.get(isFW, Gyro.getCanUse(), d->gyro);
-}
-
-void wait(data_t *d) {
-	//LCD表示
-	LCD.run(d->gyro, d->line, Actuator.getCanUseKicker(), Cam.getCanUse(), Gyro.getCanUse(), isFW, Comc.getCanUse(), d->fellow,
-		Line.getQTY(), Line.getValue(), Line.getState(),INA219.getValue(), d->goal,
-		d->ball, Ball.getQTY(), Ball.getValue(),
-		Ball.getValueCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->isBallClose,
-		frontPSD.getValue(), d->enemyStandsFront, backPSD.getValue(), d->isGoalClosePSD);
-	//駆動
-	Actuator.run(false, 0, 0);
-	Actuator.checkKick();
 }
 
 

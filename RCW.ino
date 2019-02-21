@@ -12,7 +12,8 @@ void setup() {
 
 void loop() {
 	//駆動重複リセット
-	Actuator.setHaveRun(false);
+	Motor.setHaveRun(false);
+	Kicker.setHaveCheckKick(false);
 	//走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
@@ -20,7 +21,7 @@ void loop() {
 	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
-	if(INA219.checkVolt() && !Actuator.getIsKicking()) {
+	if(INA219.checkVolt() && !Kicker.getIsKicking()) {
 		//電池残量少
 		canRun = false;
 		stop();
@@ -40,7 +41,7 @@ void loop() {
 			}
 			if(d.line.isOutside) {
 				//ライン復帰
-				Actuator.run(d.line.dirInside, 0, 150);
+				Motor.run(d.line.dirInside, 0, 150);
 			}else{
 				if(!isFW) {
 					//Role能動的変更

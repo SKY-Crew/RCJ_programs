@@ -27,16 +27,16 @@ void setIR() {
 
 	LCD.clear(false);
 	LCD.write("Running!", 0, 0);
-	Actuator.setHaveRun(false);
-	Actuator.run(-1, 80, 0);
+	Motor.setHaveRun(false);
+	Motor.run(-1, 80, 0);
 	delay(1000);
 	for(int count = 0; count < 1000; count ++) {
 		if(INA219.checkVolt()) {
 			//電池残量少
 			stop();
 		}else {
-			Actuator.run(-1, 80, 0);
-			Actuator.setHaveRun(false);
+			Motor.run(-1, 80, 0);
+			Motor.setHaveRun(false);
 			Ball.get(false);
 			uint16_t *value = Ball.getValue();
 			for(int i = 0; i < 16; i ++) {
@@ -49,5 +49,5 @@ void setIR() {
 		}
 	}
 
-	Actuator.run(-1, 0, 0);
+	Motor.run(-1, 0, 0);
 }
