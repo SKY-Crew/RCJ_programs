@@ -1,3 +1,6 @@
+#ifndef INCLUDE_ORIG
+#define INCLUDE_ORIG
+
 #include "AdvMath.h"
 #include "Angle.h"
 #include "Count.h"
@@ -11,23 +14,12 @@ Actuator Actuator(true, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73, 29, 54, 30, 3, 4
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-#if IS_SKY
-	uint16_t MAX_IR[] = {623, 568, 619, 593, 580, 619, 604, 593,
-		593, 611, 591, 586, 605, 580, 595, 593};
-	uint16_t AVG_IR[] = {381, 332, 362, 344, 337, 360, 331, 333,
-		344, 359, 337, 341, 379, 353, 360, 363};
-#else
-	uint16_t MAX_IR[] = {622, 566, 588, 566, 625, 618, 651, 566,
-		562, 618, 577, 566, 607, 622, 622, 618};
-	uint16_t AVG_IR[] = {355, 270, 280, 290, 344, 327, 337, 284,
-		330, 328, 276, 299, 329, 358, 354, 346};
-#endif
 double SLOPE_DIR[5][2] = {{1, 1}, {0.2, 2}, {0.111, 0}, {-0.167, 0.222}, {0, 0}};
 double INTERCEPT_DIR[5][2] = {{0, 0}, {8, -20}, {13.333, 70}, {55, 50}, {25, 90}};
 double POINT_DIR[4][2] = {{10, 20}, {60, 45}, {150, 90}, {180, 180}};
 
-Ball Ball(16, P_IR, MAX_IR, AVG_IR, 2, 200, 0.1, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
-// QTY, PORT, MAX_IR, AVG_IR,
+Ball Ball(16, P_IR, 2, 200, 0.1, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
+// QTY, PORT,
 // MEASURING_COUNT, BORDER_WEAK, MULTI_AVG,
 // SIZE_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
 // P_CATCH, BORDER_CATCH, MAX_C_CATCH);
@@ -76,7 +68,7 @@ typedef struct {
 	Angle gyro;
 	cam_t goal;
 	bool isGoalClose;
-	bool isGoalCloseLazer;
+	bool isGoalClosePSD;
 
 	bool enemyStandsFront;
 	comc_t fellow;
@@ -89,3 +81,5 @@ typedef struct {
 
 	line_t line;
 } data_t;
+
+#endif
