@@ -21,9 +21,8 @@ void wait(data_t *d) {
 
 
 void correctRot(bool isFW, Angle gyro) {
-	cCorrectRot.set_COUNT_UP(!correctingRot);
-	correctingRot = bool(cCorrectRot);
-	if(correctingRot) {
+	cCorrectRot.set_COUNT_UP(!bool(cCorrectRot));
+	if(bool(cCorrectRot)) {
 		//駆動
 		int16_t powerCorrectRot = absAngle(gyro) >= BORDER_INCREASE_CCR
 			? signum(gyro) * (isFW ? 120 : 60)

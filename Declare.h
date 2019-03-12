@@ -14,7 +14,6 @@ uint16_t BORDER_IF;
 uint16_t BORDER_IC;
 
 Count cCorrectRot(3);
-bool correctingRot = false;
 uint16_t BORDER_INCREASE_CCR;
 uint16_t BORDER_DECREASE_CCR;
 
