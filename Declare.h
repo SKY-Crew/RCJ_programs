@@ -11,7 +11,7 @@ bool prvIsFW;
 Count cBecomeFW(100, false);
 
 uint16_t BORDER_IF;
-uint16_t BORDER_IC;
+uint16_t BORDER_DB[2];
 
 Count cCorrectRot(3);
 uint16_t BORDER_INCREASE_CCR;

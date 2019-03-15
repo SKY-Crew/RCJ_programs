@@ -1,3 +1,12 @@
+void setBorders(bool isFW, bool fellowExists) {
+	BORDER_IF = isFW ? 610 : fellowExists ? 670 : 610;
+	BORDER_DB[0] = isFW ? 300 : fellowExists ? 400 : 350;
+	BORDER_DB[1] = 200;
+	BORDER_INCREASE_CCR = isFW ? 60 : 30;
+	BORDER_DECREASE_CCR = isFW ? 40 : 5;
+	cCatchFreely.set_MAX(isFW ? 3 : 1);
+}
+
 void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get();
@@ -9,9 +18,9 @@ void get(data_t *d) {
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	d->ball = Ball.get(false);
-	d->isBallClose = d->ball.r >= BORDER_IC;
-	d->isBallForward = Ball.getForward() >= BORDER_IF && d->isBallClose;
-	d->catchingBall = Ball.getCatch() && d->ball.t.inside(330, 30) && d->isBallClose;
+	d->distBall = d->ball.r >= BORDER_DB[0] ? CLOSE : d->ball.r >= BORDER_DB[1] ? MIDDLE : FAR;
+	d->isBallForward = Ball.getForward() >= BORDER_IF && d->distBall == CLOSE;
+	d->catchingBall = Ball.getCatch() && d->ball.t.inside(330, 30) && d->distBall == CLOSE;
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->goal.distGK >= 2 || !Cam.getCanUse());
 
@@ -19,10 +28,10 @@ void get(data_t *d) {
 }
 
 
-Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool isGoalClosePSD, bool isBallClose) {
+Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool isGoalClosePSD, Dist distBall) {
 	Angle dir;
 	if(isFW) {
-		dir = Ball.getDir(ball.t, isBallClose);
+		dir = distBall == FAR ? ball.t : Ball.getDir(ball);
 	}else {
 		Angle dirGK = isGoalClosePSD ? 110 : goal.distGK > 0 ? 70 : 90;
 		dir = bool(ball.t) ? dirGK * signum(ball.t) : Angle(false);
@@ -75,11 +84,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 		}
 	}
 	//閾値変更
-	BORDER_IF = isFW ? 610 : fellow.exists ? 670 : 610;
-	BORDER_IC = isFW ? 350 : fellow.exists ? 400 : 350;
-	BORDER_INCREASE_CCR = isFW ? 60 : 30;
-	BORDER_DECREASE_CCR = isFW ? 40 : 5;
-	cCatchFreely.set_MAX(isFW ? 3 : 1);
+	setBorders(isFW, fellow.exists);
 }
 
 bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {

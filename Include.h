@@ -17,11 +17,12 @@ Kicker Kicker(29, 54, 30, 3, 40);
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-double SLOPE_DIR[5][2] = {{1, 0.25}, {0.2, 2.6}, {0.111, 0}, {-0.167, 0.222}, {0, 0}};
-double INTERCEPT_DIR[5][2] = {{0, 0}, {8, -47}, {13.333, 70}, {55, 50}, {25, 90}};
-double POINT_DIR[4][2] = {{10, 20}, {60, 45}, {150, 90}, {180, 180}};
+uint16_t BORDER_DIST[2] = {0, 400};
+double SLOPE_DIR[5][2] = {{0.25, 0.667}, {1, 2.5}, {0, 0}, {-0.056, 0.056}, {0, 0}};
+double INTERCEPT_DIR[5][2] = {{0, 0}, {-15, -27.5}, {30, 85}, {35, 80}, {25, 90}};
+double POINT_DIR[4][2] = {{20, 15}, {45, 45}, {89, 89}, {179, 179}};
 
-Ball Ball(16, P_IR, 2, 200, 0.1, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
+Ball Ball(16, P_IR, 2, 200, 0.1, BORDER_DIST, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
 // QTY, PORT,
 // MEASURING_COUNT, BORDER_WEAK, MULTI_AVG,
 // SIZE_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
@@ -77,7 +78,7 @@ typedef struct {
 	comc_t fellow;
 
 	vectorRT_t ball;
-	bool isBallClose;
+	Dist distBall;
 	bool isBallForward;
 	bool catchingBall;
 	bool catchFreely;
