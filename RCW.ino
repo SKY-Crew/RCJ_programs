@@ -13,7 +13,7 @@ void setup() {
 void loop() {
 	//駆動重複リセット
 	Motor.setHaveRun(false);
-	Kicker.setHaveCheckKick(false);
+	Kicker.setHaveChecked(false);
 	//走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);

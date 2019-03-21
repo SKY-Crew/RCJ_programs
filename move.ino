@@ -9,14 +9,14 @@ void stop() {
 
 void wait(data_t *d) {
 	//LCD表示
-	LCD.run(d->gyro, d->line, Kicker.getCanUseKicker(), Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
+	LCD.run(d->gyro, d->line, Kicker.getCanUse(), Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
 		Line.getQTY(), Line.getValue(), Line.getState(),INA219.getValue(), d->goal,
 		d->ball, Ball.getQTY(), Ball.getValue(),
 		Ball.getValueCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
 		frontPSD.getValue(), d->enemyStandsFront, backPSD.getValue(), d->isGoalClosePSD);
 	//駆動
 	Motor.run(false, 0, 0);
-	Kicker.checkKick();
+	Kicker.check();
 }
 
 
