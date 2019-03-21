@@ -79,10 +79,3 @@ void loop() {
 		}
 	}
 }
-
-
-
-void loop2() {
-	//IR調整
-	setIR();
-}
