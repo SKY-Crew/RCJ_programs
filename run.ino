@@ -1,4 +1,4 @@
-void setBorders(bool isFW, bool fellowExists) {
+void setThres(bool isFW, bool fellowExists) {
 	THRE_IF = isFW ? 610 : fellowExists ? 670 : 610;
 	THRE_DB[0] = isFW ? 300 : fellowExists ? 400 : 350;
 	THRE_DB[1] = 200;
@@ -84,7 +84,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 		}
 	}
 	//閾値変更
-	setBorders(isFW, fellow.exists);
+	setThres(isFW, fellow.exists);
 }
 
 bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
