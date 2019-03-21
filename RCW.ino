@@ -56,7 +56,7 @@ void loop() {
 				if(isFW) {
 					//マルチ対策
 					d.isGoalClose = avoidMulDef(&dir, d.fellow, d.ball, d.goal);
-					//ライン角
+					//ライン上停止
 					detectBallOutside(&dir, d.line, d.gyro);
 				}
 				//rot計算
