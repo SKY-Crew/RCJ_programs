@@ -1,9 +1,9 @@
 void setBorders(bool isFW, bool fellowExists) {
-	BORDER_IF = isFW ? 610 : fellowExists ? 670 : 610;
-	BORDER_DB[0] = isFW ? 300 : fellowExists ? 400 : 350;
-	BORDER_DB[1] = 200;
-	BORDER_INCREASE_CCR = isFW ? 60 : 30;
-	BORDER_DECREASE_CCR = isFW ? 40 : 5;
+	THRE_IF = isFW ? 610 : fellowExists ? 670 : 610;
+	THRE_DB[0] = isFW ? 300 : fellowExists ? 400 : 350;
+	THRE_DB[1] = 200;
+	THRE_INCREASE_CCR = isFW ? 60 : 30;
+	THRE_DECREASE_CCR = isFW ? 40 : 5;
 	cCatchFreely.set_MAX(isFW ? 3 : 1);
 }
 
@@ -18,8 +18,8 @@ void get(data_t *d) {
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	d->ball = Ball.get(false);
-	d->distBall = d->ball.r >= BORDER_DB[0] ? CLOSE : d->ball.r >= BORDER_DB[1] ? MIDDLE : FAR;
-	d->isBallForward = Ball.getForward() >= BORDER_IF && d->distBall == CLOSE;
+	d->distBall = d->ball.r >= THRE_DB[0] ? CLOSE : d->ball.r >= THRE_DB[1] ? MIDDLE : FAR;
+	d->isBallForward = Ball.getForward() >= THRE_IF && d->distBall == CLOSE;
 	d->catchingBall = Ball.getCatch() && d->ball.t.inside(330, 30) && d->distBall == CLOSE;
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->goal.distGK >= 2 || !Cam.getCanUse());

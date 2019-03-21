@@ -17,21 +17,21 @@ Kicker Kicker(29, 54, 30, 3, 40);
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-uint16_t BORDER_DIST[2] = {0, 400};
+uint16_t THRE_DIST[2] = {0, 400};
 double SLOPE_DIR[5][2] = {{0.25, 0.667}, {1, 2.5}, {0, 0}, {-0.056, 0.056}, {0, 0}};
 double INTERCEPT_DIR[5][2] = {{0, 0}, {-15, -27.5}, {30, 85}, {35, 80}, {25, 90}};
 double POINT_DIR[4][2] = {{20, 15}, {45, 45}, {89, 89}, {179, 179}};
 
-Ball Ball(16, P_IR, 2, 200, 0.1, BORDER_DIST, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
+Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
 // QTY, PORT,
-// MEASURING_COUNT, BORDER_WEAK, MULTI_AVG,
+// MEASURING_COUNT, THRE_WEAK, MULTI_AVG,
 // SIZE_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
-// P_CATCH, BORDER_CATCH, MAX_C_CATCH);
+// P_CATCH, THRE_CATCH, MAX_C_CATCH);
 
 #include "Line.h"
 uint8_t P_LINE[16] = {A9, A8, A7, A6, A5, A4, A3, A2, A1, A0, A22, A21, A10, A11, A26, A25};
 Line Line(true, 16, P_LINE, 5, 100, 400, 12, 0.5);
-// CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, BORDER_BLACK, BORDER_WHITE, BORDER_IS_IN_AIR, MULTI_AVG
+// CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, THRE_BLACK, THRE_WHITE, THRE_IS_IN_AIR, MULTI_AVG
 
 #include "Cam.h"
 Cam Cam(1, 56, 3, 3, 15, 10);
@@ -50,7 +50,7 @@ Gyro Gyro(1, 0x68, 55, 2, 3, SLOPE_RG, POINT_RG);
 #include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
 PSD backPSD(2, 0.7, 700, 3);
-// X, MULTI_AVG, BORDER_IS_CLOSE, MAX_CC
+// X, MULTI_AVG, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"
 Comc Comc(5, 57, 10, 20);
