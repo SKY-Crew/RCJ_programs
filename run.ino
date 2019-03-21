@@ -24,7 +24,7 @@ void get(data_t *d) {
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->goal.distGK >= 2 || !Cam.getCanUse());
 
-	d->line = Line.get(isFW, bool(gyro), d->gyro);
+	d->line = Line.get(isFW, d->gyro, Gyro.getDiff());
 }
 
 
