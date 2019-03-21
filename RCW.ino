@@ -57,7 +57,7 @@ void loop() {
 					//マルチ対策
 					d.isGoalClose = avoidMulDef(&dir, d.fellow, d.ball, d.goal);
 					//ライン角
-					detectCornerLine(&dir, d.line, d.gyro);
+					detectBallOutside(&dir, d.line, d.gyro);
 				}
 				//rot計算
 				int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward);
