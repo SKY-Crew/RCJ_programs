@@ -18,11 +18,10 @@ Kicker Kicker(29, 54, 30, 3, 40);
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
 uint16_t THRE_DIST[2] = {0, 400};
-double SLOPE_DIR[5][2] = {{0.25, 0.667}, {1, 2.5}, {0, 0}, {-0.056, 0.056}, {0, 0}};
-double INTERCEPT_DIR[5][2] = {{0, 0}, {-15, -27.5}, {30, 85}, {35, 80}, {25, 90}};
-double POINT_DIR[4][2] = {{20, 15}, {45, 45}, {89, 89}, {179, 179}};
+double POINT_DIR[5][2] = {{0, 0}, {20, 15}, {45, 45}, {90, 90}, {180, 180}};
+double PLUS_DIR[5][2] = {{0, 0}, {5, 10}, {30, 85}, {30, 85}, {25, 90}};
 
-Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR, A20, 400, 10);
+Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, POINT_DIR, PLUS_DIR, A20, 400, 10);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE,
 // SIZE_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
