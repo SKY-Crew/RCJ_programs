@@ -110,24 +110,24 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 
 void detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 	if(bool(line.dirInside)) {
-		////gyro考慮 absolute 角検知易しく
-		if(line.dirInside.inside(45, 135)) {
-			if(dir->inside(line.dirInside + 170, line.dirInside + 200)
+		Angle absoluteDI = line.dirInside - gyro;
+		if(absoluteDI.inside(45, 135)) {
+			if(dir->inside(absoluteDI + 170, absoluteDI + 200)
 				&& line.canPause) {
 				//停止
 				*dir = Angle(false);
-			}else if(dir->inside(line.dirInside + 90, line.dirInside + 180)) {
+			}else if(dir->inside(absoluteDI + 90, absoluteDI + 180)) {
 				//後退
-				*dir = line.dirInside + 90;
+				*dir = absoluteDI + 90;
 			}
-		}else if(line.dirInside.inside(225, 315)) {
-			if(dir->inside(line.dirInside + 160, line.dirInside + 190)
+		}else if(absoluteDI.inside(225, 315)) {
+			if(dir->inside(absoluteDI + 160, absoluteDI + 190)
 				&& line.canPause) {
 				//停止
 				*dir = Angle(false);
-			}else if(dir->inside(line.dirInside - 180, line.dirInside - 90)) {
+			}else if(dir->inside(absoluteDI - 180, absoluteDI - 90)) {
 				//後退
-				*dir = line.dirInside - 90;
+				*dir = absoluteDI - 90;
 			}
 		}
 	}
