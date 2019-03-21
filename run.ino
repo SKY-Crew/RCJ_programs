@@ -24,7 +24,7 @@ void get(data_t *d) {
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->goal.distGK >= 2 || !Cam.getCanUse());
 
-	d->line = Line.get(isFW, Gyro.getCanUse(), d->gyro);
+	d->line = Line.get(isFW, bool(gyro), d->gyro);
 }
 
 
@@ -43,7 +43,7 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 	//rot計算
 	int16_t rot = 0;
 	if(isFW) {
-		if(Cam.getCanUse() && Gyro.getCanUse()) {
+		if(Cam.getCanUse() && bool(gyro)) {
 			//両方使用可
 			rot = (catchingBall || isBallForward) && abs(goal.rotOpp) <= 3
 				? Cam.multiRotGoal(goal.rotOpp)
@@ -51,7 +51,7 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 		}else if(Cam.getCanUse()) {
 			//camのみ
 			rot = Cam.multiRotGoal(goal.rotOpp);
-		}else if(Gyro.getCanUse()) {
+		}else if(bool(gyro)) {
 			//gyroのみ
 			rot = Gyro.multiRot(gyro);
 		}
