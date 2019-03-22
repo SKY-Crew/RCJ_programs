@@ -10,30 +10,32 @@ void setThres(bool isFW, bool fellowExists) {
 void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get();
-	d->isGoalClose = false;
-	d->isGoalClosePSD = backPSD.get();
+	backPSD.get();
+	uint16_t valueBackPSD = backPSD.getValue();
+	d->distGoalPSD = valueBackPSD <= THRE_BACK_PSD[0] ? CLOSE : valueBackPSD <= THRE_BACK_PSD[1] ? PROPER : FAR;
+	d->distGoal = abs(d->goal.rot) >= 2 || d->goal.distGK == TOO_FAR ? d->goal.distGK : d->distGoalPSD;
 
 	cEnemyStandsFront.increase(frontPSD.get());
 	d->enemyStandsFront = bool(cEnemyStandsFront);
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	d->ball = Ball.get(false);
-	d->distBall = d->ball.r >= THRE_DB[0] ? CLOSE : d->ball.r >= THRE_DB[1] ? MIDDLE : FAR;
+	d->distBall = d->ball.r >= THRE_DB[0] ? CLOSE : d->ball.r >= THRE_DB[1] ? PROPER : FAR;
 	d->isBallForward = Ball.getForward() >= THRE_IF && d->distBall == CLOSE;
 	d->catchingBall = Ball.getCatch() && d->ball.t.inside(330, 30) && d->distBall == CLOSE;
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
-	d->catchFreely = bool(cCatchFreely) && (isFW || d->goal.distGK >= 2 || !Cam.getCanUse());
+	d->catchFreely = bool(cCatchFreely) && (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
 	d->line = Line.get(isFW, d->gyro, Gyro.getDiff());
 }
 
 
-Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool isGoalClosePSD, Dist distBall) {
+Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, Dist distBall) {
 	Angle dir;
 	if(isFW) {
 		dir = distBall == FAR ? ball.t : Ball.getDir(ball);
 	}else {
-		Angle dirGK = isGoalClosePSD ? 110 : goal.distGK > 0 ? 70 : 90;
+		Angle dirGK = distGoal == CLOSE ? 110 : distGoal == PROPER ? 70 : 90;////
 		dir = bool(ball.t) ? dirGK * signum(ball.t) : Angle(false);
 	}
 	return dir;

@@ -52,10 +52,10 @@ void loop() {
 					d.ball.t = bool(d.ball.t) ? d.ball.t - d.gyro : Angle(false);
 				}
 				//dir計算
-				Angle dir = calDir(isFW, d.ball, d.gyro, d.goal, d.isGoalClosePSD, d.distBall);
+				Angle dir = calDir(isFW, d.ball, d.gyro, d.goal, d.distGoal, d.distBall);
 				if(isFW) {
 					//マルチ対策
-					d.isGoalClose = avoidMulDef(&dir, d.fellow, d.ball, d.goal);
+					d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal) ? CLOSE : PROPER;
 					//ライン上停止
 					detectBallOutside(&dir, d.line, d.gyro);
 				}

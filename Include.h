@@ -70,8 +70,8 @@ const uint8_t P_IS_FW = 31;
 typedef struct {
 	Angle gyro;
 	cam_t goal;
-	bool isGoalClose;
-	bool isGoalClosePSD;
+	Dist distGoalPSD;
+	Dist distGoal;
 
 	bool enemyStandsFront;
 	comc_t fellow;

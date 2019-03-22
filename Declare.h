@@ -26,4 +26,6 @@ uint32_t timeStartCB;
 
 Count cCatchFreely;
 
+uint16_t THRE_BACK_PSD[2] = {900, 1200};
+
 #endif

@@ -13,7 +13,7 @@ void wait(data_t *d) {
 		Line.getQTY(), Line.getValue(), Line.getState(),INA219.getValue(), d->goal,
 		d->ball, Ball.getQTY(), Ball.getValue(),
 		Ball.getValueCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
-		frontPSD.getValue(), d->enemyStandsFront, backPSD.getValue(), d->isGoalClosePSD);
+		frontPSD.getValue(), d->enemyStandsFront, backPSD.getValue(), d->distGoalPSD);
 	//駆動
 	Motor.run(false, 0, 0);
 	Kicker.check();
@@ -69,7 +69,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(dir, rot * 1.5, leavingLine ? 120 : 210);
 		}else if(dir.inside(90, 270)) {
 			//ボール後方
-			Motor.run(dir, min(rot * 1.5, 60), (leavingLine || d->isGoalClose) ? 100 : 180);
+			Motor.run(dir, min(rot * 1.5, 60), (leavingLine || d->distGoal == CLOSE) ? 100 : 180);
 		}else {
 			//ボール前方
 			Motor.run(dir, min(rot * 1.5, 60), leavingLine ? 100 : 140);
@@ -78,12 +78,11 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	}else {
 		//GK
 		d->isBallForward |= d->ball.t.inside(350, 10) && d->distBall == CLOSE;
-		bool isTooFarGoal = d->goal.distGK >= 2 && !d->isGoalClosePSD;
-		bool isOnSide = abs(d->goal.rot) >= 3 || (isTooFarGoal && abs(d->goal.rot) >= 2);
+		bool isOnSide = abs(d->goal.rot) >= 3 || (d->distGoal == TOO_FAR && abs(d->goal.rot) >= 2);
 		if(isOnSide) {
 			//横行きすぎ
-			Motor.run(180 - signum(d->goal.rot) * (isTooFarGoal ? 60 : 100), rot, 120);
-		}else if(isTooFarGoal) {
+			Motor.run(180 - signum(d->goal.rot) * (d->distGoal == TOO_FAR ? 60 : 100), rot, 120);
+		}else if(d->distGoal == TOO_FAR) {
 			//ゴールとても遠すぎ・仲間がいてゴール遠すぎ
 			Motor.run(180, rot, 160);
 		}
@@ -99,8 +98,8 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			||	d->ball.t.inside(150, 210)
 			||	d->ball.t.inside(355, 5)) {
 			//ボールない・ボール外側・ボール後ろ(150~210)・ボール前方遠く
-			Motor.run(d->isGoalClosePSD ? 0 : d->goal.distGK > 0 ? 180 : Angle(false),
-				(!d->isGoalClosePSD && d->goal.distGK <= 0) ? signum(rot) * 60 : 0, 80);
+			Motor.run(d->distGoal == CLOSE ? 0 : d->distGoal >= FAR ? 180 : Angle(false),
+				d->distGoal == PROPER ? signum(rot) * 60 : 0, 80);
 		}else if(d->ball.t.inside(340, 20) || signum(d->goal.rot) != signum(dir)) {
 			//ボールある程度前方・少し横
 			Motor.run(dir, rot, 120);
