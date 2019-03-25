@@ -21,7 +21,6 @@ uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 
 uint16_t THRE_DIST[2] = {200, 400};
 double POINT_DIR[5][2] = {{0, 0}, {20, 15}, {45, 45}, {135, 135}, {180, 180}};
 double PLUS_DIR[5][2] = {{0, 0}, {0, 5}, {5, 85}, {5, 85}, {25, 90}};
-
 Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, POINT_DIR, PLUS_DIR, A20, 400, 10);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE,
@@ -35,30 +34,26 @@ Line Line(true, 16, P_LINE, 5, 100, 400, 12, 0.5);
 
 #include "Cam.h"
 Cam Cam(1, 56, 3, 3, 15, 10);
-// X, P_ONOFF, CENTER_OPP_GOAL, CENTER_OWN_GOAL, SLOPE_RG, INTERCEPT_RG
+// P_SERIAL, P_ONOFF, CENTER_OPP_GOAL, CENTER_OWN_GOAL, SLOPE_RG, INTERCEPT_RG
 
-
-// #define GYRO_ONOFF_PIN 55
-// #define GYRO_RESET_PIN 2
-// #define CAMERA_I2C_WIRE Wire1
-// #define SIZE_SLOPE_RG 3
 int16_t SLOPE_RG[3] = {0, 10, 30};
 int16_t POINT_RG[2] = {5, 25};
 #include "Gyro.h"
 Gyro Gyro(1, 0x68, 55, 2, 3, SLOPE_RG, POINT_RG);
+// P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_SLOPE_RG, SLOPE_RG, POINT_RG
 
 #include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
 PSD backPSD(2, 0.7, 700, 3);
-// X, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
+// P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"
 Comc Comc(5, 57, 10, 20);
-// X, P_ONOFF, MAX_C_SND, MAX_C_NR
+// P_SERIAL, P_ONOFF, MAX_C_SND, MAX_C_NR
 
 #include "INA219.h"
 INA219 INA219(2, 10.2, 10.4, 10, 10);
-// X, LOW_VOLT, HIGH_VOLT, MAX_CR, MAX_CVL
+// P_WIRE, LOW_VOLT, HIGH_VOLT, MAX_CR, MAX_CVL
 
 #include "LCD.h"
 LCD LCD(7, 13, 11, 8, 12, 0, 100, Line.getQTY());
