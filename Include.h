@@ -4,6 +4,7 @@
 #include "AdvMath.h"
 #include "Angle.h"
 #include "Count.h"
+#include "Dist.h"
 
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
@@ -17,9 +18,9 @@ Kicker Kicker(29, 30, 3, 40);
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-uint16_t THRE_DIST[2] = {0, 400};
-double POINT_DIR[5][2] = {{0, 0}, {20, 15}, {45, 45}, {90, 90}, {180, 180}};
-double PLUS_DIR[5][2] = {{0, 0}, {5, 10}, {30, 85}, {30, 85}, {25, 90}};
+uint16_t THRE_DIST[2] = {200, 400};
+double POINT_DIR[5][2] = {{0, 0}, {20, 15}, {45, 45}, {135, 135}, {180, 180}};
+double PLUS_DIR[5][2] = {{0, 0}, {0, 5}, {5, 85}, {5, 85}, {25, 90}};
 
 Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, POINT_DIR, PLUS_DIR, A20, 400, 10);
 // QTY, PORT,

@@ -1,18 +1,9 @@
-void setThres(bool isFW, bool fellowExists) {
-	THRE_IF = isFW ? 610 : fellowExists ? 670 : 610;
-	THRE_DB[0] = isFW ? 300 : fellowExists ? 400 : 350;
-	THRE_DB[1] = 200;
-	THRE_INCREASE_CCR = isFW ? 60 : 30;
-	THRE_DECREASE_CCR = isFW ? 40 : 5;
-	cCatchFreely.set_MAX(isFW ? 3 : 1);
-}
-
 void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get();
-	backPSD.get();
-	uint16_t valueBackPSD = backPSD.getValue();
-	d->distGoalPSD = valueBackPSD <= THRE_BACK_PSD[0] ? CLOSE : valueBackPSD <= THRE_BACK_PSD[1] ? PROPER : FAR;
+	backPSD.get();////
+	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
+	d->distGoalPSD = compare(backPSD.getValue(), THRE_BACK_PSD, 3, true, CLOSE);
 	d->distGoal = abs(d->goal.rot) >= 2 || d->goal.distGK == TOO_FAR ? d->goal.distGK : d->distGoalPSD;
 
 	cEnemyStandsFront.increase(frontPSD.get());
@@ -20,9 +11,14 @@ void get(data_t *d) {
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	d->ball = Ball.get(false);
-	d->distBall = d->ball.r >= THRE_DB[0] ? CLOSE : d->ball.r >= THRE_DB[1] ? PROPER : FAR;
-	d->isBallForward = Ball.getForward() >= THRE_IF && d->distBall == CLOSE;
+
+	const uint16_t THRE_DB[2] = {370, 200};
+	d->distBall = compare(d->ball.r, THRE_DB, 3, false, CLOSE);
+	d->isBallForward = d->distBall == CLOSE
+		&& Ball.getForward() >= (isFW ? 610 : d->fellow.exists ? 670 : 610);
 	d->catchingBall = Ball.getCatch() && d->ball.t.inside(330, 30) && d->distBall == CLOSE;
+	
+	cCatchFreely.set_MAX(isFW ? 3 : 1);
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
@@ -35,7 +31,8 @@ Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, 
 	if(isFW) {
 		dir = distBall == FAR ? ball.t : Ball.getDir(ball);
 	}else {
-		Angle dirGK = distGoal == CLOSE ? 110 : distGoal == PROPER ? 70 : 90;////
+		int16_t DIR_GKs[] = {110, 70, 90};
+		Angle dirGK = DIR_GKs[min(distGoal, 2)];
 		dir = bool(ball.t) ? dirGK * signum(ball.t) : Angle(false);
 	}
 	return dir;
@@ -85,8 +82,6 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 			cCatchFreely.reset();
 		}
 	}
-	//閾値変更
-	setThres(isFW, fellow.exists);
 }
 
 bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
@@ -95,15 +90,19 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 		if(ball.t.inside(90, 270)) {
 			switch (goal.distFW) {
 			//少し後ろ
-			case 1: *dir = ball.t.inside(170, 190) ? Angle(false)
-						: ball.t.inside(90, 180) ? 90 : 270;
-					isGoalClose = true;
-					break;
+			case CLOSE:
+				*dir = ball.t.inside(170, 190) ? Angle(false)
+					: ball.t.inside(90, 180) ? 90 : 270;
+				isGoalClose = true;
+				break;
 			//後ろ過ぎ
-			case 0: *dir = ball.t.inside(170, 190) ? 0
-						: ball.t.inside(90, 180) ? 50 : 310;
-					isGoalClose = false;
-					break;
+			case TOO_CLOSE:
+				*dir = ball.t.inside(170, 190) ? 0
+					: ball.t.inside(90, 180) ? 50 : 310;
+				isGoalClose = false;
+				break;
+			default:
+				break;
 			}
 		}
 	}
