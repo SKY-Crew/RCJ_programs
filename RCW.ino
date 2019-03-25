@@ -19,6 +19,7 @@ void loop() {
 	canRun = digitalRead(P_START);
 	//Role強制変更
 	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
+	//Role表示LED
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
 	if(INA219.checkVolt() && !Kicker.getIsKicking()) {
