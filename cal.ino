@@ -1,13 +1,11 @@
 void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get();
-	backPSD.get();////
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
 	d->distGoalPSD = compare(backPSD.getValue(), THRE_BACK_PSD, 3, true, CLOSE);
 	d->distGoal = abs(d->goal.rot) >= 2 || d->goal.distGK == TOO_FAR ? d->goal.distGK : d->distGoalPSD;
 
-	cEnemyStandsFront.increase(frontPSD.get());
-	d->enemyStandsFront = bool(cEnemyStandsFront);
+	d->enemyStandsFront = frontPSD.getBool();
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	d->ball = Ball.get(false);

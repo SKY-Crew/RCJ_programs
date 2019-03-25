@@ -12,8 +12,6 @@ Count cBecomeFW(100, false);
 
 Count cCorrectRot(3);
 
-Count cEnemyStandsFront(8, false);
-
 bool carryingBall = false;
 bool willCarryBall = false;
 uint32_t timeStartCB;
