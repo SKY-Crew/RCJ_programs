@@ -27,7 +27,7 @@ void get(data_t *d) {
 Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, Dist distBall) {
 	Angle dir;
 	if(isFW) {
-		dir = distBall == FAR ? ball.t : Ball.getDir(ball);
+		dir = Ball.getDir(ball);
 	}else {
 		int16_t DIR_GKs[] = {110, 70, 90};
 		Angle dirGK = DIR_GKs[min(distGoal, 2)];
