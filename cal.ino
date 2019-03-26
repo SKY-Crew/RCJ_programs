@@ -8,7 +8,7 @@ void get(data_t *d) {
 	d->enemyStandsFront = frontPSD.getBool();
 	d->fellow = Comc.communicate(canRun, isFW);
 
-	d->ball = Ball.get(false);
+	d->ball = Ball.get();
 
 	const uint16_t THRE_DB[2] = {370, 200};
 	d->distBall = compare(d->ball.r, THRE_DB, 3, false, CLOSE);
