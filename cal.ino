@@ -111,20 +111,18 @@ void detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 	if(bool(line.dirInside)) {
 		Angle absoluteDI = line.dirInside - gyro;
 		if(absoluteDI.isRight(45)) {
-			if(dir->inside(absoluteDI + 180 - 10, absoluteDI + 180 + 20)
-				&& line.canPause) {
+			if(line.canPause && (*dir - absoluteDI).inside(180 - 10, 180 + 20)) {
 				//停止
 				*dir = Angle(false);
-			}else if(dir->inside(absoluteDI + 90, absoluteDI + 180)) {
+			}else if((*dir - absoluteDI).inside(90, 180)) {
 				//後退
 				*dir = absoluteDI + 90;
 			}
 		}else if(absoluteDI.isLeft(45)) {
-			if(dir->inside(absoluteDI + 180 - 20, absoluteDI + 180 + 10)
-				&& line.canPause) {
+			if(line.canPause && (*dir - absoluteDI).inside(180 - 20, 180 + 10)) {
 				//停止
 				*dir = Angle(false);
-			}else if(dir->inside(absoluteDI - 180, absoluteDI - 90)) {
+			}else if((*dir - absoluteDI).inside(180, 270)) {
 				//後退
 				*dir = absoluteDI - 90;
 			}
