@@ -21,11 +21,12 @@ uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 
 uint16_t THRE_DIST[2] = {200, 400};
 double POINT_DIR[5][2] = {{0, 0}, {20, 15}, {45, 45}, {135, 135}, {180, 180}};
 double PLUS_DIR[5][2] = {{0, 0}, {0, 5}, {5, 85}, {5, 85}, {25, 90}};
-Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, POINT_DIR, PLUS_DIR, A20, 400, 10);
+Ball Ball(16, P_IR, 2, 200, 0.1, THRE_DIST, 5, POINT_DIR, PLUS_DIR, A20, 400, 10, 54, 200);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE,
 // SIZE_SLOPE_DIR, SLOPE_DIR, INTERCEPT_DIR, POINT_DIR,
-// P_CATCH, THRE_CATCH, MAX_C_CATCH);
+// P_CATCH, THRE_CATCH, MAX_C_CATCH,
+// P_UP, THRE_UP
 
 #include "Line.h"
 uint8_t P_LINE[16] = {A9, A8, A7, A6, A5, A4, A3, A2, A1, A0, A22, A21, A10, A11, A26, A25};
