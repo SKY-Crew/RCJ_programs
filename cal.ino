@@ -14,7 +14,7 @@ void get(data_t *d) {
 	d->distBall = compare(d->ball.r, THRE_DB, 3, false, CLOSE);
 	d->isBallForward = d->distBall == CLOSE
 		&& Ball.getForward() >= (isFW ? 610 : d->fellow.exists ? 670 : 610);
-	d->catchingBall = Ball.getCatch() && d->ball.t.inside(330, 30) && d->distBall == CLOSE;
+	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	
 	cCatchFreely.set_MAX(isFW ? 3 : 1);
 	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
@@ -85,18 +85,18 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 	bool isGoalClose = false;
 	if(fellow.exists) {
-		if(ball.t.inside(90, 270)) {
+		if(ball.t.isDown(90)) {
 			switch (goal.distFW) {
 			//少し後ろ
 			case CLOSE:
-				*dir = ball.t.inside(170, 190) ? Angle(false)
-					: ball.t.inside(90, 180) ? 90 : 270;
+				*dir = ball.t.isDown(10) ? Angle(false)
+					: ball.t.isRight(90) ? 90 : 270;
 				isGoalClose = true;
 				break;
 			//後ろ過ぎ
 			case TOO_CLOSE:
-				*dir = ball.t.inside(170, 190) ? 0
-					: ball.t.inside(90, 180) ? 50 : 310;
+				*dir = ball.t.isDown(10) ? 0
+					: ball.t.isRight(90) ? 50 : 310;
 				isGoalClose = false;
 				break;
 			default:
@@ -110,8 +110,8 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 void detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 	if(bool(line.dirInside)) {
 		Angle absoluteDI = line.dirInside - gyro;
-		if(absoluteDI.inside(45, 135)) {
-			if(dir->inside(absoluteDI + 170, absoluteDI + 200)
+		if(absoluteDI.isRight(45)) {
+			if(dir->inside(absoluteDI + 180 - 10, absoluteDI + 180 + 20)
 				&& line.canPause) {
 				//停止
 				*dir = Angle(false);
@@ -119,8 +119,8 @@ void detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 				//後退
 				*dir = absoluteDI + 90;
 			}
-		}else if(absoluteDI.inside(225, 315)) {
-			if(dir->inside(absoluteDI + 160, absoluteDI + 190)
+		}else if(absoluteDI.isLeft(45)) {
+			if(dir->inside(absoluteDI + 180 - 20, absoluteDI + 180 + 10)
 				&& line.canPause) {
 				//停止
 				*dir = Angle(false);

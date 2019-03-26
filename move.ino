@@ -64,15 +64,15 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	willCarryBall = false;
 	if(isFW) {
 		//FW
-		bool leavingLine = bool(d->line.dirInside) && dir.inside(d->line.dirInside + 90, d->line.dirInside - 90);
+		bool leavingLine = bool(d->line.dirInside) && diff(dir, d->line.dirInside) <= 90;
 		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStandsFront);
-		if(Ball.isUp() && d->ball.t.inside(300, 60)) {
+		if(Ball.isUp() && d->ball.t.isUp(60)) {
 			//ボール真上前方
 			Motor.run(false, rot, 0);
 		}else if(d->isBallForward) {
 			//ボール前方直線上
 			Motor.run(dir, rot, leavingLine ? 120 : 160);
-		}else if(d->ball.t.inside(110, 250) || d->distBall >= FAR) {
+		}else if(d->ball.t.isDown(70) || d->distBall >= FAR) {
 			//ボール後方or遠く
 			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 100 : 180);
 		}else {
@@ -82,7 +82,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		Kicker.kick(d->catchFreely && d->goal.isWide);
 	}else {
 		//GK
-		d->isBallForward |= d->ball.t.inside(350, 10) && d->distBall == CLOSE;
+		d->isBallForward |= d->ball.t.isUp(10) && d->distBall == CLOSE;
 		bool isOnSide = abs(d->goal.rot) >= 3 || (d->distGoal == TOO_FAR && abs(d->goal.rot) >= 2);
 		if(isOnSide) {
 			//横行きすぎ
@@ -100,12 +100,12 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(Ball.getDir(d->ball), 0, 40);
 		}else if(!bool(dir)
 			||	(signum(d->ball.t - 180) == signum(d->goal.rot) && abs(d->goal.rot) >= 2)
-			||	d->ball.t.inside(150, 210)
-			||	d->ball.t.inside(355, 5)) {
+			||	d->ball.t.isDown(30)
+			||	d->ball.t.isUp(5)) {
 			//ボールない・ボール外側・ボール後ろ(150~210)・ボール前方遠く
 			Motor.run(d->distGoal == CLOSE ? 0 : d->distGoal >= FAR ? 180 : Angle(false),
 				d->distGoal == PROPER ? signum(rot) * 60 : 0, 80);
-		}else if(d->ball.t.inside(340, 20) || signum(d->goal.rot) != signum(dir)) {
+		}else if(d->ball.t.isUp(20) || signum(d->goal.rot) != signum(dir)) {
 			//ボールある程度前方・少し横
 			Motor.run(dir, rot, 120);
 		}else {
@@ -114,5 +114,5 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		}
 		Kicker.kick(d->catchFreely && !d->fellow.exists);
 	}
-	carryingBall = willCarryBall && d->ball.t.inside(340, 20) && d->distBall == CLOSE;
+	carryingBall = willCarryBall && d->ball.t.isUp(20) && d->distBall == CLOSE;
 }
