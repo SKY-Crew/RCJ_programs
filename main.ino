@@ -1,4 +1,4 @@
-void run() {
+void main() {
 	//get
 	data_t d;
 	get(&d);
