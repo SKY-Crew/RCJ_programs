@@ -22,13 +22,13 @@ void wait(data_t *d) {
 
 void correctRot(bool isFW, Angle gyro) {
 	uint16_t THRE_INCREASE_CCR = isFW ? 60 : 30;
-	uint16_t THRE_DECREASE_CCR = isFW ? 40 : 5;
+	uint16_t THRE_DECREASE_CCR = isFW ? 40 : 10;
 	cCorrectRot.set_COUNT_UP(!bool(cCorrectRot));
 	if(bool(cCorrectRot)) {
 		//駆動
 		int16_t powerCorrectRot = absAngle(gyro) >= THRE_INCREASE_CCR
-			? signum(gyro) * (isFW ? 120 : 60)
-			: signum(gyro) * (isFW ? 20 : 20);
+			? signum(gyro) * (isFW ? 160 : 80)
+			: signum(gyro) * (isFW ? 100 : 30);
 		Motor.run(false, powerCorrectRot, 0);
 		//correctRot継続
 		cCorrectRot.increase(absAngle(gyro) >= THRE_DECREASE_CCR);
@@ -43,10 +43,10 @@ void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool
 	if(carryingBall) {
 		if(millis() - timeStartCB < 1500) {
 			////
-			Motor.run(0, rot * 1.5, isFW ? 180 : 170);
+			Motor.run(0, rot, isFW ? 180 : 170);
 		}else {
 			//スタック
-			Motor.run(false, 0, 0);
+			Motor.run(false, rot, 0);
 		}
 		//carry続けるか
 		willCarryBall = Ball.compareCatch(0.3);
@@ -68,13 +68,13 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStandsFront);
 		if(d->isBallForward) {
 			//ボール前方直線上
-			Motor.run(dir, rot * 1.5, leavingLine ? 120 : 160);
+			Motor.run(dir, rot, leavingLine ? 120 : 160);
 		}else if(d->ball.t.inside(110, 250) || d->distBall >= FAR) {
 			//ボール後方or遠く
-			Motor.run(dir, min(rot * 1.5, 60), (leavingLine || d->distGoal == CLOSE) ? 100 : 180);
+			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 100 : 180);
 		}else {
 			//ボール前方
-			Motor.run(dir, min(rot * 1.5, 60), leavingLine ? 90 : 105);
+			Motor.run(dir, rot, leavingLine ? 90 : 105);
 		}
 		Kicker.kick(d->catchFreely && d->goal.isWide);
 	}else {

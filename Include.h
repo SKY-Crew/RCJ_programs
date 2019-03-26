@@ -36,11 +36,11 @@ Line Line(true, 16, P_LINE, 5, 100, 400, 12, 0.5);
 Cam Cam(1, 56, 3, 3, 15, 10);
 // P_SERIAL, P_ONOFF, CENTER_OPP_GOAL, CENTER_OWN_GOAL, SLOPE_RG, INTERCEPT_RG
 
-int16_t SLOPE_RG[3] = {0, 10, 30};
-int16_t POINT_RG[2] = {5, 25};
+double POINT_GYRO[3] = {0, 6.1, 40};
+double ROT_GYRO[3] = {0, 17.2, 100};
 #include "Gyro.h"
-Gyro Gyro(1, 0x68, 55, 2, 3, SLOPE_RG, POINT_RG);
-// P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_SLOPE_RG, SLOPE_RG, POINT_RG
+Gyro Gyro(1, 0x68, 55, 2, 3, POINT_GYRO, ROT_GYRO, 0.78);
+// P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_POINT, POINT, ROT, Kd
 
 #include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
