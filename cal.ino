@@ -44,16 +44,16 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 			//両方使用可
 			rot = (catchingBall || isBallForward) && abs(goal.rotOpp) <= 3
 				? Cam.multiRotGoal(goal.rotOpp)
-				: Gyro.multiRot(gyro);
+				: Gyro.multiRot(0);
 		}else if(Cam.getCanUse()) {
 			//camのみ
 			rot = Cam.multiRotGoal(goal.rotOpp);
 		}else if(bool(gyro)) {
 			//gyroのみ
-			rot = Gyro.multiRot(gyro);
+			rot = Gyro.multiRot(0);
 		}
 	}else {
-		rot = Gyro.multiRot(gyro);
+		rot = Gyro.multiRot(0);
 	}
 	return rot;
 }
