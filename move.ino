@@ -102,7 +102,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			||	(signum(d->ball.t - 180) == signum(d->goal.rot) && abs(d->goal.rot) >= 2)
 			||	d->ball.t.isDown(30)
 			||	d->ball.t.isUp(5)) {
-			//ボールない・ボール外側・ボール後ろ(150~210)・ボール前方遠く
+			//ボールない・ボール外側・ボール後ろ・ボール前方遠く
 			Motor.run(d->distGoal == CLOSE ? 0 : d->distGoal >= FAR ? 180 : Angle(false),
 				d->distGoal == PROPER ? signum(rot) * 60 : 0, 80);
 		}else if(d->ball.t.isUp(20) || signum(d->goal.rot) != signum(dir)) {
