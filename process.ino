@@ -1,4 +1,4 @@
-void main() {
+void process() {
 	//get
 	data_t d;
 	get(&d);
@@ -15,6 +15,9 @@ void main() {
 		if(d.line.isOutside) {
 			//ライン復帰
 			Motor.run(d.line.dirInside, 0, 150);
+			if(Line.getIsLineFront()) {
+				cLineForward.increase(true);
+			}
 		}else{
 			if(!isFW) {
 				//Role能動的変更
@@ -31,6 +34,8 @@ void main() {
 				d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal) ? CLOSE : PROPER;
 				//ライン上停止
 				detectBallOutside(&dir, d.line, d.gyro);
+				//ライン前後進->停止
+				detctLineForward(&dir, d.ball);
 			}
 			//rot計算
 			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward);

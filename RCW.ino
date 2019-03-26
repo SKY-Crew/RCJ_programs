@@ -27,6 +27,6 @@ void loop() {
 		canRun = false;
 		stop();
 	}else {
-		main();
+		process();
 	}
 }
