@@ -90,13 +90,13 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 			//少し後ろ
 			case CLOSE:
 				*dir = ball.t.isDown(10) ? Angle(false)
-					: ball.t.isRight(90) ? 90 : 270;
+					: 180 + 90 * (ball.t.isLeft(90) ? 1 : -1);
 				isGoalClose = true;
 				break;
 			//後ろ過ぎ
 			case TOO_CLOSE:
 				*dir = ball.t.isDown(10) ? 0
-					: ball.t.isRight(90) ? 50 : 310;
+					: 180 + 130 * (ball.t.isLeft(90) ? 1 : -1);
 				isGoalClose = false;
 				break;
 			default:
