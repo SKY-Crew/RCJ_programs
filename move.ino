@@ -41,6 +41,7 @@ void correctRot(bool isFW, Angle gyro) {
 void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
 	willCarryBall = carryingBall;
 	if(carryingBall) {
+		cLineForward.increase(false);
 		if(millis() - timeStartCB < 1500) {
 			////
 			Motor.run(0, rot, isFW ? 180 : 170);

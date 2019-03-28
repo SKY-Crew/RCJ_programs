@@ -15,9 +15,8 @@ void process() {
 		if(d.line.isOutside) {
 			//ライン復帰
 			Motor.run(d.line.dirInside, 0, 150);
-			if(Line.getIsLineFront()) {
-				cLineForward.increase(true);
-			}
+			cLineForward.reset();
+			cLineForward.increase(Line.getIsLineFront());
 		}else{
 			if(!isFW) {
 				//Role能動的変更

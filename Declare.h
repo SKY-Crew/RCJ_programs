@@ -18,4 +18,6 @@ uint32_t timeStartCB;
 
 Count cCatchFreely;
 
+Count cLineForward(60);
+
 #endif
