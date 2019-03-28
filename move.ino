@@ -65,8 +65,8 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	if(isFW) {
 		//FW
 		bool leavingLine = bool(d->line.dirInside) && diff(dir, d->line.dirInside) <= 90;
-		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStandsFront);
-		if(Ball.isUp() && d->ball.t.isUp(60)) {
+		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStands[0]);
+		if(Ball.isInAir() && d->ball.t.isUp(60)) {
 			//ボール真上前方
 			Motor.run(false, rot, 0);
 		}else if(d->isBallForward) {
