@@ -19,10 +19,9 @@ Kicker Kicker(29, 30, 3, 40);
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
 double THRE_DIST[2] = {200, 400};
-// double DIR[5][2] = {{0, 0}, {20, 15}, {45, 45}, {135, 135}, {180, 180}};
 double DIR[2][5] = {{0, 20, 45, 135, 180}, {0, 15, 45, 135, 180}};
 double* p_DIR[2] = {DIR[0], DIR[1]};
-double PLUS_DIR[5][2] = {{0, 0}, {0, 5}, {5, 85}, {5, 85}, {25, 90}};
+double PLUS_DIR[2][5] = {{0, 0, 5, 5, 25}, {0, 5, 85, 85, 90}};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
 Ball Ball(16, P_IR, 2, 200, 0.1, 2, THRE_DIST, 5, p_DIR, p_PLUS_DIR, A20, 400, 10, 54, 200);
 // QTY, PORT,
