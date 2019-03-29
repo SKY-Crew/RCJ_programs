@@ -45,7 +45,7 @@ void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool
 		if(millis() - timeStartCB < 1500) {
 			if(isFW) {
 				if(enemyStandsFront) {
-					Motor.run(bool(gyro) ? gyro * (-1) : 0, Gyro.multiRot(goal.rotOpp * 10), 180);
+					Motor.run(bool(gyro) ? gyro * (-0.5) : 0, Gyro.multiRot(goal.rotOpp * 10), 180);
 				}
 			}else {
 				Motor.run(0, rot, 170);
