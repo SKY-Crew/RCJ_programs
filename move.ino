@@ -43,8 +43,13 @@ void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool
 	if(carryingBall) {
 		cLineForward.increase(false);
 		if(millis() - timeStartCB < 1500) {
-			////
-			Motor.run(0, rot, isFW ? 180 : 170);
+			if(isFW) {
+				if(enemyStandsFront) {
+					Motor.run(bool(gyro) ? gyro * (-1) : 0, Gyro.multiRot(goal.rotOpp * 10), 180);
+				}
+			}else {
+				Motor.run(0, rot, 170);
+			}
 		}else {
 			//スタック
 			Motor.run(false, rot, 0);
