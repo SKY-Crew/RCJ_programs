@@ -47,7 +47,7 @@ Gyro Gyro(1, 0x68, 55, 2, 3, POINT_GYRO, ROT_GYRO, 0.78);
 
 #include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
-PSD backPSD(2, 0.7, 700, 3);
+PSD backPSD(2, 0.7, 1000, 6);
 // P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"
@@ -69,11 +69,12 @@ const uint8_t P_IS_FW = 31;
 typedef struct {
 	Angle gyro;
 	cam_t goal;
+
+	bool enemyStands[2]; // Front, Back
+	comc_t fellow;
+
 	Dist distGoalPSD;
 	Dist distGoal;
-
-	bool enemyStandsFront;
-	comc_t fellow;
 
 	vectorRT_t ball;
 	Dist distBall;

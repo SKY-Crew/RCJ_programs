@@ -1,12 +1,14 @@
 void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get();
+
+	d->enemyStands[0] = frontPSD.getBool(false);
+	d->enemyStands[1] = backPSD.getBool(false);
+	d->fellow = Comc.communicate(canRun, isFW);
+
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
 	d->distGoalPSD = compare(backPSD.getValue(), THRE_BACK_PSD, 3, true, CLOSE);
 	d->distGoal = abs(d->goal.rot) >= 2 || d->goal.distGK == TOO_FAR ? d->goal.distGK : d->distGoalPSD;
-
-	d->enemyStandsFront = frontPSD.getBool();
-	d->fellow = Comc.communicate(canRun, isFW);
 
 	d->ball = Ball.get();
 
@@ -17,7 +19,7 @@ void get(data_t *d) {
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	
 	cCatchFreely.set_MAX(isFW ? 3 : 1);
-	cCatchFreely.increase(d->catchingBall && !d->enemyStandsFront);
+	cCatchFreely.increase(d->catchingBall && !d->enemyStands[0]);
 	d->catchFreely = bool(cCatchFreely) && (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
 	d->line = Line.get(isFW, d->gyro, Gyro.getDiff());
@@ -105,6 +107,12 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 		}
 	}
 	return isGoalClose;
+}
+
+void detectEnemyBack(Angle *dir, vectorRT_t ball, bool enemyStandsBack) {
+	if(enemyStandsBack && dir->isDown(70)) {
+		*dir = constrainAngle(ball.t, -90, 90);
+	}
 }
 
 void detectBallOutside(Angle *dir, line_t line, Angle gyro) {

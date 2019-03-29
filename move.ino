@@ -11,9 +11,9 @@ void wait(data_t *d) {
 	//LCD表示
 	LCD.run(d->gyro, d->line, Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
 		Line.getQTY(), Line.getValue(), Line.getState(),INA219.getValue(), d->goal,
-		d->ball, Ball.getQTY(), Ball.getValue(),
+		d->ball, Ball.getQTY(), Ball.getValue(), Ball.getValueInAir(), Ball.getIsInAir(),
 		Ball.getValueCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
-		frontPSD.getValue(), d->enemyStandsFront, backPSD.getValue(), d->distGoalPSD);
+		frontPSD.getValue(), backPSD.getValue(), d->enemyStands, d->distGoalPSD);
 	//駆動
 	Motor.run(false, 0, 0);
 	Kicker.check();
@@ -72,6 +72,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(false, rot, 0);
 		}else if(d->isBallForward) {
 			//ボール前方直線上
+			cLineForward.increase(false);
 			Motor.run(dir, rot, leavingLine ? 120 : 160);
 		}else if(d->ball.t.isDown(70) || d->distBall >= FAR) {
 			//ボール後方or遠く

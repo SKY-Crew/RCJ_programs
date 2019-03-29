@@ -31,6 +31,8 @@ void process() {
 			if(isFW) {
 				//マルチ対策
 				d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal) ? CLOSE : PROPER;
+				//真後ろ敵
+				detectEnemyBack(&dir, d.ball, d.enemyStands[1]);
 				//ライン上停止
 				detectBallOutside(&dir, d.line, d.gyro);
 				//ライン前後進->停止
