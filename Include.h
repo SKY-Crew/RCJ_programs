@@ -42,8 +42,9 @@ Cam Cam(1, 56, 3, 3, 15, 10);
 double POINT_GYRO[3] = {0, 6.1, 40};
 double ROT_GYRO[3] = {0, 17.2, 100};
 #include "Gyro.h"
-Gyro Gyro(1, 0x68, 55, 2, 3, POINT_GYRO, ROT_GYRO, 0.78);
-// P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_POINT, POINT, ROT, Kd
+Gyro Gyro(1, 0x68, 55, 2, 3, POINT_GYRO, ROT_GYRO, 0.78, 30, 30, 60);
+// P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_POINT, POINT, ROT, Kd,
+// BROKEN_THRE, STOP_FRAMES, STAY_THRE
 
 #include "PSD.h"
 PSD frontPSD(1, 0.7, 1000, 6);
