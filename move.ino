@@ -26,15 +26,15 @@ void correctRot(bool isFW, Angle gyro) {
 	cCorrectRot.set_COUNT_UP(!bool(cCorrectRot));
 	if(bool(cCorrectRot)) {
 		//駆動
-		int16_t powerCorrectRot = absAngle(gyro) >= THRE_INCREASE_CCR
+		int16_t powerCorrectRot = abs(gyro) >= THRE_INCREASE_CCR
 			? signum(gyro) * (isFW ? 160 : 80)
 			: signum(gyro) * (isFW ? 100 : 30);
 		Motor.run(false, powerCorrectRot, 0);
 		//correctRot継続
-		cCorrectRot.increase(absAngle(gyro) >= THRE_DECREASE_CCR);
+		cCorrectRot.increase(abs(gyro) >= THRE_DECREASE_CCR);
 	}else {
 		//correctRot開始
-		cCorrectRot.increase(absAngle(gyro) >= THRE_INCREASE_CCR);
+		cCorrectRot.increase(abs(gyro) >= THRE_INCREASE_CCR);
 	}
 }
 
@@ -70,7 +70,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	willCarryBall = false;
 	if(isFW) {
 		//FW
-		bool leavingLine = bool(d->line.dirInside) && diff(dir, d->line.dirInside) <= 90;
+		bool leavingLine = bool(d->line.dirInside) && abs(dir - d->line.dirInside) <= 90;
 		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStands[0]);
 		if(Ball.getIsInAir() && d->ball.t.isUp(60)) {
 			//ボール真上前方
