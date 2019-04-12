@@ -23,7 +23,7 @@ double DIR[2][5] = {{0, 20, 45, 135, 180}, {0, 15, 45, 135, 180}};
 double* p_DIR[2] = {DIR[0], DIR[1]};
 double PLUS_DIR[2][5] = {{0, 0, 5, 5, 25}, {0, 5, 85, 85, 90}};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
-Ball Ball(16, P_IR, 2, 200, 0.1, 2, THRE_DIST, 5, p_DIR, p_PLUS_DIR, A20, 400, 10, 54, 200);
+Ball Ball(16, P_IR, 2, 200, 0.9, 2, THRE_DIST, 5, p_DIR, p_PLUS_DIR, A20, 200, 10, 54, 150);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE,
 // SIZE_THRE_DIST, THRE_DIST, SIZE_DIR, DIR, PLUS_DIR,
@@ -32,7 +32,7 @@ Ball Ball(16, P_IR, 2, 200, 0.1, 2, THRE_DIST, 5, p_DIR, p_PLUS_DIR, A20, 400, 1
 
 #include "Line.h"
 uint8_t P_LINE[16] = {A9, A8, A7, A6, A5, A4, A3, A2, A1, A0, A22, A21, A10, A11, A26, A25};
-Line Line(true, 16, P_LINE, 5, 100, 400, 12, 0.5);
+Line Line(true, 16, P_LINE, 5, 100, 400, 12, 0.9);
 // CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, THRE_BLACK, THRE_WHITE, THRE_IS_IN_AIR, CHANGE_RATE
 
 #include "Cam.h"
@@ -47,8 +47,8 @@ Gyro Gyro(1, 0x68, 55, 2, 3, POINT_GYRO, ROT_GYRO, 0.78, 30, 30, 60);
 // BROKEN_THRE, STOP_FRAMES, STAY_THRE
 
 #include "PSD.h"
-PSD frontPSD(1, 0.7, 1000, 6);
-PSD backPSD(2, 0.7, 1000, 6);
+PSD frontPSD(1, 0.3, 1000, 6);
+PSD backPSD(2, 0.3, 1000, 6);
 // P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"
