@@ -36,7 +36,7 @@ void process() {
 				//ライン上停止
 				detectBallOutside(&dir, d.line, d.gyro);
 				//ライン前後進->停止
-				detctLineForward(&dir, d.ball);
+				detectLineForward(&dir, d.ball, d.distBall);
 			}
 			//rot計算
 			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward);
