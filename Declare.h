@@ -1,6 +1,9 @@
 #ifndef DECLARE_ORIG
 #define DECLARE_ORIG
 
+#define trace(xx) if(trace_break(xx))
+//#define trace(xx) if(false)
+
 const bool IS_SKY = true;
 bool canRun;
 bool prvCanRun;

@@ -2,6 +2,7 @@
 #define INCLUDE_ORIG
 
 #include "AdvMath.h"
+#include "Debug.h"
 #include "Angle.h"
 #include "Count.h"
 #include "Dist.h"
