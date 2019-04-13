@@ -15,7 +15,7 @@ Motor Motor(true, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73);
 
 #include "Kicker.h"
 Kicker Kicker(29, 30, 3, 40);
-// 	P_KICKER, P_RUN_KICKER, MAX_CK, MAX_CKW
+// P_KICKER, P_RUN_KICKER, MAX_CK, MAX_CKW
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
