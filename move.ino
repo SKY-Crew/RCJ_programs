@@ -10,10 +10,10 @@ void stop() {
 void wait(data_t *d) {
 	//LCD表示
 	LCD.run(d->gyro, d->line, Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
-		Line.getQTY(), Line.getValue(), Line.getState(),INA219.getValue(), d->goal,
-		d->ball, Ball.getQTY(), Ball.getValue(), Ball.getValueInAir(), Ball.getIsInAir(),
-		Ball.getValueCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
-		frontPSD.getValue(), backPSD.getValue(), d->enemyStands, d->distGoalPSD, d->distGoal);
+		Line.getQTY(), Line.getVal(), Line.getState(),INA219.getVal(), d->goal,
+		d->ball, Ball.getQTY(), Ball.getVal(), Ball.getValInAir(), Ball.getIsInAir(),
+		Ball.getValCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
+		frontPSD.getVal(), backPSD.getVal(), d->enemyStands, d->distGoalPSD, d->distGoal);
 	//駆動
 	Motor.run(false, 0, 0);
 	Kicker.check();

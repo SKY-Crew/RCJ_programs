@@ -4,11 +4,11 @@
 /*
 Debug
 1 Motor::moveAngle
-2 Ball::value
-3 Ball::valueInAir
-4 Line::value
+2 Ball::val
+3 Ball::valInAir
+4 Line::val
 5 Gyro::crt
-6 PSD::value
+6 PSD::val
 31 FPS
 */
 
