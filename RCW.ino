@@ -1,6 +1,17 @@
 #include "Include.h"
 #include "Declare.h"
 
+/*
+Debug
+1 Motor::moveAngle
+2 Ball::value
+3 Ball::valueInAir
+4 Line::value
+5 Gyro::crt
+6 PSD::value
+31 FPS
+*/
+
 void setup() {
 	delay(1000);
 	Serial.begin(9600);
@@ -11,6 +22,9 @@ void setup() {
 }
 
 void loop() {
+	//debug
+	trace_cmdloop(0);
+	uint64_t timeLoop = micros();
 	//駆動重複リセット
 	Motor.setHaveRun(false);
 	Kicker.setHaveChecked(false);
@@ -29,4 +43,8 @@ void loop() {
 	}else {
 		process();
 	}
+	//fps計算
+	delayMicroseconds(max(0l, WAIT + (int64_t)timeLoop - (int64_t)micros()));
+	timeLoop = micros() - timeLoop;
+	trace(31) { Serial.println("FPS:"+str(1000 * 1000 / timeLoop)); }
 }
