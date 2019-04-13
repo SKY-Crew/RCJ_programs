@@ -15,7 +15,7 @@ void get(data_t *d) {
 
 	const uint16_t THRE_DB[2] = {370, 200};
 	d->distBall = compare(d->ball.r, THRE_DB, 3, false, CLOSE);
-	d->isBallForward = d->distBall == CLOSE
+	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15)
 		&& Ball.getForward() >= (isFW ? 610 : d->fellow.exists ? 670 : 610);
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	
