@@ -92,6 +92,8 @@ Dist avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 				*dir = ball.t.isDown(10) ? 0
 						: 180 + 130 * (ball.t.isLeft(90) ? 1 : -1);
 				break;
+			default:
+				break;
 			}
 		}
 	}
