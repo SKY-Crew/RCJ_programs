@@ -28,7 +28,7 @@ void process() {
 				d.ball.t = bool(d.ball.t) ? d.ball.t - d.gyro : Angle(false);
 			}
 			//dir計算
-			Angle dir = calDir(isFW, d.ball, d.gyro, d.goal, d.distGoal, d.distBall);
+			Angle dir = calDir(isFW, d.ball, d.distGoal);
 			if(isFW) {
 				//マルチ対策
 				d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal);

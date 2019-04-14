@@ -26,7 +26,7 @@ void get(data_t *d) {
 }
 
 
-Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, Dist distBall) {
+Angle calDir(bool isFW, vectorRT_t ball, Dist distGoal) {
 	Angle dir;
 	if(isFW) {
 		dir = Ball.getDir(ball);

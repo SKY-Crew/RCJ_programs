@@ -38,7 +38,7 @@ void correctRot(bool isFW, Angle gyro) {
 	}
 }
 
-void carryBall(bool isFW, line_t line, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
+void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront) {
 	willCarryBall = carryingBall;
 	if(carryingBall) {
 		cLineForward.increase(false);
@@ -71,7 +71,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	if(isFW) {
 		//FW
 		bool leavingLine = bool(d->line.dirInside) && abs(dir - d->line.dirInside) <= 90;
-		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStands[0]);
+		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStands[0]);
 		if(Ball.getIsInAir() && d->ball.t.isUp(60)) {
 			//ボール真上前方
 			Motor.run(false, rot, 0);
@@ -98,7 +98,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(180, rot, 160);
 		}
 		//ボール捕獲
-		carryBall(isFW, d->line, rot, d->goal, d->gyro, d->catchingBall, false);
+		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false);
 		if(d->isBallForward) {
 			//ボール前方
 			Motor.run(0, rot, d->fellow.exists ? 40 : 100);
