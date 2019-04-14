@@ -22,7 +22,7 @@ void get(data_t *d) {
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
-	d->line = Line.get(isFW, d->gyro, Gyro.getDiff());
+	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner);
 }
 
 
