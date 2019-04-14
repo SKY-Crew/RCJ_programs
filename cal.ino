@@ -5,7 +5,7 @@ void get(data_t *d) {
 
 	d->enemyStands[0] = frontPSD.getBool(false);
 	d->enemyStands[1] = backPSD.getBool(false);
-	d->fellow = Comc.communicate(canRun, isFW);
+	d->fellow = Comc.communicate(canRun, isFW, d->ball.r);
 
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
 	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, CLOSE);
