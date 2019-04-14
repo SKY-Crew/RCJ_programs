@@ -53,7 +53,7 @@ PSD backPSD(2, 0.3, 1000, 6);
 // P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"
-Comc Comc(5, 57, 10, 20);
+Comc Comc(5, 57, 3, 25);
 // P_SERIAL, P_ONOFF, MAX_C_SND, MAX_C_NR
 
 #include "INA219.h"
