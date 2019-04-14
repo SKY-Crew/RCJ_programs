@@ -5,7 +5,6 @@ void get(data_t *d) {
 
 	d->enemyStands[0] = frontPSD.getBool(false);
 	d->enemyStands[1] = backPSD.getBool(false);
-	d->fellow = Comc.communicate(canRun, isFW, d->ball.r);
 
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
 	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, CLOSE);
@@ -22,6 +21,8 @@ void get(data_t *d) {
 			&& (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
 	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner);
+
+	d->fellow = Comc.communicate(canRun, isFW, d->catchFreely ? 1000 : d->ball.r);
 }
 
 
@@ -54,12 +55,11 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 	return rot;
 }
 
-
-void checkRole(bool canBecomeGK, comc_t fellow) {
+void checkRole(bool canBecomeGK, comc_t fellow, double ball_r) {
 	if(Comc.getCanUse()) {
 		if(fellow.exists && isFW == fellow.isFW) {
-			if(canBecomeGK && isFW) {
-				//fellowがGK->FW
+			if(canBecomeGK && isFW && ball_r > fellow.ball_r) {
+				//両方FW && ボール遠い
 				isFW = false;
 			}else if(!isFW && !canRun) {
 				//停止状態
