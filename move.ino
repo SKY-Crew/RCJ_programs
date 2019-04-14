@@ -21,20 +21,20 @@ void wait(data_t *d) {
 
 
 void correctRot(bool isFW, Angle gyro) {
-	uint16_t THRE_INCREASE_CCR = isFW ? 60 : 30;
-	uint16_t THRE_DECREASE_CCR = isFW ? 40 : 10;
+	const uint16_t THRE_INCREASE_cCR = 60;
+	const uint16_t THRE_DECREASE_cCR = 40;
 	cCorrectRot.set_COUNT_UP(!bool(cCorrectRot));
 	if(bool(cCorrectRot)) {
 		//駆動
-		int16_t powerCorrectRot = abs(gyro) >= THRE_INCREASE_CCR
-			? signum(gyro) * (isFW ? 160 : 80)
-			: signum(gyro) * (isFW ? 100 : 30);
+		int16_t powerCorrectRot = abs(gyro) >= THRE_INCREASE_cCR
+				? signum(gyro) * 160
+				: signum(gyro) * 100;
 		Motor.run(false, powerCorrectRot, 0);
 		//correctRot継続
-		cCorrectRot.increase(abs(gyro) >= THRE_DECREASE_CCR);
+		cCorrectRot.increase(abs(gyro) >= THRE_DECREASE_cCR);
 	}else {
 		//correctRot開始
-		cCorrectRot.increase(abs(gyro) >= THRE_INCREASE_CCR);
+		cCorrectRot.increase(abs(gyro) >= THRE_INCREASE_cCR);
 	}
 }
 
