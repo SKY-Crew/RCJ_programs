@@ -40,16 +40,11 @@ Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, 
 int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBallForward) {
 	int16_t rot = 0;
 	if(isFW) {
-		if(Cam.getCanUse() && bool(gyro)) {
-			//両方使用可
-			rot = (catchingBall || isBallForward) && abs(goal.rotOpp) <= 3
-				? Cam.multiRotGoal(goal.rotOpp)
-				: Gyro.multiRot(0);
-		}else if(Cam.getCanUse()) {
+		if(Cam.getCanUse() && !bool(gyro)) {
 			//camのみ
 			rot = Cam.multiRotGoal(goal.rotOpp);
 		}else if(bool(gyro)) {
-			//gyroのみ
+			//両方 or gyroのみ
 			rot = Gyro.multiRot(0);
 		}
 	}else {
