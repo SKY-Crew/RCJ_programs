@@ -14,9 +14,9 @@ Count cCorrectRot(3);
 
 bool carryingBall = false;
 bool willCarryBall = false;
-uint32_t timeStartCB;
 
 Count cCatchFreely;
+uint64_t timeStartCB;
 
 Count cLineForward(60);
 
