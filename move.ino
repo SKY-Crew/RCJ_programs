@@ -101,9 +101,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false);
 		if(d->isBallForward) {
 			//ボール前方
-			Motor.run(0, rot, d->fellow.exists ? 40 : 100);
-		}else if(d->distBall == CLOSE && abs(d->goal.rot) >= 1 && signum(d->ball.t - 180) == signum(d->goal.rot)) {
-			Motor.run(Ball.getDir(d->ball), 0, 40);
+			Motor.run(0, rot, 100);
 		}else if(!bool(d->ball.t)
 				|| (d->goal.rotOwn != signum(d->ball.t) && d->goal.diffOwn >= LARGE)
 				|| d->ball.t.isDown(30)
