@@ -18,10 +18,15 @@ void process() {
 			//ライン前方向
 			cLineForward.reset();
 			cLineForward.increase(d.line.isFront);
-		}else{
+		}else if(d.line.isInAir){
+			//空中
+			Motor.run(false, 0, 0);
+			isFW = true;
+			cBecomeFW.reset();
+		}else {
 			if(!isFW) {
 				//Role能動的変更
-				isFW = (d.catchFreely || d.line.isInAir) && d.fellow.exists;
+				isFW = d.catchFreely && d.fellow.exists;
 			}
 			if(!isFW) {
 				//gyro考慮
