@@ -19,9 +19,8 @@ void get(data_t *d) {
 		&& Ball.getForward() >= (isFW ? 610 : d->fellow.exists ? 670 : 610);
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	
-	cCatchFreely.set_MAX(isFW ? 3 : 1);
-	cCatchFreely.increase(d->catchingBall && !d->enemyStands[0]);
-	d->catchFreely = bool(cCatchFreely) && (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
+	d->catchFreely = d->catchingBall && !d->enemyStands[0]
+			&& (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
 	d->line = Line.get(isFW, d->gyro, Gyro.getDiff());
 }
@@ -68,7 +67,6 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 			if(canBecomeGK && isFW) {
 				//fellowがGK→FW
 				isFW = false;
-				cCatchFreely.reset();
 			}else if(!isFW && !canRun) {
 				//停止状態
 				isFW = true;
@@ -80,7 +78,6 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 		if(canRun && !fellow.exists && isFW && canBecomeGK) {
 			//fellowいなくなる
 			isFW = false;
-			cCatchFreely.reset();
 		}
 	}
 }
