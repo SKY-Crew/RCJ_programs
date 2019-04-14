@@ -3,7 +3,7 @@ void process() {
 	data_t d;
 	get(&d);
 	//Role受動的変更
-	checkRole(!bool(cBecomeFW), d.fellow);
+	checkRole(!bool(cBecomeFW), d.fellow, d.ball.r);
 	if(canRun) {
 		//走行中
 		if(!prvCanRun) {
