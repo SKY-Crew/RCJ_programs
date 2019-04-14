@@ -90,10 +90,9 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	}else {
 		//GK
 		d->isBallForward |= d->ball.t.isUp(10) && d->distBall == CLOSE;
-		bool isOnSide = abs(d->goal.rot) >= 3 || (d->distGoal == TOO_FAR && abs(d->goal.rot) >= 2);
-		if(isOnSide) {
+		if(d->goal.diffOwn == LARGE) {
 			//横行きすぎ
-			Motor.run(180 - signum(d->goal.rot) * (d->distGoal == TOO_FAR ? 60 : 100), rot, 120);
+			Motor.run(180 - d->goal.rotOwn * (d->distGoal == TOO_FAR ? 60 : 100), rot, 120);
 		}else if(d->distGoal == TOO_FAR) {
 			//ゴールとても遠すぎ
 			Motor.run(180, rot, 160);
@@ -105,14 +104,14 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(0, rot, d->fellow.exists ? 40 : 100);
 		}else if(d->distBall == CLOSE && abs(d->goal.rot) >= 1 && signum(d->ball.t - 180) == signum(d->goal.rot)) {
 			Motor.run(Ball.getDir(d->ball), 0, 40);
-		}else if(!bool(dir)
-			||	(signum(d->ball.t - 180) == signum(d->goal.rot) && abs(d->goal.rot) >= 2)
-			||	d->ball.t.isDown(30)
-			||	d->ball.t.isUp(5)) {
+		}else if(!bool(d->ball.t)
+				|| (d->goal.rotOwn != signum(d->ball.t) && d->goal.diffOwn >= LARGE)
+				|| d->ball.t.isDown(30)
+				|| d->ball.t.isUp(5)) {
 			//ボールない・ボール外側・ボール後ろ・ボール前方遠く
 			Motor.run(d->distGoal == CLOSE ? 0 : d->distGoal >= FAR ? 180 : Angle(false),
 				d->distGoal == PROPER ? signum(rot) * 60 : 0, 80);
-		}else if(d->ball.t.isUp(20) || signum(d->goal.rot) != signum(dir)) {
+		}else if(d->ball.t.isUp(20) || d->goal.rotOwn != signum(dir)) {
 			//ボールある程度前方・少し横
 			Motor.run(dir, rot, 120);
 		}else {

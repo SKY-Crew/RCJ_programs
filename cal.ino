@@ -8,8 +8,9 @@ void get(data_t *d) {
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
-	d->distGoal = abs(d->goal.rot) >= 2 || d->goal.distGK == TOO_FAR ? d->goal.distGK : d->distGoalPSD;
 	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, true, CLOSE);
+	d->distGoal = d->goal.diffOwn >= LARGE || d->goal.distGK == TOO_FAR
+			? d->goal.distGK : d->distGoalPSD;
 
 	d->ball = Ball.get();
 
