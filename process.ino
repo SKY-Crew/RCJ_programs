@@ -17,7 +17,7 @@ void process() {
 			Motor.run(d.line.dirInside, 0, 150);
 			//ライン前方向
 			cLineForward.reset();
-			cLineForward.increase(Line.getIsLineFront());
+			cLineForward.increase(d.line.isFront);
 		}else{
 			if(!isFW) {
 				//Role能動的変更
