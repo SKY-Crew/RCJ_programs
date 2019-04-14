@@ -44,6 +44,7 @@ void loop() {
 		process();
 	}
 	//fps計算
+	const int64_t WAIT = 8500;
 	delayMicroseconds(max(0l, WAIT + (int64_t)timeLoop - (int64_t)micros()));
 	timeLoop = micros() - timeLoop;
 	trace(31) { Serial.println("FPS:"+str(1000 * 1000 / timeLoop)); }
