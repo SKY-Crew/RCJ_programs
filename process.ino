@@ -15,6 +15,7 @@ void process() {
 		if(d.line.isOutside) {
 			//ライン復帰
 			Motor.run(d.line.dirInside, 0, 150);
+			//ライン前方向
 			cLineForward.reset();
 			cLineForward.increase(Line.getIsLineFront());
 		}else{
@@ -35,7 +36,7 @@ void process() {
 				detectEnemyBack(&dir, d.ball, d.enemyStands[1]);
 				//ライン上停止
 				detectBallOutside(&dir, d.line, d.gyro);
-				//ライン前後進->停止
+				//ライン前方向:後進->停止
 				detectLineForward(&dir, d.ball, d.distBall);
 			}
 			//rot計算

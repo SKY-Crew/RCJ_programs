@@ -95,7 +95,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			//横行きすぎ
 			Motor.run(180 - signum(d->goal.rot) * (d->distGoal == TOO_FAR ? 60 : 100), rot, 120);
 		}else if(d->distGoal == TOO_FAR) {
-			//ゴールとても遠すぎ・仲間がいてゴール遠すぎ
+			//ゴールとても遠すぎ
 			Motor.run(180, rot, 160);
 		}
 		//ボール捕獲

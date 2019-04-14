@@ -18,7 +18,6 @@ void get(data_t *d) {
 	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15)
 		&& Ball.getForward() >= (isFW ? 610 : d->fellow.exists ? 670 : 610);
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
-	
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
@@ -39,7 +38,6 @@ Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, 
 }
 
 int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBallForward) {
-	//rot計算
 	int16_t rot = 0;
 	if(isFW) {
 		if(Cam.getCanUse() && bool(gyro)) {
@@ -65,7 +63,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	if(Comc.getCanUse()) {
 		if(fellow.exists && isFW == fellow.isFW) {
 			if(canBecomeGK && isFW) {
-				//fellowがGK→FW
+				//fellowがGK->FW
 				isFW = false;
 			}else if(!isFW && !canRun) {
 				//停止状態

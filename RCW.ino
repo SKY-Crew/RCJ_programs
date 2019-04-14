@@ -31,11 +31,12 @@ void loop() {
 	//走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
-	//Role強制変更
+	//Role変更禁止
 	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	//Role表示LED
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
+
 	if(INA219.checkVolt() && !Kicker.getIsKicking()) {
 		//電池残量少
 		canRun = false;
@@ -43,6 +44,7 @@ void loop() {
 	}else {
 		process();
 	}
+
 	//fps計算
 	const int64_t WAIT = 8500;
 	delayMicroseconds(max(0l, WAIT + (int64_t)timeLoop - (int64_t)micros()));
