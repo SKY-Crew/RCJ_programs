@@ -31,7 +31,7 @@ void process() {
 			Angle dir = calDir(isFW, d.ball, d.gyro, d.goal, d.distGoal, d.distBall);
 			if(isFW) {
 				//マルチ対策
-				d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal) ? CLOSE : PROPER;
+				d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal);
 				//真後ろ敵
 				detectEnemyBack(&dir, d.ball, d.enemyStands[1]);
 				//ライン上停止

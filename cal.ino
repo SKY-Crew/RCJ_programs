@@ -31,9 +31,10 @@ Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, cam_t goal, bool distGoal, 
 	if(isFW) {
 		dir = Ball.getDir(ball);
 	}else {
-		int16_t DIR_GKs[] = {110, 70, 90};
-		Angle dirGK = DIR_GKs[min(distGoal, 2)];
-		dir = bool(ball.t) ? dirGK * signum(ball.t) : Angle(false);
+		int16_t DIR_GKs[] = {110, 90, 70};
+		dir = bool(ball.t)
+				? DIR_GKs[min(distGoal , FAR) - CLOSE] * signum(ball.t)
+				: Angle(false);
 	}
 	return dir;
 }
@@ -76,29 +77,26 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	}
 }
 
-bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
-	bool isGoalClose = false;
+Dist avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
+	Dist distGoal = PROPER;
 	if(fellow.exists) {
+		distGoal = goal.distFW;
 		if(ball.t.isDown(90)) {
 			switch (goal.distFW) {
 			//少し後ろ
 			case CLOSE:
 				*dir = ball.t.isDown(10) ? Angle(false)
-					: 180 + 90 * (ball.t.isLeft(90) ? 1 : -1);
-				isGoalClose = true;
+						: 180 + 90 * (ball.t.isLeft(90) ? 1 : -1);
 				break;
 			//後ろ過ぎ
 			case TOO_CLOSE:
 				*dir = ball.t.isDown(10) ? 0
-					: 180 + 130 * (ball.t.isLeft(90) ? 1 : -1);
-				isGoalClose = false;
-				break;
-			default:
+						: 180 + 130 * (ball.t.isLeft(90) ? 1 : -1);
 				break;
 			}
 		}
 	}
-	return isGoalClose;
+	return distGoal;
 }
 
 void detectEnemyBack(Angle *dir, vectorRT_t ball, bool enemyStandsBack) {
