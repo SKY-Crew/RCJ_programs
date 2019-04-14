@@ -8,16 +8,16 @@ void get(data_t *d) {
 	d->fellow = Comc.communicate(canRun, isFW);
 
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
-	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, true, CLOSE);
+	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, CLOSE);
 	d->distGoal = d->goal.diffOwn >= LARGE || d->goal.distGK == TOO_FAR
 			? d->goal.distGK : d->distGoalPSD;
 
 	d->ball = Ball.get();
 
 	const uint16_t THRE_DB[2] = {370, 200};
-	d->distBall = compare(d->ball.r, THRE_DB, 3, false, CLOSE);
 	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15)
 		&& Ball.getForward() >= (isFW ? 610 : d->fellow.exists ? 670 : 610);
+	d->distBall = compare(d->ball.r, THRE_DB, 3, CLOSE);
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
