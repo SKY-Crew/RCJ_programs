@@ -9,6 +9,7 @@ Debug
 4 Line::val
 5 Gyro::crt
 6 PSD::val
+7 Comc::fellow
 31 FPS
 */
 
