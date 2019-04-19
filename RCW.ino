@@ -23,30 +23,30 @@ void setup() {
 }
 
 void loop() {
-	//debug
+	// debug
 	trace_cmdloop(0);
 	uint64_t timeLoop = micros();
-	//駆動重複リセット
+	// 駆動重複リセット
 	Motor.setHaveRun(false);
 	Kicker.setHaveChecked(false);
-	//走行可か
+	// 走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
-	//Role変更禁止
 	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
-	//Role表示LED
+	// Role変更禁止
+	// Role表示LED
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
 
 	if(INA219.checkVolt() && !Kicker.getIsKicking()) {
-		//電池残量少
+		// 電池残量少
 		canRun = false;
 		stop();
 	}else {
 		process();
 	}
 
-	//fps計算
+	// fps計算
 	const int64_t WAIT = 8500;
 	delayMicroseconds(max(0l, WAIT + (int64_t)timeLoop - (int64_t)micros()));
 	timeLoop = micros() - timeLoop;

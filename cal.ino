@@ -43,10 +43,10 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 	int16_t rot = 0;
 	if(isFW) {
 		if(Cam.getCanUse() && !bool(gyro)) {
-			//camのみ
+			// camのみ
 			rot = Cam.multiRotGoal(goal.rotOpp);
 		}else if(bool(gyro)) {
-			//両方 or gyroのみ
+			// 両方 or gyroのみ
 			rot = Gyro.multiRot(0);
 		}
 	}else {
@@ -62,15 +62,15 @@ void checkRole(bool canBecomeGK, comc_t fellow, double ball_r) {
 				//両方FW && ボール遠い
 				isFW = false;
 			}else if(!isFW && !canRun) {
-				//停止状態
+				// 停止状態
 				isFW = true;
 			}else if(!isFW && IS_SKY) {
-				//両方GK
+				// 両方GK
 				isFW = true;
 			}
 		}
 		if(canRun && !fellow.exists && isFW && canBecomeGK) {
-			//fellowいなくなる
+			// fellowいなくなる
 			isFW = false;
 		}
 	}
@@ -82,12 +82,12 @@ Dist avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
 		distGoal = goal.distFW;
 		if(ball.t.isDown(90)) {
 			switch (goal.distFW) {
-			//少し後ろ
+			// 少し後ろ
 			case CLOSE:
 				*dir = ball.t.isDown(10) ? Angle(false)
 						: 180 + 90 * (ball.t.isLeft(90) ? 1 : -1);
 				break;
-			//後ろ過ぎ
+			// 後ろ過ぎ
 			case TOO_CLOSE:
 				*dir = ball.t.isDown(10) ? 0
 						: 180 + 130 * (ball.t.isLeft(90) ? 1 : -1);
@@ -111,18 +111,18 @@ void detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 		Angle absoluteDI = line.dirInside - gyro;
 		if(absoluteDI.isRight(45)) {
 			if(line.canPause && (*dir - absoluteDI).inside(180 - 10, 180 + 20)) {
-				//停止
+				// 停止
 				*dir = Angle(false);
 			}else if((*dir - absoluteDI).inside(90, 180)) {
-				//後退
+				// 後退
 				*dir = absoluteDI + 90;
 			}
 		}else if(absoluteDI.isLeft(45)) {
 			if(line.canPause && (*dir - absoluteDI).inside(180 - 20, 180 + 10)) {
-				//停止
+				// 停止
 				*dir = Angle(false);
 			}else if((*dir - absoluteDI).inside(-180, -90)) {
-				//後退
+				// 後退
 				*dir = absoluteDI - 90;
 			}
 		}

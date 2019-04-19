@@ -1,20 +1,20 @@
 void stop() {
-	//駆動
+	// 駆動
 	Motor.run(false, 0, 0);
-	//LCD表示
+	// LCD表示
 	LCD.clear(true);
 	LCD.write("THE VOLTAGE", 5, 1);
 	LCD.write("IS TOO LOW!!!", 4, 2);
 }
 
 void wait(data_t *d) {
-	//LCD表示
+	// LCD表示
 	LCD.run(d->gyro, d->line, Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
 		Line.getQTY(), Line.getVal(), Line.getState(),INA219.getVal(), d->goal,
 		d->ball, Ball.getQTY(), Ball.getVal(), Ball.getValInAir(), Ball.getIsInAir(),
 		Ball.getValCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
 		frontPSD.getVal(), backPSD.getVal(), d->enemyStands, d->distGoalPSD, d->distGoal);
-	//駆動
+	// 駆動
 	Motor.run(false, 0, 0);
 	Kicker.check();
 }
@@ -25,15 +25,15 @@ void correctRot(bool isFW, Angle gyro) {
 	const uint16_t THRE_DECREASE_cCR = 40;
 	cCorrectRot.set_COUNT_UP(!bool(cCorrectRot));
 	if(bool(cCorrectRot)) {
-		//駆動
+		// 駆動
 		int16_t powerCorrectRot = abs(gyro) >= THRE_INCREASE_cCR
 				? signum(gyro) * 160
 				: signum(gyro) * 100;
 		Motor.run(false, powerCorrectRot, 0);
-		//correctRot継続
+		// correctRot継続
 		cCorrectRot.increase(abs(gyro) >= THRE_DECREASE_cCR);
 	}else {
-		//correctRot開始
+		// correctRot開始
 		cCorrectRot.increase(abs(gyro) >= THRE_INCREASE_cCR);
 	}
 }
@@ -51,13 +51,13 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 				Motor.run(0, rot, 170);
 			}
 		}else {
-			//スタック
+			// スタック
 			Motor.run(false, rot, 0);
 		}
-		//carry続けるか
+		// carry続けるか
 		willCarryBall = Ball.compareCatch(0.3);
 	}else {
-		//carry始めるか
+		// carry始めるか
 		willCarryBall = catchingBall;
 		if(willCarryBall) {
 			timeStartCB = millis();
@@ -69,26 +69,26 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	willCarryBall = false;
 	if(isFW) {
-		//FW
+		// FW
 		bool leavingLine = bool(d->line.dirInside) && abs(dir - d->line.dirInside) <= 90;
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStands[0]);
 		if(Ball.getIsInAir() && d->ball.t.isUp(60)) {
-			//ボール真上前方
 			Motor.run(false, rot, 0);
+			// ボール真上前方
 		}else if(d->isBallForward) {
-			//ボール前方直線上
+			// ボール前方直線上
 			cLineForward.increase(false);
 			Motor.run(dir, rot, leavingLine ? 120 : 160);
 		}else if(d->ball.t.isDown(70) || d->distBall >= FAR) {
-			//ボール後方or遠く
+			// ボール後方or遠く
 			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 100 : 180);
 		}else {
-			//ボール前方
+			// ボール前方
 			Motor.run(dir, rot, leavingLine ? 90 : 105);
 		}
 		Kicker.kick(d->catchFreely && d->goal.isWide);
 	}else {
-		//GK
+		// GK
 		d->isBallForward |= d->ball.t.isUp(10) && d->distBall == CLOSE;
 		if(d->goal.diffOwn == LARGE) {
 			//横行きすぎ
@@ -97,7 +97,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			//ゴールとても遠すぎ
 			Motor.run(180, rot, 160);
 		}
-		//ボール捕獲
+		// ボール捕獲
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false);
 		if(d->isBallForward) {
 			//ボール前方
