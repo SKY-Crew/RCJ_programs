@@ -2,10 +2,10 @@
 #define INCLUDE_ORIG
 
 #include "AdvMath.h"
-#include "Debug.h"
 #include "Angle.h"
 #include "Count.h"
 #include "Dist.h"
+#include "Debug.h"
 
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
