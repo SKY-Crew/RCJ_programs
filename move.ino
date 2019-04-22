@@ -105,33 +105,42 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	}else {
 		// GK
 		d->isBallForward |= d->ball.t.isUp(10) && d->distBall == CLOSE;
-		if(d->goal.diffOwn == LARGE) {
-			//横行きすぎ
-			Motor.run(180 - d->goal.rotOwn * (d->distGoal == TOO_FAR ? 60 : 100), rot, 120);
-		}else if(d->distGoal == TOO_FAR) {
-			//ゴールとても遠すぎ
-			Motor.run(180, rot, 160);
+		if(d->goal.diffOwn == TOO_LARGE
+				|| (d->goal.diffOwn == LARGE && d->distBall > CLOSE)) {
+			// 横行きすぎ・横&ボール遠く
+			Motor.run(90 * (- d->goal.sideOwn), rot, 150);
+		}else if(d->distGoal == TOO_FAR && (d->ball.t.isUp(90) || !bool(d->ball.t))) {
+			// ゴール遠すぎ&ボール(前方|ない)
+			Motor.run(d->goal.rotOwn ? d->goal.rotOwn : 180, rot, 200);
+		}else if(d->distGoal == TOO_FAR && d->distBall <= CLOSE) {
+			// ゴール遠すぎ&ボール(後方)近く
+			Motor.run(Ball.getDir(d->ball), rot, 200);
 		}
 		// ボール捕獲
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false);
 		if(d->isBallForward) {
-			//ボール前方
-			Motor.run(0, rot, 100);
+			// ボール前方直線上
+			Motor.run(0, rot, 150);
+		}else if(d->ball.t.isDown(80) && d->distGoal <= PROPER) {
+			// ボール後方&ゴール遠くない
+			Motor.run(false, rot, 0);
+		}else if(d->goal.diffOwn == SMALL && d->distBall <= CLOSE) {
+			// 少し横&ボール近く
+			Motor.run(dir * signum(d->ball.t), rot, 90);
 		}else if(!bool(d->ball.t)
-				|| (d->goal.rotOwn != signum(d->ball.t) && d->goal.diffOwn >= LARGE)
-				|| d->ball.t.isDown(30)
-				|| d->ball.t.isUp(5)) {
-			//ボールない・ボール外側・ボール後ろ・ボール前方遠く
+				|| d->ball.t.isUp(5)
+				|| d->goal.sideOwn * signum(d->ball.t) == 1) {
+			// ボールない(ゴール遠くない)・ボール前方(遠く)・ボール外側(自分端)
 			Motor.run(d->distGoal == CLOSE ? 0 : d->distGoal >= FAR ? 180 : Angle(false),
-				d->distGoal == PROPER ? signum(rot) * 60 : 0, 80);
-		}else if(d->ball.t.isUp(20) || d->goal.rotOwn != signum(dir)) {
-			//ボールある程度前方・少し横
-			Motor.run(dir, rot, 120);
+					rot, 60);
+		}else if(d->ball.t.isDown(80) && d->distBall <= CLOSE){
+			//ボール後方近く(ゴール遠い)
+			Motor.run(Ball.getDir(d->ball), rot, 140);
 		}else {
-			//ボール斜め前方
-			Motor.run(dir, rot, 210);
+			//ボール(前方|遠い)(ゴール遠い)
+			Motor.run(dir * signum(d->ball.t), rot, 140);
 		}
-		Kicker.kick(d->catchFreely && !d->fellow.exists);
+		Kicker.run(d->catchFreely && !d->fellow.exists);
 	}
 	carryingBall = willCarryBall && d->ball.t.isUp(20) && d->distBall == CLOSE;
 }
