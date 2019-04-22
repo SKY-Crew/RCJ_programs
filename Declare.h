@@ -16,6 +16,6 @@ bool carryingBall = false;
 bool willCarryBall = false;
 uint64_t timeStartCB;
 
-Count cLineForward(60);
+Count cLineForward(40);
 
 #endif
