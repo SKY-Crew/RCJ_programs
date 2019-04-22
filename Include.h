@@ -8,6 +8,10 @@
 #include "Debug.h"
 
 const bool CAN_MOVE = true;
+
+double DIR[2][5] = {{0, 5, 20, 90, 180}, {0, 15, 20, 135, 180}};
+double PLUS_DIR[2][5] = {{0, 0, 25, 45, 30}, {0, -10, 90, 90, 85}};
+
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
 uint8_t P_M_PWR[4] = {5, 6, 9, 10};
@@ -20,12 +24,10 @@ Kicker Kicker(29, 30, 3, 40);
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-double THRE_DIST[2] = {200, 400};
-double DIR[2][5] = {{0, 20, 45, 135, 180}, {0, 15, 45, 135, 180}};
+double THRE_DIST[2] = {260, 400};
 double* p_DIR[2] = {DIR[0], DIR[1]};
-double PLUS_DIR[2][5] = {{0, 0, 5, 5, 25}, {0, 5, 85, 85, 90}};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
-Ball Ball(16, P_IR, 2, 200, 0.9, 2, THRE_DIST, 5, p_DIR, p_PLUS_DIR, A20, 200, 10, 54, 150);
+Ball Ball(16, P_IR, 2, 200, 0.1, 2, THRE_DIST, 5, p_DIR, p_PLUS_DIR, A20, 200, 10, 54, 150);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE,
 // SIZE_THRE_DIST, THRE_DIST, SIZE_DIR, DIR, PLUS_DIR,
