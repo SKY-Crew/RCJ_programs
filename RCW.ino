@@ -30,6 +30,7 @@ void loop() {
 	Motor.setHaveRun(false);
 	Motor.setRateVolt(INA219.getRate());
 	Kicker.setHaveChecked(false);
+	Kicker.setPower();
 	// 走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
