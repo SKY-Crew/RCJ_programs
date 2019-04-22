@@ -7,10 +7,11 @@
 #include "Dist.h"
 #include "Debug.h"
 
+const bool CAN_MOVE = true;
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
 uint8_t P_M_PWR[4] = {5, 6, 9, 10};
-Motor Motor(true, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73);
+Motor Motor(CAN_MOVE, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73);
 // CAN_MOVE, QTY, P_DIR, P_PWR, firstRM, SLOPE_POWER, INTERCEPT_POWER
 
 #include "Kicker.h"
