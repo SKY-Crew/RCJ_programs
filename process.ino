@@ -36,8 +36,8 @@ void process() {
 			// dir計算
 			Angle dir = calDir(isFW, d.ball, d.distGoal);
 			if(isFW) {
-				d.distGoal = avoidMulDef(&dir, d.fellow, d.ball, d.goal);
 				// マルチ対策
+				avoidMulDef(&dir, d.fellow, d.ball, d.distGoal);
 				// 真後ろ敵
 				detectEnemyBack(&dir, d.ball, d.enemyStands[1]);
 				// ライン上停止

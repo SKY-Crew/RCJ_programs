@@ -86,28 +86,25 @@ void checkRole(bool canBecomeGK, comc_t fellow, double ball_r) {
 	}
 }
 
-Dist avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, cam_t goal) {
-	Dist distGoal = PROPER;
-	if(fellow.exists) {
-		distGoal = goal.distFW;
+void avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, Dist distGoal) {
+	if(fellow.exists || true) {
 		if(ball.t.isDown(90)) {
-			switch (goal.distFW) {
+			switch (distGoal) {
 			// 少し後ろ
 			case CLOSE:
 				*dir = ball.t.isDown(10) ? Angle(false)
-						: 180 + 90 * (ball.t.isLeft(90) ? 1 : -1);
+						: 80 * signum(ball.t);
 				break;
 			// 後ろ過ぎ
 			case TOO_CLOSE:
 				*dir = ball.t.isDown(10) ? 0
-						: 180 + 130 * (ball.t.isLeft(90) ? 1 : -1);
+						: 50 * signum(ball.t);
 				break;
 			default:
 				break;
 			}
 		}
 	}
-	return distGoal;
 }
 
 void detectEnemyBack(Angle *dir, vectorRT_t ball, bool enemyStandsBack) {
