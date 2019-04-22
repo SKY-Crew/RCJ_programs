@@ -65,23 +65,38 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 	}
 }
 
+void ballInAir(bool isBallInAir, int16_t rot, Angle rotOwn, Dist distGoal, vectorRT_t ball) {
+	if(isBallInAir && Cam.getCanUse()) {
+		// ボール真上前方・ボールない
+		if(distGoal >= FAR) {
+			Motor.run(180, rot, 190);
+		}else if(distGoal > CLOSE) {
+			Motor.run(rotOwn, rot, 160);
+		}else if(!rotOwn.isDown(10) && distGoal >= CLOSE) {
+			Motor.run(signum(rotOwn) * 90, rot, 110);
+		}else {
+			Motor.run(distGoal < CLOSE ? 0 : Angle(false), rot, 100);
+		}
+	}else if(isBallInAir && ball.t.isUp(60)) {
+		Motor.run(false, rot, 0);
+	}
+}
 
 void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	willCarryBall = false;
 	if(isFW) {
 		// FW
 		bool leavingLine = bool(d->line.dirInside) && abs(dir - d->line.dirInside) <= 90;
-		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall || d->isBallForward, d->enemyStands[0]);
-		if(Ball.getIsInAir() && d->ball.t.isUp(60)) {
-			Motor.run(false, rot, 0);
-			// ボール真上前方
-		}else if(d->isBallForward) {
-			// ボール前方直線上
-			cLineForward.increase(false);
-			Motor.run(dir, rot, leavingLine ? 120 : 160);
-		}else if(d->ball.t.isDown(70) || d->distBall >= FAR) {
-			// ボール後方or遠く
-			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 100 : 180);
+		carryBall(isFW, rot, d->goal, d->gyro,
+				d->catchingBall || d->isBallForward, d->enemyStands[0]);
+		ballInAir(Ball.getIsInAir() || !bool(d->ball.t),
+				rot, d->goal.rotOwn, d->distGoal, d->ball);
+		if(d->ball.t.isRight(45) || d->ball.t.isLeft(45)) {
+			//ボール横
+			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 140 : 190);
+		}else if(d->ball.t.isDown(45) || d->distBall >= FAR) {
+			// ボール(後方|遠く)
+			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 130 : 160);
 		}else {
 			// ボール前方
 			Motor.run(dir, rot, leavingLine ? 90 : 105);
