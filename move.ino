@@ -99,9 +99,9 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 130 : 160);
 		}else {
 			// ボール前方
-			Motor.run(dir, rot, leavingLine ? 90 : 105);
+			Motor.run(dir, rot, leavingLine ? 100 : 130);
 		}
-		Kicker.kick(d->catchFreely && d->goal.isWide);
+		Kicker.run(d->catchFreely && d->goal.isOppWide);
 	}else {
 		// GK
 		d->isBallForward |= d->ball.t.isUp(10) && d->distBall == CLOSE;
