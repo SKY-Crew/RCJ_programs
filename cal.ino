@@ -8,8 +8,16 @@ void get(data_t *d) {
 
 	const uint16_t THRE_BACK_PSD[2] = {900, 1200};
 	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, CLOSE);
-	d->distGoal = d->goal.diffOwn >= LARGE || d->goal.distGK == TOO_FAR
-			? d->goal.distGK : d->distGoalPSD;
+	if(isFW) {
+		const uint16_t THRE_DIST_FW[3] = {20, 34, 55};
+		d->distGoal = compare(d->goal.distOwn, THRE_DIST_FW, 4, TOO_CLOSE);
+	}else {
+		const uint16_t THRE_DIST_GK[2] = {11, 20};
+		Dist distGK = compare(d->goal.distOwn, THRE_DIST_GK, 3, PROPER);
+		d->distGoal = Cam.getCanUse()
+				&& (backPSD.getVal() > 4000 || d->goal.diffOwn >= SMALL || distGK == TOO_FAR)
+				? distGK : d->distGoalPSD; ////
+	}
 
 	d->ball = Ball.get();
 
