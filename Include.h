@@ -64,7 +64,7 @@ INA219 INA219(2, 10.2, 10.4, 12.4, 10, 10);
 // P_WIRE, LOW_VOLT, HIGH_VOLT, MAX_VOLT, MAX_CR, MAX_CVL
 
 #include "LCD.h"
-LCD LCD(7, 13, 11, 8, 12, 0, 100, Line.getQTY());
+LCD LCD(7, 13, 11, 8, 12, 0, 30, Line.getQTY());
 // P_REDRAW, P_SCK, P_MOSI, P_CS, P_DI, WAIT, MAX_CP, QTY_LINE
 
 const uint8_t P_START = 28;
