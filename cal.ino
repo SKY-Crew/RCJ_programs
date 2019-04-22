@@ -28,7 +28,7 @@ void get(data_t *d) {
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal == TOO_FAR || !Cam.getCanUse());
 
-	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner);
+	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner != 0);
 
 	d->fellow = Comc.communicate(canRun, isFW, d->catchFreely ? 1000 : d->ball.r);
 }
