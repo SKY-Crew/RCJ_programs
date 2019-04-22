@@ -36,6 +36,7 @@ Angle calDir(bool isFW, vectorRT_t ball, Dist distGoal) {
 				? DIR_GKs[min(distGoal , FAR) - CLOSE] * signum(ball.t)
 				: Angle(false);
 	}
+	trace(11) { Serial.println("dir:"+str(dir)); }
 	return dir;
 }
 
@@ -52,6 +53,7 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 	}else {
 		rot = Gyro.multiRot(0);
 	}
+	trace(12) { Serial.println("rot:"+str(rot)); }
 	return rot;
 }
 

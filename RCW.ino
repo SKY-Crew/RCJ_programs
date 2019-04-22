@@ -10,6 +10,11 @@ Debug
 5 Gyro::crt
 6 PSD::val
 7 Comc::fellow
+8 Cam::rotOpp, rotOwn, distOwn
+9 Cam::isOppWide, posOwn, isInCorner
+11 dir
+12 rot
+30 Gyro:debug
 31 FPS
 */
 
