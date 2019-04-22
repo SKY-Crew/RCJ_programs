@@ -28,6 +28,7 @@ void loop() {
 	uint64_t timeLoop = micros();
 	// 駆動重複リセット
 	Motor.setHaveRun(false);
+	Motor.setRateVolt(INA219.getRate());
 	Kicker.setHaveChecked(false);
 	// 走行可か
 	prvCanRun = canRun;
