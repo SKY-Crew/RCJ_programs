@@ -140,12 +140,19 @@ void detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 }
 
 void detectLineForward(Angle *dir, vectorRT_t ball, Dist distBall) {
+	bool isBallOutside = ball.t.isUp(bool(cLineForward) ? 25 : 35);
+	switch(sideLF) {
+		case LEFT: isBallOutside |= ball.t.inside(-60, 0); break;
+		case RIGHT: isBallOutside |= ball.t.inside(0, 60); break;
+		default: break;
+	}
+
 	if(bool(cLineForward)) {
 		*dir = false;
-		cLineForward.increase(ball.t.isUp(25) && distBall >= PROPER);
+		cLineForward.increase(distBall >= PROPER && isBallOutside);
 	}else if(cLineForward.compare(0)) {
-		*dir = Angle(180);
-		cLineForward.increase(ball.t.isUp(35));
+		*dir = 180;
+		cLineForward.increase(isBallOutside);
 	}else {
 		cLineForward.increase(false);
 	}

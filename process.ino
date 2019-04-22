@@ -18,6 +18,7 @@ void process() {
 			// ライン前方向
 			cLineForward.reset();
 			cLineForward.increase(d.line.isFront);
+			sideLF = d.line.isFront ? d.goal.isInCorner : sideLF;
 		}else if(d.line.isInAir){
 			// 空中
 			Motor.run(false, 0, 0);
@@ -41,8 +42,8 @@ void process() {
 				detectEnemyBack(&dir, d.ball, d.enemyStands[1]);
 				// ライン上停止
 				detectBallOutside(&dir, d.line, d.gyro);
-				detectLineForward(&dir, d.ball, d.distBall);
 				// ライン前方向:後進->停止
+				detectLineForward(&dir, d.ball, d.distBall);
 			}
 			// rot計算
 			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward);
