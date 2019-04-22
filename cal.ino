@@ -34,15 +34,12 @@ void get(data_t *d) {
 }
 
 
-Angle calDir(bool isFW, vectorRT_t ball, Dist distGoal) {
+Angle calDir(bool isFW, vectorRT_t ball, double distGoal) {
 	Angle dir;
 	if(isFW) {
 		dir = Ball.getDir(ball);
 	}else {
-		int16_t DIR_GKs[] = {110, 90, 70};
-		dir = bool(ball.t)
-				? DIR_GKs[min(distGoal , FAR) - CLOSE] * signum(ball.t)
-				: Angle(false);
+		dir = constrain(map(distGoal, 5, 60, 90, 180), 90, 180); ////
 	}
 	trace(11) { Serial.println("dir:"+str(dir)); }
 	return dir;
