@@ -2,8 +2,8 @@ void process() {
 	// get
 	data_t d;
 	get(&d);
-	checkRole(!bool(cBecomeFW), d.fellow, d.ball.r);
 	// Role受動的変更
+	checkRole(!bool(cBecomeFW), !d.line.isInAir && !d.fellow.isInAir, d.fellow, d.ball.r, d.goal.distOwn);
 	if(canRun) {
 		// 走行中
 		if(!prvCanRun) {
@@ -22,12 +22,14 @@ void process() {
 		}else if(d.line.isInAir){
 			// 空中
 			Motor.run(false, 0, 0);
+			cLineForward.reset();
 			isFW = true;
+			prvIsFW = isFW;
 			cBecomeFW.reset();
 		}else {
 			if(!isFW) {
-				isFW = d.catchFreely && d.fellow.exists;
 				// Role能動的変更
+				isFW = d.catchFreely && d.fellow.exists && d.fellow.allowBecomeFW;
 			}
 			if(!isFW) {
 				// gyro考慮

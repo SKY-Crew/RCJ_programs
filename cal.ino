@@ -29,7 +29,9 @@ void get(data_t *d) {
 
 	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner != 0);
 
-	d->fellow = Comc.communicate(canRun, isFW, d->catchFreely ? 1000 : d->ball.r);
+	d->fellow = Comc.rcv(isFW);
+	Comc.snd(canRun, isFW, d->ball.r, d->goal.distOwn, d->distGoal <= CLOSE, d->line.isInAir);
+
 }
 
 
@@ -61,12 +63,18 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 	return rot;
 }
 
-void checkRole(bool canBecomeGK, comc_t fellow, double ball_r) {
+void checkRole(bool canBecomeGK, bool onGround, comc_t fellow, double ball_r, double distOwn) {
 	if(Comc.getCanUse()) {
 		if(fellow.exists && isFW == fellow.isFW) {
-			if(canBecomeGK && isFW && ball_r > fellow.ball_r) {
-				//両方FW && ボール遠い
-				isFW = false;
+			if(canBecomeGK && onGround && isFW) {
+				// 両方FW
+				if(fellow.distOwn - distOwn > 5) {
+					//ゴール近い
+					isFW = false;
+				}else if(abs(distOwn - fellow.distOwn) <= 5 && fellow.ball_r > ball_r) {
+					//ゴール等距離&ボール遠い
+					isFW = false;
+				}
 			}else if(!isFW && !canRun) {
 				// 停止状態
 				isFW = true;

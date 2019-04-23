@@ -39,8 +39,8 @@ void loop() {
 	// 走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
-	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	// Role変更禁止
+	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	// Role表示LED
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
