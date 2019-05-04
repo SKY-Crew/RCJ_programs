@@ -19,18 +19,24 @@ void process() {
 			cLineForward.reset();
 			cLineForward.increase(d.line.isFront);
 			sideLF = d.line.isFront ? d.goal.isInCorner : sideLF;
+			if(!isFW && Cam.getCanUse() && (d.line.dirInside.isLeft(30) || d.line.dirInside.isRight(30))) {
+				d.goal.diffOwn = TOO_LARGE;
+				d.goal.sideOwn = Side(- signum(d.line.dirInside));
+			}
 		}else if(d.line.isInAir){
 			// 空中
 			Motor.run(false, 0, 0);
 			cLineForward.reset();
-			isFW = true;
-			prvIsFW = isFW;
-			cBecomeFW.reset();
-		}else {
-			if(!isFW) {
-				// Role能動的変更
-				isFW = d.catchFreely && d.fellow.exists && d.fellow.allowBecomeFW;
+			if(Comc.getCanUse()) {
+				isFW = true;
+				prvIsFW = isFW;
+				cBecomeFW.reset();
 			}
+		}else {
+			// if(!isFW) {
+			// 	// Role能動的変更
+			// 	isFW = d.catchFreely && d.fellow.exists && d.fellow.allowBecomeFW;
+			// }
 			if(!isFW) {
 				// gyro考慮
 				d.ball.t = bool(d.ball.t) ? d.ball.t - d.gyro : Angle(false);
@@ -38,17 +44,18 @@ void process() {
 			// dir計算
 			Angle dir = calDir(isFW, d.ball, d.goal.distOwn);
 			if(isFW) {
-				// マルチ対策
-				avoidMulDef(&dir, d.fellow, d.ball, d.distGoal);
-				// 真後ろ敵
-				detectEnemyBack(&dir, d.ball, d.enemyStands[1]);
-				// ライン上停止
-				detectBallOutside(&dir, d.line, d.gyro);
-				// ライン前方向:後進->停止
-				detectLineForward(&dir, d.ball, d.distBall);
+				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal, d.goal)) {
+					// マルチ対策
+				}else if(detectBallOutside(&dir, d.line, d.gyro)) {
+					// ライン上停止
+				}else if(detectLineForward(&dir, d.ball, d.distBall, d.gyro)) {
+					// ライン前方向:後進->停止
+				}else if(detectEnemyBack(&dir, d.ball, d.enemyStands[1])) {
+					// 真後ろ敵
+				}
 			}
 			// rot計算
-			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward);
+			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward, bool(d.line.dirInside));
 			if(!carryingBall) {
 				// 姿勢その場修正
 				correctRot(isFW, d.gyro);
