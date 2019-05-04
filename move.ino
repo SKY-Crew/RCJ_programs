@@ -17,6 +17,8 @@ void wait(data_t *d) {
 	// 駆動
 	Motor.run(false, 0, 0);
 	Kicker.check();
+
+	cLineForward.reset();
 }
 
 
