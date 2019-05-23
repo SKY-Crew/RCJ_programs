@@ -12,14 +12,14 @@ bool isFW = IS_SKY;
 
 const bool CAN_MOVE = true;
 
-double DIR[2][5] = {{0, 15, 40, 110, 180}, {0, 15, 30, 40, 180}};
-double PLUS_DIR[2][5] = {{0, -3, 30, 55, 30}, {0, -15, 30, 85, 80}};
+double DIR[2][5] = {{0, 15, 40, 110, 180}, {0, 10, 25, 60, 120}};
+double PLUS_DIR[2][5] = {{0, 0, 40, 55, 30}, {0, 0, 70, 90, 75}};
 
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
 uint8_t P_M_PWR[4] = {5, 6, 9, 10};
 double MULTI_POWER_SKY[4] = {1.1, 1.2, 1.1, 1.19};
-double MULTI_POWER_CREW[4] = {1.07, 1.2, 1.1, 1.45};
+double MULTI_POWER_CREW[4] = {1.07, 1.1, 1.1, 1.25};
 Motor Motor(CAN_MOVE, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73, IS_SKY ? MULTI_POWER_SKY : MULTI_POWER_CREW);
 // CAN_MOVE, QTY, P_DIR, P_PWR, firstRM, SLOPE_POWER, INTERCEPT_POWER, MULTI_POWER
 
@@ -32,7 +32,7 @@ uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 
 double THRE_DIST_BALL[2] = {300, 180};
 double* p_DIR[2] = {DIR[0], DIR[1]};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
-Ball Ball(16, P_IR, 2, 200, 0.1, IS_SKY ? 0 : 0, 2, THRE_DIST_BALL, 5, p_DIR, p_PLUS_DIR, A20, 200, 10, 54, 150);
+Ball Ball(16, P_IR, 2, 200, 0.1, IS_SKY ? 0 : -1, 2, THRE_DIST_BALL, 5, p_DIR, p_PLUS_DIR, A20, 200, 10, 54, 150);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE, PLUS_T
 // SIZE_THRE_DIST, THRE_DIST, SIZE_DIR, DIR, PLUS_DIR,
