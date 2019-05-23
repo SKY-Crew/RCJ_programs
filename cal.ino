@@ -27,13 +27,12 @@ void get(data_t *d) {
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal >= FAR || !Cam.getCanUse());
 
-	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner != 0);
+	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner != CENTER);
 	prvIsInAir = d->line.isInAir;
 	d->line.isOutside |= !bool(d->ball.t) && bool(d->line.dirInside);
 
 	d->fellow = Comc.rcv(isFW);
 	Comc.snd(canRun, isFW, d->ball.r, d->goal.distOwn, d->distGoal <= CLOSE, d->line.isInAir);
-
 }
 
 
