@@ -101,15 +101,14 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		if(cLineForward.compare(0)) {
 			Motor.run(dir, Gyro.multiRot(0, bool(d->line.dirInside)), 140);
 		}
-		if(d->ball.t.isRight(45) || d->ball.t.isLeft(45)) {
-			//ボール横
-			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 110 : 140);
-		}else if(d->ball.t.isDown(45) || d->distBall >= FAR) {
+		if(d->ball.t.isDown(45) || d->distBall >= FAR) {
 			// ボール(後方|遠く)
 			Motor.run(dir, rot, (leavingLine || d->distGoal == CLOSE) ? 160 : 190);
 		}else {
-			// ボール前方
-			Motor.run(dir, rot, leavingLine ? 90 : 120);
+			// ボール(前方|横)
+			Motor.run(dir, rot,
+					constrain(map(double(abs(d->ball.t)), 10, 45, 100, 190), 100, 190)
+					* (leavingLine || d->distGoal == CLOSE ? 0.7 : 1));
 		}
 		Kicker.run(d->catchFreely && d->goal.isOppWide);
 	}else {
