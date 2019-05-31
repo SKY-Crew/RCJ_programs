@@ -33,10 +33,10 @@ void process() {
 				cBecomeFW.reset();
 			}
 		}else {
-			// if(!isFW) {
-			// 	// Role能動的変更
-			// 	isFW = d.catchFreely && d.fellow.exists && d.fellow.allowBecomeFW;
-			// }
+			if(!isFW) {
+				// Role能動的変更
+				isFW = d.catchFreely && d.fellow.exists && d.fellow.allowBecomeFW;
+			}
 			if(!isFW) {
 				// gyro考慮
 				d.ball.t = bool(d.ball.t) ? d.ball.t - d.gyro : Angle(false);

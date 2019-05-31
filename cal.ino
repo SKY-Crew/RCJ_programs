@@ -92,7 +92,7 @@ void checkRole(bool canBecomeGK, bool onGround, comc_t fellow, double ball_r, do
 }
 
 bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, Dist distGoal, cam_t goal) {
-	if(digitalRead(57)) { // fellow.exists && Comc.getCanUse()) {
+	if(fellow.exists && Comc.getCanUse()) {
 		if(ball.t.isDown(100)) {
 			switch (distGoal) {
 			// 少し後ろ
