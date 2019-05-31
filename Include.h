@@ -75,6 +75,9 @@ INA219 INA219(2, 10.2, 10.4, 12.4, 10, 10);
 LCD LCD(7, 13, 11, 8, 12, 0, 30, Line.getQTY());
 // P_REDRAW, P_SCK, P_MOSI, P_CS, P_DI, WAIT, MAX_CP, QTY_LINE
 
+#include "Buzzer.h"
+// Buzzer Buzzer(30);
+
 const uint8_t P_START = 28;
 const uint8_t P_CHANGE_ROLE = 32;
 const uint8_t P_IS_FW = 31;
