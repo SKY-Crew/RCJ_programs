@@ -25,6 +25,8 @@ void setup() {
 	pinMode(P_START, INPUT);
 	pinMode(P_CHANGE_ROLE, INPUT);
 	pinMode(P_IS_FW, OUTPUT);
+
+	Buzzer.set(60, 100);
 }
 
 void loop() {
@@ -36,6 +38,8 @@ void loop() {
 	Motor.setRateVolt(INA219.getRate());
 	Kicker.setHaveChecked(false);
 	Kicker.setPower();
+	//音
+	Buzzer.beep(false);
 	// 走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
@@ -44,7 +48,6 @@ void loop() {
 	// Role表示LED
 	prvIsFW = isFW;
 	digitalWrite(P_IS_FW, isFW);
-
 	if(INA219.checkVolt() && !Kicker.getIsKicking()) {
 		// 電池残量少
 		canRun = false;
