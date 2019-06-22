@@ -177,3 +177,20 @@ bool detectLineForward(Angle *dir, vectorRT_t ball, Dist distBall, Angle gyro) {
 	}
 	return false;
 }
+
+bool detectLineBackward(Angle *dir, vectorRT_t ball, Angle gyro) {
+	Angle absoluteBall_t = ball.t - gyro;
+	bool isBallOutside = absoluteBall_t.isDown(135);
+	if(bool(cLineBackward)) {
+		*dir = absoluteBall_t.isDown(30) ? Angle(false) : constrainAngle(ball.t, -90, 90);
+		cLineBackward.increase(isBallOutside);
+		return true;
+	}else if(cLineBackward.compare(0)) {
+		*dir = 0 + gyro;
+		cLineBackward.increase(isBallOutside);
+		return true;
+	}else {
+		cLineBackward.increase(false);
+	}
+	return false;
+}

@@ -19,6 +19,7 @@ void wait(data_t *d) {
 	Kicker.check();
 
 	cLineForward.reset();
+	cLineBackward.reset();
 }
 
 
@@ -74,6 +75,7 @@ void ballInAir(bool isBallInAir, int16_t rot, Angle rotOwn, Dist distGoal, vecto
 	if(isBallInAir && Cam.getCanUse()) {
 		// ボール真上前方・ボールない
 		cLineForward.reset();
+		cLineBackward.reset();
 		if(distGoal >= FAR) {
 			Motor.run(180, rot, 190);
 		}else if(distGoal > CLOSE) {
@@ -85,6 +87,7 @@ void ballInAir(bool isBallInAir, int16_t rot, Angle rotOwn, Dist distGoal, vecto
 		}
 	}else if(isBallInAir && ball.t.isUp(60)) {
 		cLineForward.reset();
+		cLineBackward.reset();
 		Motor.run(false, rot, 0);
 	}
 }
@@ -100,6 +103,8 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 				rot, d->goal.rotOwn, d->distGoal, d->ball);
 		if(cLineForward.compare(0)) {
 			Motor.run(dir, Gyro.multiRot(0, bool(d->line.dirInside)), 140);
+		if(cLineBackward.compare(0)) {
+			Motor.run(dir, Gyro.multiRot(0), 140);
 		}
 		if(d->ball.t.isDown(45) || d->distBall >= FAR) {
 			// ボール(後方|遠く)

@@ -23,10 +23,14 @@ void process() {
 				d.goal.diffOwn = TOO_LARGE;
 				d.goal.sideOwn = Side(- signum(d.line.dirInside));
 			}
+
+			cLineBackward.reset();
+			cLineBackward.increase(d.line.isBack);
 		}else if(d.line.isInAir){
 			// 空中
 			Motor.run(false, 0, 0);
 			cLineForward.reset();
+			cLineBackward.reset();
 			if(Comc.getCanUse()) {
 				isFW = true;
 				prvIsFW = isFW;
@@ -47,6 +51,8 @@ void process() {
 				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal, d.goal)) {
 					// マルチ対策
 				}else if(detectBallOutside(&dir, d.line, d.gyro)) {
+				}else if(detectLineBackward(&dir, d.ball, d.gyro)) {
+					// ライン後方向:前進->停止
 					// ライン上停止
 				}else if(detectLineForward(&dir, d.ball, d.distBall, d.gyro)) {
 					// ライン前方向:後進->停止
