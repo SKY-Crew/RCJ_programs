@@ -3,7 +3,7 @@ void process() {
 	data_t d;
 	get(&d);
 	// Role受動的変更
-	checkRole(!bool(cBecomeFW), !d.line.isInAir && !d.fellow.isInAir, d.fellow, d.ball.r, d.goal.distOwn);
+	checkRole(!bool(cBecomeFW), d.fellow);
 	if(canRun) {
 		// 走行中
 		if(!prvCanRun) {
@@ -37,9 +37,10 @@ void process() {
 				cBecomeFW.reset();
 			}
 		}else {
-			if(!isFW) {
+			if(!isFW && d.fellow.isFW && d.fellow.allowChangeRole) {
 				// Role能動的変更
-				isFW = d.catchFreely && d.fellow.exists && d.fellow.allowBecomeFW;
+				isFW = d.isBallForward
+						|| (d.goal.sideOwn * signum(d.ball.t) == 1 && d.distBall <= PROPER);
 			}
 			if(!isFW) {
 				// gyro考慮

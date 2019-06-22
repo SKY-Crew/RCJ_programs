@@ -32,7 +32,9 @@ void get(data_t *d) {
 	d->line.isOutside |= !bool(d->ball.t) && bool(d->line.dirInside);
 
 	d->fellow = Comc.rcv(isFW);
-	Comc.snd(canRun, isFW, d->ball.r, d->goal.distOwn, d->distGoal <= CLOSE, d->line.isInAir);
+	bool allowChangeRole = calAllowChangeRole(isFW, d->ball, d->distGoal, d->goal.distOwn, d->fellow,
+			d->fellow.exists && !d->line.isInAir && !d->fellow.isInAir);
+	Comc.snd(canRun, isFW, d->ball.r, d->goal.distOwn, allowChangeRole, d->line.isInAir);
 }
 
 
@@ -64,18 +66,22 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 	return rot;
 }
 
-void checkRole(bool canBecomeGK, bool onGround, comc_t fellow, double ball_r, double distOwn) {
+bool calAllowChangeRole(bool isFW, vectorRT_t ball, Dist distGoal, double distOwn, comc_t fellow, bool onGround) {
+	bool allowChangeRole = onGround;
+	if(isFW && !fellow.isFW) {
+		allowChangeRole &= distGoal <= CLOSE && ball.t.isUp(135) && fellow.ball_r - ball.r > 20 && !bool(cBecomeFW);
+	}else if(isFW && fellow.isFW && !bool(cBecomeFW)) {
+		allowChangeRole &= distOwn - fellow.distOwn > 15
+				|| (abs(distOwn - fellow.distOwn) <= 15 && ball.r > fellow.ball_r);
+	}
+	return allowChangeRole;
+}
+
+void checkRole(bool canBecomeGK, comc_t fellow) {
 	if(Comc.getCanUse()) {
 		if(fellow.exists && isFW == fellow.isFW) {
-			if(canBecomeGK && onGround && isFW) {
-				// 両方FW
-				if(fellow.distOwn - distOwn > 5) {
-					//ゴール近い
-					isFW = false;
-				}else if(abs(distOwn - fellow.distOwn) <= 5 && fellow.ball_r > ball_r) {
-					//ゴール等距離&ボール遠い
-					isFW = false;
-				}
+			if(isFW && fellow.allowChangeRole && canBecomeGK) {
+				isFW = false;
 			}else if(!isFW && !canRun) {
 				// 停止状態
 				isFW = true;
