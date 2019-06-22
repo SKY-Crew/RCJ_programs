@@ -13,7 +13,7 @@ void get(data_t *d) {
 			: max(backPSD[0].getVal(), backPSD[1].getVal());
 	d->distGoalPSD = compare(d->valBackPSD, THRE_BACK_PSD, 3, CLOSE);
 	if(isFW) {
-		const uint16_t THRE_DIST_FW[3] = {22, 37, 60};
+		const uint16_t THRE_DIST_FW[3] = {15, 32, 60};
 		d->distGoal = compare(d->goal.distOwn, THRE_DIST_FW, 4, TOO_CLOSE);
 	}else {
 		const double THRE_DIST_GK[2] = {-1, 10};
@@ -25,7 +25,7 @@ void get(data_t *d) {
 	d->ball = Ball.get();
 
 	d->distBall = compare(d->ball.r, THRE_DIST_BALL, 3, CLOSE);
-	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15) && Ball.getForward() >= 450;
+	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15) && Ball.getForward() >= (isFW ? 450 : 550);
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal >= FAR || !Cam.getCanUse());
