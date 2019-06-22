@@ -51,7 +51,7 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 		if(millis() - timeStartCB < 1500) {
 			if(isFW && Cam.getCanUse() && bool(gyro)) {
 				if(enemyStandsFront) {
-					Motor.run(gyro * (-0.5), Gyro.multiRot(signum(goal.rotOpp) * 45, false), powerCB);
+					Motor.run(gyro * (-0.5), Gyro.multiRot(signum(goal.rotOpp) * 45), powerCB);
 				}else {
 					Motor.run(leavingLine ? goal.rotOpp : 0, Cam.multiRotGoal(goal.rotOpp), powerCB);
 				}
@@ -104,7 +104,8 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		ballInAir(!bool(d->ball.t),
 				rot, d->goal.rotOwn, d->distGoal, d->ball);
 		if(cLineForward.compare(0)) {
-			Motor.run(dir, Gyro.multiRot(0, bool(d->line.dirInside)), 140);
+			Motor.run(dir, Gyro.multiRot(0), 140);
+		}
 		if(cLineBackward.compare(0)) {
 			Motor.run(dir, Gyro.multiRot(0), 140);
 		}

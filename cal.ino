@@ -60,10 +60,10 @@ int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBall
 			rot = Cam.multiRotGoal(goal.rotOpp);
 		}else if(bool(gyro)) {
 			// 両方 or gyroのみ
-			rot = Gyro.multiRot(0, isOnLine);
+			rot = Gyro.multiRot(0);
 		}
 	}else {
-		rot = Gyro.multiRot(0, isOnLine);
+		rot = Gyro.multiRot(0);
 	}
 	trace(12) { Serial.println("rot:"+str(rot)); }
 	return rot;
