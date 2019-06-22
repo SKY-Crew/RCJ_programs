@@ -8,7 +8,7 @@ bool prvChangeRole = false;
 bool prvIsFW = isFW;
 Count cBecomeFW(100, false);
 
-Count cCorrectRot(3);
+// Count cCorrectRot(3);
 
 bool carryingBall = false;
 bool willCarryBall = false;

@@ -65,9 +65,10 @@ void process() {
 			// rot計算
 			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward, bool(d.line.dirInside));
 			if(!carryingBall) {
+			/* if(!carryingBall) {
 				// 姿勢その場修正
 				correctRot(isFW, d.gyro);
-			}
+			}*/
 			// 駆動
 			run(&d, isFW, dir, rot);
 		}

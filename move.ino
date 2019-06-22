@@ -24,7 +24,7 @@ void wait(data_t *d) {
 	cLineBackward.reset();
 }
 
-
+/*
 void correctRot(bool isFW, Angle gyro) {
 	const uint16_t THRE_INCREASE_cCR = 60;
 	const uint16_t THRE_DECREASE_cCR = 40;
@@ -42,7 +42,7 @@ void correctRot(bool isFW, Angle gyro) {
 		cCorrectRot.increase(abs(gyro) >= THRE_INCREASE_cCR);
 	}
 }
-
+*/
 void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall, bool enemyStandsFront, bool leavingLine, bool isBallForward) {
 	willCarryBall = carryingBall;
 	if(carryingBall) {
