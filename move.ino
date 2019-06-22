@@ -73,13 +73,17 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 	}
 }
 
-void ballInAir(bool isBallInAir, int16_t rot, Angle rotOwn, Dist distGoal, vectorRT_t ball) {
+void ballInAir(bool isBallInAir, int16_t rot, Angle gyro, Angle rotOwn, Angle rotOpp, Dist distGoal, vectorRT_t ball) {
 	if(isBallInAir && Cam.getCanUse()) {
 		// ボール真上前方・ボールない
 		cLineForward.reset();
 		cLineBackward.reset();
 		if(distGoal >= FAR) {
-			Motor.run(180, rot, 190);
+			if(rotOpp.isUp(10)) {
+				Motor.run(180, rot, 100);
+			}else {
+				Motor.run(rotOpp + signum(rotOpp - gyro) * 90, rot, 190);
+			}
 		}else if(distGoal > CLOSE) {
 			Motor.run(rotOwn, rot, 160);
 		}else if(!rotOwn.isDown(10) && distGoal >= CLOSE) {
@@ -101,8 +105,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		bool leavingLine = bool(d->line.dirInside) && (dir - d->line.dirInside).isUp(45);
 		carryBall(isFW, rot, d->goal, d->gyro,
 				d->catchingBall || d->isBallForward, d->enemyStands[0], leavingLine, d->isBallForward);
-		ballInAir(!bool(d->ball.t),
-				rot, d->goal.rotOwn, d->distGoal, d->ball);
+		ballInAir(!bool(d->ball.t), rot, d->gyro, d->goal.rotOwn, d->goal.rotOpp, d->distGoal, d->ball);
 		if(cLineForward.compare(0)) {
 			Motor.run(dir, Gyro.multiRot(0), 140);
 		}

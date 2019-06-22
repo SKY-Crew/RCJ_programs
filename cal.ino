@@ -16,7 +16,7 @@ void get(data_t *d) {
 			: max(backPSD[0].getVal(), backPSD[1].getVal());
 	d->distGoalPSD = compare(d->valBackPSD, THRE_BACK_PSD, 3, CLOSE);
 	if(isFW) {
-		const uint16_t THRE_DIST_FW[3] = {15, 32, 60};
+		const uint16_t THRE_DIST_FW[3] = {15, 30, 48};
 		d->distGoal = compare(d->goal.distOwn, THRE_DIST_FW, 4, TOO_CLOSE);
 	}else {
 		const double THRE_DIST_GK[2] = {-1, 10};
