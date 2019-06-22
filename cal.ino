@@ -2,6 +2,7 @@ void get(data_t *d) {
 	d->gyro = Gyro.get();
 	d->goal = Cam.get(prvIsInAir);
 	Cam.send(double(d->gyro));
+	Cam.send(double(d->gyro), isFW);
 
 	d->enemyStands[0] = frontPSD.getBool(false);
 	d->enemyStands[1] = backPSD[0].getBool(false) || backPSD[1].getBool(false);
