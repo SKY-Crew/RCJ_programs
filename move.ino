@@ -135,9 +135,9 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		}else if(d->distGoal == TOO_FAR && d->distBall <= CLOSE) {
 			// ゴール遠すぎ&ボール(後方)近く
 			Motor.run(Ball.getDir(d->ball), rot, 200);
-		}else if(!d->goal.rotOwn.isDown(10) && !bool(d->ball.t)) {
+		}else if(!(d->goal.rotOwn - d->gyro).isDown(10) && d->distGoal == PROPER && !bool(d->ball.t)) {
 			// ゴール真後ろでない&ボールない
-			Motor.run(signum(d->goal.rotOwn) * 90, rot, 130);
+			Motor.run(signum(d->goal.rotOwn - d->gyro) * 90, rot, 130);
 		}
 		// ボール捕獲
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false, false, false);
