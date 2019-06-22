@@ -79,7 +79,7 @@ void ballInAir(bool isBallInAir, int16_t rot, Angle gyro, Angle rotOwn, Angle ro
 		cLineForward.reset();
 		cLineBackward.reset();
 		if(distGoal >= FAR) {
-			if(rotOpp.isUp(10)) {
+			if(rotOpp.isUp(10) || !bool(rotOpp)) {
 				Motor.run(180, rot, 100);
 			}else {
 				Motor.run(rotOpp + signum(rotOpp - gyro) * 90, rot, 190);
