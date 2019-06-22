@@ -58,7 +58,7 @@ void process() {
 					// ライン上停止
 				}else if(detectLineForward(&dir, d.ball, d.distBall, d.gyro)) {
 					// ライン前方向:後進->停止
-				}else if(detectEnemyBack(&dir, d.ball, d.enemyStands[1])) {
+				}else if(detectEnemyBack(&dir, d.ball, d.distBall, d.enemyStands[1])) {
 					// 真後ろ敵
 				}
 			}

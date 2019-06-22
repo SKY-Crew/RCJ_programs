@@ -136,9 +136,9 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, Dist distGoal, cam_
 	return false;
 }
 
-bool detectEnemyBack(Angle *dir, vectorRT_t ball, bool enemyStandsBack) {
+bool detectEnemyBack(Angle *dir, vectorRT_t ball, Dist distBall, bool enemyStandsBack) {
 	if(enemyStandsBack && dir->isDown(70)) {
-		*dir = constrainAngle(ball.t, -90, 90);
+		*dir = constrainAngle(distBall <= PROPER ? *dir : ball.t, -90, 90);
 		return true;
 	}
 	return false;
