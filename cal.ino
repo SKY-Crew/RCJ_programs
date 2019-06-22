@@ -108,7 +108,7 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	}
 }
 
-bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, Dist distGoal, cam_t goal) {
+bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, Dist distGoal) {
 	if(fellow.exists && Comc.getCanUse()) {
 		if(ball.t.isDown(100)) {
 			switch (distGoal) {
@@ -126,10 +126,6 @@ bool avoidMulDef(Angle *dir, comc_t fellow, vectorRT_t ball, Dist distGoal, cam_
 				break;
 			default:
 				break;
-			}
-			if(goal.diffOwn >= TOO_LARGE && bool(goal.rotOwn)) {
-				*dir = false;
-				return true;
 			}
 		}
 	}

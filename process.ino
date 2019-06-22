@@ -49,7 +49,7 @@ void process() {
 			// dir計算
 			Angle dir = calDir(isFW, d.ball, d.gyro, d.goal.distOwn);
 			if(isFW) {
-				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal, d.goal)) {
+				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal)) {
 					// マルチ対策
 				}else if(detectLineBackward(&dir, d.ball, d.gyro)) {
 					// ライン後方向:前進->停止
