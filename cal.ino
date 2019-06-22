@@ -41,10 +41,12 @@ void get(data_t *d) {
 }
 
 
-Angle calDir(bool isFW, vectorRT_t ball, double distGoal) {
+Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, double distGoal) {
 	Angle dir;
 	if(isFW) {
+		ball.t = bool(ball.t) ? ball.t - gyro : Angle(false);
 		dir = Ball.getDir(ball);
+		if(bool(dir)) { dir += gyro; }
 	}else {
 		dir = constrain(map(distGoal, 5, 60, 90, 180), 85, 180);
 	}
@@ -140,7 +142,7 @@ bool detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 	if(bool(line.dirInside) && bool(*dir)) {
 		Angle absoluteDI = line.dirInside - gyro;
 		if(absoluteDI.isRight(45)) {
-			if(line.canPause && (*dir - absoluteDI).inside(180 - 30, 180 + 30)) {
+			if(line.canPause && (*dir - line.dirInside).inside(180 - 30, 180 + 30)) {
 				// 停止
 				*dir = Angle(false);
 				return true;
@@ -150,7 +152,7 @@ bool detectBallOutside(Angle *dir, line_t line, Angle gyro) {
 				return true;
 			}
 		}else if(absoluteDI.isLeft(45)) {
-			if(line.canPause && (*dir - absoluteDI).inside(180 - 30, 180 + 30)) {
+			if(line.canPause && (*dir - line.dirInside).inside(180 - 30, 180 + 30)) {
 				// 停止
 				*dir = Angle(false);
 				return true;
