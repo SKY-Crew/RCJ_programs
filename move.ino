@@ -128,7 +128,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(90 * (- d->goal.sideOwn), rot, 150);
 		}else if(d->distGoal == TOO_FAR && (d->ball.t.isUp(90) || !bool(d->ball.t))) {
 			// ゴール遠すぎ&ボール(前方|ない)
-			Motor.run(d->goal.rotOwn ? d->goal.rotOwn : 180, rot, 200);
+			Motor.run(bool(d->goal.rotOwn) ? d->goal.rotOwn : 180, rot, 200);
 		}else if(d->distGoal == TOO_FAR && d->distBall <= CLOSE) {
 			// ゴール遠すぎ&ボール(後方)近く
 			Motor.run(Ball.getDir(d->ball), rot, 200);
