@@ -4,18 +4,21 @@ void get(data_t *d) {
 	Cam.send(double(d->gyro));
 
 	d->enemyStands[0] = frontPSD.getBool(false);
-	d->enemyStands[1] = backPSD.getBool(false);
+	d->enemyStands[1] = backPSD[0].getBool(false) || backPSD[1].getBool(false);
 
-	const uint16_t THRE_BACK_PSD[2] = {1200, 1500};
-	d->distGoalPSD = compare(backPSD.getVal(), THRE_BACK_PSD, 3, CLOSE);
+	const uint16_t THRE_BACK_PSD[2] = {460, 400};
+	d->valBackPSD =
+			d->goal.sideOwn == LEFT ? backPSD[0].getVal()
+			: d->goal.sideOwn == RIGHT ? backPSD[1].getVal()
+			: max(backPSD[0].getVal(), backPSD[1].getVal());
+	d->distGoalPSD = compare(d->valBackPSD, THRE_BACK_PSD, 3, CLOSE);
 	if(isFW) {
 		const uint16_t THRE_DIST_FW[3] = {22, 37, 60};
 		d->distGoal = compare(d->goal.distOwn, THRE_DIST_FW, 4, TOO_CLOSE);
 	}else {
-		const double THRE_DIST_GK[3] = {1.5, 4, 8};
-		Dist distGK = compare(d->goal.distOwn, THRE_DIST_GK, 4, CLOSE);
-		d->distGoal = Cam.getCanUse()
-				&& (backPSD.getVal() > 4000 || d->goal.diffOwn >= SMALL || distGK == TOO_FAR)
+		const double THRE_DIST_GK[2] = {-1, 10};
+		Dist distGK = compare(d->goal.distOwn, THRE_DIST_GK, 3, PROPER);
+		d->distGoal = Cam.getCanUse() && distGK == TOO_FAR
 				? distGK : d->distGoalPSD;
 	}
 

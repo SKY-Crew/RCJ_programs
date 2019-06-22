@@ -59,8 +59,8 @@ Gyro Gyro(1, 0x68, 55, 2, 3, p_POINT_GYRO, p_ROT_GYRO, Kd_GYRO, 30, 30, 60);
 // BROKEN_THRE, STOP_FRAMES, STAY_THRE
 
 #include "PSD.h"
-PSD frontPSD(1, 0.3, 2000, 6);
-PSD backPSD(2, 0.96, 1000, 6);
+PSD frontPSD(31, 0.3, 450, 6);
+PSD backPSD[2] = {PSD(37, 0.96, 400, 6), PSD(38, 0.96, 400, 6)};
 // P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"
@@ -89,6 +89,7 @@ typedef struct {
 	bool enemyStands[2]; // Front, Back
 	comc_t fellow;
 
+	uint16_t valBackPSD;
 	Dist distGoalPSD;
 	Dist distGoal;
 

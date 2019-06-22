@@ -13,7 +13,7 @@ void wait(data_t *d) {
 		Line.getQTY(), Line.getVal(), Line.getState(),INA219.getVal(), d->goal,
 		d->ball, Ball.getQTY(), Ball.getVal(), Ball.getValInAir(), Ball.getIsInAir(),
 		Ball.getValCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
-		frontPSD.getVal(), backPSD.getVal(), d->enemyStands, d->distGoalPSD, d->distGoal);
+		frontPSD.getVal(), d->valBackPSD, d->enemyStands, d->distGoalPSD, d->distGoal);
 	// 駆動
 	Motor.run(false, 0, 0);
 	Kicker.check();
