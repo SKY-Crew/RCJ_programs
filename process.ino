@@ -46,8 +46,12 @@ void process() {
 				// gyro考慮
 				d.ball.t = bool(d.ball.t) ? d.ball.t - d.gyro : Angle(false);
 			}
+			// rot計算
+			Angle dir;
+			int16_t rot;
+			Angle targetDir = calRot(&rot, isFW, d.goal, d.gyro, d.ball, d.distBall, d.catchingBall, d.isBallForward);
+			calDir(&dir, isFW, d.ball, targetDir, d.goal.distOwn);
 			// dir計算
-			Angle dir = calDir(isFW, d.ball, d.gyro, d.goal.distOwn);
 			if(isFW) {
 				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal)) {
 					// マルチ対策
@@ -62,9 +66,6 @@ void process() {
 					// 真後ろ敵
 				}
 			}
-			// rot計算
-			int16_t rot = calRot(isFW, d.goal, d.gyro, d.catchingBall, d.isBallForward, bool(d.line.dirInside));
-			if(!carryingBall) {
 			/* if(!carryingBall) {
 				// 姿勢その場修正
 				correctRot(isFW, d.gyro);

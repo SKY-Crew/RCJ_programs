@@ -47,34 +47,36 @@ void get(data_t *d) {
 }
 
 
-Angle calDir(bool isFW, vectorRT_t ball, Angle gyro, double distGoal) {
-	Angle dir;
+Angle calRot(int16_t *rot, bool isFW, cam_t goal, Angle gyro, vectorRT_t ball, Dist distBall, bool catchingBall, bool isBallForward) {
+	Angle targetDir = 0;
 	if(isFW) {
-		ball.t = bool(ball.t) ? ball.t - gyro : Angle(false);
-		dir = Ball.getDir(ball);
-		if(bool(dir)) { dir += gyro; }
-	}else {
-		dir = constrain(map(distGoal, 5, 60, 90, 180), 85, 180);
-	}
-	trace(11) { Serial.println("dir:"+str(dir)); }
-	return dir;
-}
-
-int16_t calRot(bool isFW, cam_t goal, Angle gyro, bool catchingBall, bool isBallForward, bool isOnLine) {
-	int16_t rot = 0;
-	if(isFW) {
-		if(Cam.getCanUse() && !bool(gyro)) {
+		if(Cam.getCanUse() && bool(goal.rotOpp) && (!bool(gyro) || distBall <= PROPER)) { ////
 			// camのみ
-			rot = Cam.multiRotGoal(goal.rotOpp);
+			*rot = Cam.multiRotGoal(goal.rotOpp);
+			targetDir = goal.rotOpp;
 		}else if(bool(gyro)) {
 			// 両方 or gyroのみ
-			rot = Gyro.multiRot(0);
+			*rot = Gyro.multiRot(0);
+			targetDir = gyro;
+			//// rot = Gyro.multiRot(absMinus(absConstrain(double(ball.t) * 0.8, 50 + 10), 10), isOnLine);
 		}
 	}else {
-		rot = Gyro.multiRot(0);
+		*rot = Gyro.multiRot(0);
+		targetDir = gyro;
 	}
-	trace(12) { Serial.println("rot:"+str(rot)); }
-	return rot;
+	trace(12) { Serial.println("rot:"+str(*rot)); }
+	return targetDir;
+}
+
+void calDir(Angle *dir, bool isFW, vectorRT_t ball, Angle targetDir, double distGoal) {
+	if(isFW) {
+		ball.t = bool(ball.t) ? ball.t - targetDir : Angle(false);
+		*dir = Ball.getDir(ball);
+		if(bool(*dir)) { *dir += targetDir; }
+	}else {
+		*dir = constrain(map(distGoal, 5, 60, 90, 180), 85, 180);
+	}
+	trace(11) { Serial.println("dir:"+str(*dir)); }
 }
 
 bool calAllowChangeRole(bool isFW, vectorRT_t ball, Dist distGoal, double distOwn, comc_t fellow, bool onGround) {
