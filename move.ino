@@ -11,7 +11,7 @@ void wait(data_t *d) {
 	// LCD表示
 	LCD.run(d->gyro, d->line, Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
 		Line.getQTY(), Line.getVal(), Line.getState(),INA219.getVal(), d->goal,
-		d->ball, Ball.getQTY(), Ball.getVal(), Ball.getValInAir(), Ball.getIsInAir(),
+		d->ball, Ball.getQTY(), Ball.getVal(),
 		Ball.getValCatch(), d->catchingBall, Ball.getForward(), d->isBallForward, d->distBall,
 		frontPSD.getVal(), d->valBackPSD, d->enemyStands, d->distGoalPSD, d->distGoal);
 	// 駆動

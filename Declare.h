@@ -19,6 +19,4 @@ Side sideLF = CENTER;
 
 Count cLineBackward(30);
 
-bool prvIsInAir;
-
 #endif

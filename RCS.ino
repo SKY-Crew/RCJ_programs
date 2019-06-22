@@ -5,7 +5,7 @@
 Debug
 1 Motor::moveAngle
 2 Ball::val
-3 Ball::valInAir
+
 4 Line::val
 5 Gyro::crt
 6 PSD::val
