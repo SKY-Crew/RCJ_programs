@@ -47,10 +47,11 @@ void get(data_t *d) {
 }
 
 
-Angle calRot(int16_t *rot, bool isFW, cam_t goal, Angle gyro, vectorRT_t ball, Dist distBall, bool catchingBall, bool isBallForward) {
+Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vectorRT_t ball, Dist distBall, bool catchingBall, bool isBallForward) {
 	Angle targetDir = 0;
 	if(isFW) {
-		if(Cam.getCanUse() && bool(goal.rotOpp) && (!bool(gyro) || distBall <= PROPER)) { ////
+		if(Cam.getCanUse() && bool(goal.rotOpp) &&
+				(!bool(gyro) || (distGoal >= FAR && ball.t.isUp(90)))) {
 			// camのみ
 			*rot = Cam.multiRotGoal(goal.rotOpp);
 			targetDir = goal.rotOpp;
@@ -58,7 +59,6 @@ Angle calRot(int16_t *rot, bool isFW, cam_t goal, Angle gyro, vectorRT_t ball, D
 			// 両方 or gyroのみ
 			*rot = Gyro.multiRot(0);
 			targetDir = gyro;
-			//// rot = Gyro.multiRot(absMinus(absConstrain(double(ball.t) * 0.8, 50 + 10), 10), isOnLine);
 		}
 	}else {
 		*rot = Gyro.multiRot(0);
