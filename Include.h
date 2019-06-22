@@ -44,7 +44,7 @@ Line Line(true, 16, P_LINE, 5, 120, 300, 12, 0.9);
 // CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, THRE_BLACK, THRE_WHITE, THRE_IS_IN_AIR, CHANGE_RATE
 
 #include "Cam.h"
-Cam Cam(1, 55, 2, 15);
+Cam Cam(1, 55, 3, 0);
 // P_SERIAL, P_ONOFF, SLOPE_RG, INTERCEPT_RG
 
 double POINT_GYRO[3] = {0, 9, 40};
@@ -56,7 +56,7 @@ Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 0.3, 30, 30, 60);
 
 #include "PSD.h"
 PSD frontPSD(31, 0.3, 450, 6);
-PSD backPSD[2] = {PSD(37, 0.96, 400, 6), PSD(38, 0.96, 400, 6)};
+PSD backPSD[2] = {PSD(37, 0.9, 400, 6), PSD(38, 0.9, 400, 6)};
 // P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
 
 #include "Comc.h"

@@ -9,7 +9,7 @@ void get(data_t *d) {
 	d->enemyStands[0] = frontPSD.getBool(false);
 	d->enemyStands[1] = backPSD[0].getBool(false) || backPSD[1].getBool(false);
 
-	const uint16_t THRE_BACK_PSD[2] = {460, 400};
+	const uint16_t THRE_BACK_PSD[2] = {480, 430};
 	d->valBackPSD =
 			d->goal.sideOwn == LEFT ? backPSD[0].getVal()
 			: d->goal.sideOwn == RIGHT ? backPSD[1].getVal()
@@ -19,7 +19,7 @@ void get(data_t *d) {
 		const uint16_t THRE_DIST_FW[3] = {15, 30, 48};
 		d->distGoal = compare(d->goal.distOwn, THRE_DIST_FW, 4, TOO_CLOSE);
 	}else {
-		const double THRE_DIST_GK[2] = {-1, 10};
+		const double THRE_DIST_GK[2] = {-1, 4};
 		Dist distGK = compare(d->goal.distOwn, THRE_DIST_GK, 3, PROPER);
 		d->distGoal = Cam.getCanUse() && distGK == TOO_FAR
 				? distGK : d->distGoalPSD;
