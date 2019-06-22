@@ -138,9 +138,15 @@ bool detectEnemyBack(Angle *dir, vectorRT_t ball, bool enemyStandsBack) {
 	return false;
 }
 
-bool detectBallOutside(Angle *dir, line_t line, Angle gyro) {
+bool detectBallOutside(Angle *dir, vectorRT_t ball, line_t line, Angle gyro) {
 	if(bool(line.dirInside) && bool(*dir)) {
 		Angle absoluteDI = line.dirInside - gyro;
+		if(line.isBack) {
+			if((ball.t - line.dirInside).isDown(45)) {
+				*dir = Angle(false);
+				return true;
+			}
+		}
 		if(absoluteDI.isRight(45)) {
 			if(line.canPause && (*dir - line.dirInside).inside(180 - 30, 180 + 30)) {
 				// 停止

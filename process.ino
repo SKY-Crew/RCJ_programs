@@ -51,9 +51,10 @@ void process() {
 			if(isFW) {
 				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal, d.goal)) {
 					// マルチ対策
-				}else if(detectBallOutside(&dir, d.line, d.gyro)) {
 				}else if(detectLineBackward(&dir, d.ball, d.gyro)) {
 					// ライン後方向:前進->停止
+				}
+				if(detectBallOutside(&dir, d.ball, d.line, d.gyro)) {
 					// ライン上停止
 				}else if(detectLineForward(&dir, d.ball, d.distBall, d.gyro)) {
 					// ライン前方向:後進->停止
