@@ -98,7 +98,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 	willCarryBall = false;
 	if(isFW) {
 		// FW
-		bool leavingLine = bool(d->line.dirInside) && abs(dir - d->line.dirInside) <= 90;
+		bool leavingLine = bool(d->line.dirInside) && (dir - d->line.dirInside).isUp(45);
 		carryBall(isFW, rot, d->goal, d->gyro,
 				d->catchingBall || d->isBallForward, d->enemyStands[0], leavingLine, d->isBallForward);
 		ballInAir(!bool(d->ball.t),
