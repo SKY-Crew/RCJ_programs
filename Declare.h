@@ -17,6 +17,8 @@ uint64_t timeStartCB;
 Count cLineForward(60);
 Side sideLF = CENTER;
 
+Count cLineBackward(30);
+
 bool prvIsInAir;
 
 #endif
