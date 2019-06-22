@@ -5,6 +5,8 @@ void stop() {
 	LCD.clear(true);
 	LCD.write("THE VOLTAGE", 5, 1);
 	LCD.write("IS TOO LOW!!!", 4, 2);
+	//音
+	Buzzer.set(88, 100, true);
 }
 
 void wait(data_t *d) {
