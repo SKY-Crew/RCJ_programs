@@ -1,7 +1,9 @@
 void get(data_t *d) {
 	d->gyro = Gyro.get();
-	d->goal = Cam.get(prvIsInAir);
-	Cam.send(double(d->gyro));
+
+	d->line = Line.get(d->gyro, bool(d->gyro) ? Gyro.getDiff() : 0);
+
+	d->goal = Cam.get(d->line.isInAir);
 	Cam.send(double(d->gyro), isFW);
 
 	d->enemyStands[0] = frontPSD.getBool(false);
@@ -23,7 +25,12 @@ void get(data_t *d) {
 				? distGK : d->distGoalPSD;
 	}
 
+	d->line = Line.modify(isFW, d->gyro, d->goal.isInCorner != CENTER, isFW && d->distGoal <= CLOSE);
+
 	d->ball = Ball.get();
+	if(bool(d->line.dirInside) && bool(d->ball.t) && (d->ball.t - d->line.dirInside).isDown(70)) {
+		d->ball.r = mean(THRE_DIST_BALL, 2);
+	}
 
 	d->distBall = compare(d->ball.r, THRE_DIST_BALL, 3, CLOSE);
 	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15) && Ball.getForward() >= (isFW ? 450 : 550);
@@ -31,8 +38,6 @@ void get(data_t *d) {
 	d->catchFreely = d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal >= FAR || !Cam.getCanUse());
 
-	d->line = Line.get(isFW, d->gyro, Gyro.getDiff(), d->goal.isInCorner != CENTER);
-	prvIsInAir = d->line.isInAir;
 	d->line.isOutside |= !bool(d->ball.t) && bool(d->line.dirInside);
 
 	d->fellow = Comc.rcv(isFW);
