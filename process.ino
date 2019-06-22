@@ -40,7 +40,8 @@ void process() {
 			if(!isFW && d.fellow.isFW && d.fellow.allowChangeRole) {
 				// Role能動的変更
 				isFW = d.isBallForward
-						|| (d.goal.sideOwn * signum(d.ball.t) == 1 && d.distBall <= PROPER);
+						|| (d.goal.sideOwn * signum(d.ball.t) == 1 && d.distBall <= PROPER)
+						|| bool(d.line.dirInside);
 			}
 			if(!isFW) {
 				// gyro考慮
