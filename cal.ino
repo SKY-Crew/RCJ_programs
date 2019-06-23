@@ -7,7 +7,7 @@ void get(data_t *d) {
 	Cam.send(double(d->gyro), isFW);
 
 	d->enemyStands[0] = frontPSD.getBool(false);
-	d->enemyStands[1] = backPSD[0].getBool(false) || backPSD[1].getBool(false);
+	d->enemyStands[1] = backPSD[0].getBool(false) | backPSD[1].getBool(false);
 
 	const uint16_t THRE_BACK_PSD[2] = {480, 430};
 	d->valBackPSD =
