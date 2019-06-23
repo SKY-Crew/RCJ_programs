@@ -21,8 +21,8 @@ void get(data_t *d) {
 	}else {
 		const double THRE_DIST_GK[2] = {-1, 4};
 		Dist distGK = compare(d->goal.distOwn, THRE_DIST_GK, 3, PROPER);
-		d->distGoal = Cam.getCanUse() && distGK == TOO_FAR
-				? distGK : d->distGoalPSD;
+		d->distGoal = Cam.getCanUse() && distGK == TOO_FAR && d->distGoalPSD >= PROPER ? TOO_FAR
+				: d->goal.diffOwn >= LARGE ? PROPER : d->distGoalPSD;
 	}
 
 	d->line = Line.modify(isFW, d->gyro, d->goal.isInCorner != CENTER, isFW && d->distGoal <= CLOSE);
