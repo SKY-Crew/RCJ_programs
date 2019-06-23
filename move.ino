@@ -53,7 +53,7 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 				if(enemyStandsFront) {
 					Motor.run(gyro * (-0.5), Gyro.calRot(signum(goal.rotOpp) * 45), powerCB);
 				}else {
-					Motor.run(leavingLine ? goal.rotOpp : 0, Cam.calRotGoal(goal.rotOpp), powerCB);
+					Motor.run(leavingLine ? goal.rotOpp : 0, Cam.calRot(goal.rotOpp), powerCB);
 				}
 			}else {
 				Motor.run(0, rot, powerCB);
