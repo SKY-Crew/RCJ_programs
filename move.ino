@@ -51,9 +51,9 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 		if(millis() - timeStartCB < 1500) {
 			if(isFW && Cam.getCanUse() && bool(gyro)) {
 				if(enemyStandsFront) {
-					Motor.run(gyro * (-0.5), Gyro.multiRot(signum(goal.rotOpp) * 45), powerCB);
+					Motor.run(gyro * (-0.5), Gyro.calRot(signum(goal.rotOpp) * 45), powerCB);
 				}else {
-					Motor.run(leavingLine ? goal.rotOpp : 0, Cam.multiRotGoal(goal.rotOpp), powerCB);
+					Motor.run(leavingLine ? goal.rotOpp : 0, Cam.calRotGoal(goal.rotOpp), powerCB);
 				}
 			}else {
 				Motor.run(0, rot, powerCB);
@@ -107,10 +107,10 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 				d->catchingBall || d->isBallForward, d->enemyStands[0], leavingLine, d->isBallForward);
 		ballInAir(!bool(d->ball.t), rot, d->gyro, d->goal.rotOwn, d->goal.rotOpp, d->distGoal, d->ball);
 		if(cLineForward.compare(0)) {
-			Motor.run(dir, Gyro.multiRot(0), 140);
+			Motor.run(dir, Gyro.calRot(0), 140);
 		}
 		if(cLineBackward.compare(0)) {
-			Motor.run(dir, Gyro.multiRot(0), 140);
+			Motor.run(dir, Gyro.calRot(0), 140);
 		}
 		if(d->ball.t.isDown(45) || d->distBall >= FAR) {
 			// ボール(後方|遠く)
