@@ -124,7 +124,6 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		Kicker.run(d->catchFreely && d->goal.isOppWide);
 	}else {
 		// GK
-		d->isBallForward |= d->ball.t.isUp(d->distBall == CLOSE ? 10 : 3) && d->distBall <= PROPER;
 		if(d->goal.diffOwn == TOO_LARGE
 				|| (d->goal.diffOwn == LARGE && d->distBall > CLOSE)) {
 			// 横行きすぎ・横&ボール遠く
@@ -143,7 +142,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false, false, false);
 		if(d->isBallForward) {
 			// ボール前方直線上
-			Motor.run(0, rot, 150);
+			Motor.run(d->distGoal >= FAR ? Angle(false) : 0, rot, 45);
 		}else if(d->ball.t.isDown(45) && d->distGoal <= PROPER) {
 			// ボール後方&ゴール遠くない
 			Motor.run(false, rot, 0);
