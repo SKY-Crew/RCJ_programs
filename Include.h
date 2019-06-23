@@ -58,9 +58,9 @@ Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 0.3, 30, 30, 60);
 // BROKEN_THRE, STOP_FRAMES, STAY_THRE
 
 #include "PSD.h"
-PSD frontPSD(31, 0.3, 450, 6);
-PSD backPSD[2] = {PSD(37, 0.9, 400, 6), PSD(38, 0.9, 400, 6)};
-// P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CC
+PSD frontPSD(31, 0.3, 450, 30, 6);
+PSD backPSD[2] = {PSD(37, 0.9, 400, 30, 6), PSD(38, 0.9, 400, 30, 6)};
+// P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CCS, MAX_CC
 
 #include "Comc.h"
 Comc Comc(5, 57, 3, 50);
