@@ -74,7 +74,7 @@ void calDir(Angle *dir, bool isFW, vectorRT_t ball, Angle targetDir, double dist
 		*dir = Ball.getDir(ball);
 		if(bool(*dir)) { *dir += targetDir; }
 	}else {
-		*dir = targetDir + signum(ball.t) * constrain(map(distGoal, 500, 170, 80, 180), 85, 180);
+		*dir = targetDir + signum(ball.t) * conMap(distGoal, 500, 170, 80, 180, 85, 180);
 	}
 	trace(11) { Serial.println("dir:"+str(*dir)); }
 }

@@ -118,7 +118,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		}else {
 			// ボール(前方|横)
 			Motor.run(dir, rot,
-					constrain(map(double(abs(d->ball.t)), 10, 45, 100, 190), 100, 190)
+					conMap(double(abs(d->ball.t)), 10, 45, 100, 190)
 					* (leavingLine || d->distGoal == CLOSE ? 0.7 : 1));
 		}
 		Kicker.run(d->catchFreely && d->goal.isOppWide);
@@ -161,11 +161,11 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 			Motor.run(Ball.getDir(d->ball), rot, 140);
 		}else if(d->distBall >= FAR) {
 			Motor.run(dir, rot,
-					constrain(map(double(abs(d->ball.t)), 3, 15, 100, 140), 30, 170));
+					conMap(double(abs(d->ball.t)), 3, 15, 100, 140, 30, 170));
 		}else {
 			Motor.run(dir, rot,
 					d->ball.t.isUp(20) ?
-							constrain(map(double(abs(d->ball.t)), 5, 10, 120, 180), 100, 180)
+							conMap(double(abs(d->ball.t)), 5, 10, 120, 180, 100, 180)
 					: d->ball.t.isUp(35) ? 200 : 200);
 		}
 		Kicker.run(d->catchFreely && !d->fellow.exists);
