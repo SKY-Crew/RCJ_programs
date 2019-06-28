@@ -52,7 +52,7 @@ Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vec
 	Angle targetDir = 0;
 	if(isFW) {
 		if(Cam.getCanUse() && bool(goal.rotOpp) &&
-				(!bool(gyro) || (distGoal >= FAR && ball.t.isUp(90)))) {
+				(!bool(gyro) || (distGoal >= FAR && (ball.t - gyro).isUp(90)))) {
 			// camのみ
 			*rot = Cam.calRot(goal.rotOpp);
 			targetDir = goal.rotOpp;
