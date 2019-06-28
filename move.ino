@@ -49,11 +49,11 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 		cLineForward.increase(false);
 		uint8_t powerCB = isBallForward ? 200 : 230; // constrain(150 + map(millis() - timeStartCB, 0, 200, 0, 50), 150, 200);
 		if(millis() - timeStartCB < 1500) {
-			if(isFW && Cam.getCanUse() && bool(gyro)) {
-				if(enemyStandsFront) {
+			if(isFW && Cam.getCanUse()) {
+				if(enemyStandsFront && bool(gyro)) {
 					Motor.run(gyro * (-0.5), Gyro.calRot(signum(goal.rotOpp) * 45), powerCB);
 				}else {
-					Motor.run(leavingLine ? goal.rotOpp : 0, Cam.calRot(goal.rotOpp), powerCB);
+					Motor.run(conAngle((goal.rotOpp - gyro) * 0.7, -70, 70), Cam.calRot(goal.rotOpp), powerCB);
 				}
 			}else {
 				Motor.run(0, rot, powerCB);
