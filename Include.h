@@ -13,7 +13,7 @@ bool isFW = IS_SKY;
 const bool CAN_MOVE = true;
 
 double DIR[2][5] = {{0, 15, 40, 110, 180}, {0, 10, 25, 60, 120}};
-double PLUS_DIR[2][5] = {{0, 0, 40, 55, 30}, {0, 0, 70, 90, 75}};
+double PLUS_DIR[2][5] = {{0, 15, 60, 55, 30}, {0, 0, 70, 90, 75}};
 
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
@@ -44,10 +44,9 @@ Line Line(true, 16, P_LINE, 5, 120, 300, 12, 0.9);
 // CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, THRE_BLACK, THRE_WHITE, THRE_IS_IN_AIR, CHANGE_RATE
 
 #include "Cam.h"
-double Kd = 0.4;
-double POINT_CAM[3] = {0, 7, 40};
-double ROT_CAM[3] = {0, 10, 100};
-Cam Cam(1, 55, 3, POINT_CAM, ROT_CAM, 0.4);
+double POINT_CAM[3] = {4, 9, 40};
+double ROT_CAM[3] = {0, 17, 100};
+Cam Cam(1, 55, 3, POINT_CAM, ROT_CAM, 0.05);
 // P_SERIAL, P_ONOFF, SIZE_POINT, POINT, ROT, Kd
 
 double POINT_GYRO[3] = {0, 9, 40};
