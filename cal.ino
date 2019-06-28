@@ -47,7 +47,8 @@ void get(data_t *d) {
 }
 
 
-Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vectorRT_t ball, Dist distBall, bool catchingBall, bool isBallForward) {
+Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vectorRT_t ball,
+		Dist distBall, bool catchingBall, bool isBallForward, bool isOnLine) {
 	Angle targetDir = 0;
 	if(isFW) {
 		if(Cam.getCanUse() && bool(goal.rotOpp) &&
@@ -64,6 +65,7 @@ Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vec
 		*rot = Gyro.calRot(0);
 		targetDir = gyro;
 	}
+	if(isOnLine) { targetDir = gyro; }
 	trace(12) { Serial.println("rot:"+str(*rot)); }
 	return targetDir;
 }

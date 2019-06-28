@@ -50,7 +50,8 @@ void process() {
 			// rot計算
 			Angle dir;
 			int16_t rot;
-			Angle targetDir = calRot(&rot, isFW, d.goal, d.distGoal, d.gyro, d.ball, d.distBall, d.catchingBall, d.isBallForward);
+			Angle targetDir = calRot(&rot, isFW, d.goal, d.distGoal, d.gyro, d.ball,
+					d.distBall, d.catchingBall, d.isBallForward, bool(d.line.dirInside));
 			calDir(&dir, isFW, d.ball, targetDir, d.valBackPSD);
 			// dir計算
 			if(isFW) {
