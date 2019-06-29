@@ -47,7 +47,7 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 	willCarryBall = carryingBall;
 	if(carryingBall) {
 		cLineForward.increase(false);
-		uint8_t powerCB = isBallForward ? 200 : 230; // constrain(150 + map(millis() - timeStartCB, 0, 200, 0, 50), 150, 200);
+		powerCB = max(powerCB, isBallForward ? 200 : 230);
 		if(millis() - timeStartCB < 1500) {
 			if(isFW && Cam.getCanUse()) {
 				if(enemyStandsFront && bool(gyro)) {
@@ -69,6 +69,7 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 		willCarryBall = catchingBall || isBallForward;
 		if(willCarryBall) {
 			timeStartCB = millis();
+			powerCB = 0;
 		}
 	}
 }
