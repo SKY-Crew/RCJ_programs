@@ -70,13 +70,14 @@ Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vec
 	return targetDir;
 }
 
-void calDir(Angle *dir, bool isFW, vectorRT_t ball, Angle targetDir, double distGoal) {
+void calDir(Angle *dir, bool isFW, vectorRT_t ball, Angle gyro, Angle targetDir, double distGoal) {
 	if(isFW) {
 		ball.t = bool(ball.t) ? ball.t - targetDir : Angle(false);
 		*dir = Ball.getDir(ball);
 		if(bool(*dir)) { *dir += targetDir; }
 	}else {
 		*dir = targetDir + signum(ball.t) * conMap(distGoal, 500, 170, 80, 180, 80, 180);
+		*dir -= signum(*dir) * conMap(double(abs(gyro)), 0, 30, 0, 40);
 	}
 	trace(11) { Serial.println("dir:"+str(*dir)); }
 }
