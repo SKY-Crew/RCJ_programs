@@ -13,7 +13,7 @@ bool isFW = IS_SKY;
 const bool CAN_MOVE = true;
 
 double DIR[2][5] = {{0, 15, 40, 110, 180}, {0, 10, 25, 60, 120}};
-double PLUS_DIR[2][5] = {{0, 15, 60, 55, 30}, {0, 0, 70, 90, 75}};
+double PLUS_DIR[2][5] = {{0, 10, 60, 55, 30}, {0, 3, 70, 90, 75}};
 
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
