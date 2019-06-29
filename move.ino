@@ -63,10 +63,10 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 			Motor.run(false, rot, 0);
 		}
 		// carry続けるか
-		willCarryBall = Ball.compareCatch(0.3);
+		willCarryBall = Ball.compareCatch(0) || isBallForward;
 	}else {
 		// carry始めるか
-		willCarryBall = catchingBall;
+		willCarryBall = catchingBall || isBallForward;
 		if(willCarryBall) {
 			timeStartCB = millis();
 		}
@@ -104,7 +104,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		// FW
 		bool leavingLine = bool(d->line.dirInside) && (dir - d->line.dirInside).isUp(45);
 		carryBall(isFW, rot, d->goal, d->gyro,
-				d->catchingBall || d->isBallForward, d->enemyStands[0], leavingLine, d->isBallForward);
+				d->catchingBall, d->enemyStands[0], leavingLine, d->isBallForward);
 		ballInAir(!bool(d->ball.t), rot, d->gyro, d->goal.rotOwn, d->goal.rotOpp, d->distGoal, d->ball);
 		if(cLineForward.compare(0)) {
 			Motor.run(dir, Gyro.calRot(0), 140);

@@ -13,6 +13,7 @@ Count cBecomeFW(100, false);
 bool carryingBall = false;
 bool willCarryBall = false;
 uint64_t timeStartCB;
+uint16_t powerCB;
 
 Count cLineForward(60);
 Side sideLF = CENTER;
