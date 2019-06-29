@@ -35,7 +35,7 @@ void get(data_t *d) {
 	d->distBall = compare(d->ball.r, THRE_DIST_BALL, 3, CLOSE);
 	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15) && Ball.getForward() >= (isFW ? 450 : 550);
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
-	d->catchFreely = d->catchingBall && !d->enemyStands[0]
+	d->catchFreely = Ball.getMayKick() && d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal >= FAR || !Cam.getCanUse());
 
 	d->line.isOutside |= !bool(d->ball.t) && bool(d->line.dirInside);
