@@ -26,7 +26,7 @@ void setup() {
 	pinMode(P_CHANGE_ROLE, INPUT);
 	pinMode(P_IS_FW, OUTPUT);
 
-	Buzzer.set(60, 100);
+	Buzzer.set(70, 100);
 }
 
 void loop() {
