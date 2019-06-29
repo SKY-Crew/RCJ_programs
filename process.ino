@@ -42,6 +42,7 @@ void process() {
 				isFW = d.isBallForward
 						|| (d.goal.sideOwn * signum(d.ball.t) == 1 && d.distBall <= PROPER)
 						|| bool(d.line.dirInside);
+				Buzzer.set(75, 200, isFW, 50);
 			}
 			if(!isFW) {
 				// gyro考慮

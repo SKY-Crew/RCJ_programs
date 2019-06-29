@@ -26,7 +26,8 @@ void setup() {
 	pinMode(P_CHANGE_ROLE, INPUT);
 	pinMode(P_IS_FW, OUTPUT);
 
-	Buzzer.set(70, 100);
+	Buzzer.set(60, 100, true, 1);
+	Buzzer.beep();
 }
 
 void loop() {
@@ -38,8 +39,7 @@ void loop() {
 	Motor.setRateVolt(INA219.getRate());
 	Kicker.setHaveChecked(false);
 	Kicker.setPower();
-	//音
-	Buzzer.beep(false);
+	Buzzer.reset();
 	// 走行可か
 	prvCanRun = canRun;
 	canRun = digitalRead(P_START);
@@ -56,6 +56,8 @@ void loop() {
 		process();
 	}
 
+	//音
+	Buzzer.beep();
 	// fps計算
 	const int64_t WAIT = 6000;
 	delayMicroseconds(max(0l, WAIT + (int64_t)timeLoop - (int64_t)micros()));

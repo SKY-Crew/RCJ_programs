@@ -8,6 +8,7 @@ void get(data_t *d) {
 
 	d->enemyStands[0] = frontPSD.getBool(false);
 	d->enemyStands[1] = backPSD[0].getBool(false) | backPSD[1].getBool(false);
+	Buzzer.set(40, 50, d->enemyStands[0], 30);
 
 	const uint16_t THRE_BACK_PSD[2] = {475, 410};
 	d->valBackPSD =
@@ -37,8 +38,10 @@ void get(data_t *d) {
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
 	d->catchFreely = Ball.getMayKick() && d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal >= FAR || !Cam.getCanUse());
+	Buzzer.set(50, 50, d->catchFreely, 20);
 
 	d->line.isOutside |= !bool(d->ball.t) && bool(d->line.dirInside);
+	Buzzer.set(80, 50, d->line.isOutside, 40);
 
 	d->fellow = Comc.rcv(isFW);
 	bool allowChangeRole = calAllowChangeRole(isFW, d->ball, d->distGoal, d->goal.distOwn, d->fellow,
