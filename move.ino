@@ -10,6 +10,9 @@ void stop() {
 }
 
 void wait(data_t *d) {
+	// Buzzer
+	Buzzer.set(30, 200, Gyro.resetting(), 60);
+	Buzzer.set(35, 200, prvChangeRole, 60);
 	// LCD表示
 	LCD.run(d->gyro, d->line, Cam.getCanUse(), bool(d->gyro), isFW, Comc.getCanUse(), d->fellow,
 		Line.getQTY(), Line.getVal(), Line.getState(),INA219.getVal(), d->goal,

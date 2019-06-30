@@ -100,17 +100,21 @@ void checkRole(bool canBecomeGK, comc_t fellow) {
 	if(Comc.getCanUse()) {
 		if(fellow.exists && isFW == fellow.isFW) {
 			if(isFW && fellow.allowChangeRole && canBecomeGK) {
+				Buzzer.set(75, 200, isFW, 50);
 				isFW = false;
 			}else if(!isFW && !canRun) {
 				// 停止状態
+				Buzzer.set(75, 200, isFW, 50);
 				isFW = true;
 			}else if(!isFW && IS_SKY) {
 				// 両方GK
+				Buzzer.set(75, 200, isFW, 50);
 				isFW = true;
 			}
 		}
 		if(canRun && !fellow.exists && isFW && canBecomeGK) {
 			// fellowいなくなる
+			Buzzer.set(75, 200, isFW, 50);
 			isFW = false;
 		}
 	}
