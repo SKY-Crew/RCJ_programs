@@ -29,7 +29,7 @@ Kicker Kicker(29, 7, 5, 40, 100);
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-double THRE_DIST_BALL[2] = {300, 180};
+double THRE_DIST_BALL[2] = {240, 150};
 double* p_DIR[2] = {DIR[0], DIR[1]};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
 Ball Ball(16, P_IR, 2, 200, 1.0, 0.1, IS_SKY ? 0 : 0, 2, THRE_DIST_BALL, 5, p_DIR, p_PLUS_DIR, A20, 200, 25, 15);

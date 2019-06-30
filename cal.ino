@@ -88,7 +88,7 @@ void calDir(Angle *dir, bool isFW, vectorRT_t ball, Angle gyro, Angle targetDir,
 bool calAllowChangeRole(bool isFW, vectorRT_t ball, Dist distGoal, double distOwn, comc_t fellow, bool onGround) {
 	bool allowChangeRole = onGround;
 	if(isFW && !fellow.isFW) {
-		allowChangeRole &= distGoal <= CLOSE && ball.t.isUp(135) && fellow.ball_r - ball.r > 20 && !bool(cBecomeFW);
+		allowChangeRole &= distGoal <= CLOSE && ball.t.isUp(120) && fellow.ball_r - ball.r > 20 && !bool(cBecomeFW);
 	}else if(isFW && fellow.isFW && !bool(cBecomeFW)) {
 		allowChangeRole &= distOwn - fellow.distOwn > 15
 				|| (abs(distOwn - fellow.distOwn) <= 15 && ball.r > fellow.ball_r);
