@@ -52,12 +52,14 @@ void carryBall(bool isFW, int16_t rot, cam_t goal, Angle gyro, bool catchingBall
 		cLineForward.increase(false);
 		powerCB = max(powerCB, isBallForward ? 200 : 230);
 		if(millis() - timeStartCB < 1500) {
-			if(isFW && Cam.getCanUse()) {
-				if(enemyStandsFront && bool(gyro)) {
-					Motor.run(gyro * (-0.5), Gyro.calRot(signum(goal.rotOpp) * 45), powerCB);
-				}else {
+			if(isFW) {
+				if(!bool(goal.rotOpp)) {
+					Motor.run(0, Gyro.calRot(0), powerCB);
+				}else if(Cam.getCanUse()) {
 					Angle dir = catchingBall ? absCon(double(goal.rotOpp - gyro) * 0.7, 70) : 0;
 					Motor.run(dir, Cam.calRot(goal.rotOpp), powerCB * conMap(double(abs(dir)), 0, 45, 1, 1.4));
+				}else {
+					Motor.run(0, rot, powerCB);
 				}
 			}else {
 				Motor.run(0, rot, powerCB);
@@ -87,10 +89,12 @@ void ballInAir(bool isBallInAir, int16_t rot, Angle gyro, Angle rotOwn, Angle ro
 			if(rotOpp.isUp(10) || !bool(rotOpp)) {
 				Motor.run(180, rot, 100);
 			}else {
-				Motor.run(rotOpp + signum(rotOpp - gyro) * 90, rot, 190);
+				Motor.run(rotOpp + signum(rotOpp - gyro) * 90, rot, 200);
 			}
 		}else if(distGoal > CLOSE) {
 			Motor.run(rotOwn, rot, 160);
+		}else if(!bool(rotOwn) && distGoal >= CLOSE) {
+			Motor.run(180, rot, 100);
 		}else if(!rotOwn.isDown(10) && distGoal >= CLOSE) {
 			Motor.run(signum(rotOwn) * 90, rot, 110);
 		}else {
@@ -109,7 +113,7 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		// FW
 		bool leavingLine = bool(d->line.dirInside) && (dir - d->line.dirInside).isDown(45);
 		carryBall(isFW, rot, d->goal, d->gyro,
-				d->catchingBall, d->enemyStands[0], leavingLine, d->isBallForward);
+				d->catchingBall, d->enemyStands[0], leavingLine, d->isBallForward && !cLineForward.compare(0));
 		ballInAir(!bool(d->ball.t), rot, d->gyro, d->goal.rotOwn, d->goal.rotOpp, d->distGoal, d->ball);
 		if(cLineForward.compare(0)) {
 			Motor.run(dir, Gyro.calRot(0), 140);
@@ -123,14 +127,13 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		}else {
 			// ボール(前方|横)
 			Motor.run(dir, rot,
-					conMap(double(abs(d->ball.t)), 10, 45, 100, 190)
-					* (leavingLine || d->distGoal == CLOSE ? 0.7 : 1));
+					conMap(double(abs(d->ball.t)), 10, 45, 120, 190)
+					* (leavingLine ? 0.7 : 1));
 		}
-		Kicker.run(d->catchFreely && d->goal.isOppWide);
+		Kicker.run(d->catchFreely);
 	}else {
 		// GK
-		if(d->goal.diffOwn == TOO_LARGE
-				|| (d->goal.diffOwn == LARGE && d->distBall > CLOSE)) {
+		if(d->goal.diffOwn >= LARGE) {
 			// 横行きすぎ・横&ボール遠く
 			Motor.run(90 * (- d->goal.sideOwn), rot, 150);
 		}else if(d->distGoal == TOO_FAR && (d->ball.t.isUp(90) || !bool(d->ball.t))) {
@@ -147,30 +150,30 @@ void run(data_t *d, bool isFW, Angle dir, int16_t rot) {
 		carryBall(isFW, rot, d->goal, d->gyro, d->catchingBall, false, false, false);
 		if(d->isBallForward) {
 			// ボール前方直線上
-			Motor.run(d->distGoal >= FAR ? Angle(false) : 0, rot, 45);
+			Motor.run(d->distGoal >= (d->fellow.exists ? FAR : TOO_FAR) ? Angle(false) : 0, rot, 45);
 		}else if(d->ball.t.isDown(45) && d->distGoal <= PROPER) {
 			// ボール後方&ゴール遠くない
 			Motor.run(false, rot, 0);
-		}else if(d->goal.diffOwn == SMALL && d->distBall <= CLOSE && d->goal.sideOwn * signum(d->ball.t) == 1) {
+		/*}else if(d->goal.diffOwn == SMALL && d->distBall <= CLOSE && d->goal.sideOwn * signum(d->ball.t) == 1) {
 			// 少し横&ボール近く
-			Motor.run(dir, rot, 90);
+			Motor.run(dir, rot, 90);*/
 		}else if(!bool(d->ball.t)
 				|| d->ball.t.isUp(d->distBall <= PROPER ? 3 : 3)
 				|| d->goal.sideOwn * signum(d->ball.t) == 1) {
 			// ボールない(ゴール遠くない)・ボール前方(遠く)・ボール外側(自分端)
 			Motor.run(d->distGoal == CLOSE ? 0 : d->distGoal >= FAR ? 180 : Angle(false),
-					rot, 70);
+					rot, 50);
 		}else if(d->ball.t.isDown(45) && d->distBall <= CLOSE){
 			//ボール後方近く(ゴール遠い)
 			Motor.run(Ball.getDir(d->ball), rot, 140);
 		}else if(d->distBall >= FAR) {
 			Motor.run(dir, rot,
-					conMap(double(abs(d->ball.t)), 3, 15, 100, 140, 30, 170));
+					conMap(double(abs(d->ball.t)), 3, 15, 100, 140, 30, 140));
 		}else {
 			Motor.run(dir, rot,
 					d->ball.t.isUp(20) ?
 							conMap(double(abs(d->ball.t)), 5, 10, 120, 180, 100, 180)
-					: d->ball.t.isUp(35) ? 200 : 200);
+					: d->ball.t.isUp(45) ? 200 : 230);
 		}
 		Kicker.run(d->catchFreely && !d->fellow.exists);
 	}

@@ -18,8 +18,8 @@ double PLUS_DIR[2][5] = {{0, 10, 60, 55, 30}, {0, 3, 70, 90, 75}};
 #include "Motor.h"
 uint8_t P_M_DIR[4] = {24, 25, 26, 27};
 uint8_t P_M_PWR[4] = {5, 6, 9, 10};
-double MULTI_POWER_SKY[4] = {1.1, 1.2, 1.1, 1.19};
-double MULTI_POWER_CREW[4] = {1.07, 1.05, 1.1, 1.15};
+double MULTI_POWER_SKY[4] = {1.07, 1.17, 1.1, 1.19};
+double MULTI_POWER_CREW[4] = {1.07, 1.05, 1.08, 1.13};
 Motor Motor(CAN_MOVE, 4, P_M_DIR, P_M_PWR, 45, 0.8773, 32.73, IS_SKY ? MULTI_POWER_SKY : MULTI_POWER_CREW);
 // CAN_MOVE, QTY, P_DIR, P_PWR, firstRM, SLOPE_POWER, INTERCEPT_POWER, MULTI_POWER
 
@@ -29,7 +29,7 @@ Kicker Kicker(29, 7, 5, 40, 100);
 
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
-double THRE_DIST_BALL[2] = {240, 150};
+double THRE_DIST_BALL[2] = {240, 100};
 double* p_DIR[2] = {DIR[0], DIR[1]};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
 Ball Ball(16, P_IR, 2, 200, 1.0, 0.1, IS_SKY ? 0 : 0, 2, THRE_DIST_BALL, 5, p_DIR, p_PLUS_DIR, A20, 200, 25, 15);
@@ -49,8 +49,8 @@ double ROT_CAM[3] = {0, 7, 120};
 Cam Cam(1, 55, 3, POINT_CAM, ROT_CAM, 0.04);
 // P_SERIAL, P_ONOFF, SIZE_POINT, POINT, ROT, Kd
 
-double POINT_GYRO[3] = {0, 9, 40};
-double ROT_GYRO[3] = {0, 17.2, 100};
+double POINT_GYRO[3] = {0, 10, 50};
+double ROT_GYRO[3] = {0, 18, 250};
 #include "Gyro.h"
 Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 0.3, 30, 30, 60);
 // P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_POINT, POINT, ROT, Kd,
@@ -58,7 +58,7 @@ Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 0.3, 30, 30, 60);
 
 #include "PSD.h"
 PSD frontPSD(31, 0.3, 450, 30, 6);
-PSD backPSD[2] = {PSD(37, 0.9, 400, 30, 6), PSD(38, 0.9, 400, 30, 6)};
+PSD backPSD[2] = {PSD(37, 0.9, 450, 30, 6), PSD(38, 0.9, 450, 30, 6)};
 // P_WIRE, CHANGE_RATE, THRE_IS_CLOSE, MAX_CCS, MAX_CC
 
 #include "Comc.h"

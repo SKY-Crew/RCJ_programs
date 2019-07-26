@@ -7,22 +7,23 @@ void get(data_t *d) {
 	Cam.send(double(d->gyro), isFW);
 
 	d->enemyStands[0] = frontPSD.getBool(false);
-	d->enemyStands[1] = backPSD[0].getBool(false) | backPSD[1].getBool(false);
+	d->enemyStands[1] = backPSD[0].getBool(false) & backPSD[1].getBool(false);
 	Buzzer.set(40, 50, d->enemyStands[0], 30);
+	Buzzer.set(88, 50, d->enemyStands[1], 150);
 
-	const uint16_t THRE_BACK_PSD[2] = {475, 410};
+	const uint16_t THRE_BACK_PSD[3] = {450, 410, 340};
 	d->valBackPSD =
 			d->goal.sideOwn == LEFT ? backPSD[0].getVal()
 			: d->goal.sideOwn == RIGHT ? backPSD[1].getVal()
 			: max(backPSD[0].getVal(), backPSD[1].getVal());
-	d->distGoalPSD = compare(d->valBackPSD, THRE_BACK_PSD, 3, CLOSE);
+	d->distGoalPSD = compare(d->valBackPSD, THRE_BACK_PSD, 4, CLOSE);
 	if(isFW) {
-		const uint16_t THRE_DIST_FW[3] = {15, 30, 48};
+		const uint16_t THRE_DIST_FW[3] = {20, 40, 57};
 		d->distGoal = compare(d->goal.distOwn, THRE_DIST_FW, 4, TOO_CLOSE);
 	}else {
-		const double THRE_DIST_GK[2] = {-1, 8};
+		const double THRE_DIST_GK[2] = {-1, 20};
 		Dist distGK = compare(d->goal.distOwn, THRE_DIST_GK, 3, PROPER);
-		d->distGoal = Cam.getCanUse() && distGK == TOO_FAR && d->distGoalPSD >= PROPER ? TOO_FAR
+		d->distGoal = Cam.getCanUse() && distGK == TOO_FAR ? TOO_FAR
 				: d->goal.diffOwn >= LARGE ? PROPER : d->distGoalPSD;
 	}
 
@@ -45,7 +46,8 @@ void get(data_t *d) {
 
 	d->fellow = Comc.rcv(isFW);
 	bool allowChangeRole = calAllowChangeRole(isFW, d->ball, d->distGoal, d->goal.distOwn, d->fellow,
-			d->fellow.exists && !d->line.isInAir && !d->fellow.isInAir);
+			d->fellow.exists && !d->line.isInAir && !d->fellow.isInAir,
+			d->line.isInAir && d->fellow.isFW);
 	Comc.snd(canRun, isFW, d->ball.r, d->goal.distOwn, allowChangeRole, d->line.isInAir);
 }
 
@@ -79,13 +81,13 @@ void calDir(Angle *dir, bool isFW, vectorRT_t ball, Angle gyro, Angle targetDir,
 		*dir = Ball.getDir(ball);
 		if(bool(*dir)) { *dir += targetDir; }
 	}else {
-		*dir = targetDir + signum(ball.t) * conMap(distGoal, 500, 170, 80, 180, 80, 180);
+		*dir = targetDir + signum(ball.t) * conMap(distGoal, 470, 170, 80, 180, 80, 180);
 		*dir -= signum(*dir) * conMap(double(abs(gyro)), 0, 30, 0, 40);
 	}
 	trace(11) { Serial.println("dir:"+str(*dir)); }
 }
 
-bool calAllowChangeRole(bool isFW, vectorRT_t ball, Dist distGoal, double distOwn, comc_t fellow, bool onGround) {
+bool calAllowChangeRole(bool isFW, vectorRT_t ball, Dist distGoal, double distOwn, comc_t fellow, bool onGround, bool multi) {
 	bool allowChangeRole = onGround;
 	if(isFW && !fellow.isFW) {
 		allowChangeRole &= distGoal <= CLOSE && ball.t.isUp(120) && fellow.ball_r - ball.r > 20 && !bool(cBecomeFW);
@@ -93,6 +95,7 @@ bool calAllowChangeRole(bool isFW, vectorRT_t ball, Dist distGoal, double distOw
 		allowChangeRole &= distOwn - fellow.distOwn > 15
 				|| (abs(distOwn - fellow.distOwn) <= 15 && ball.r > fellow.ball_r);
 	}
+	allowChangeRole |= multi;
 	return allowChangeRole;
 }
 
@@ -163,7 +166,7 @@ bool detectBallOutside(Angle *dir, vectorRT_t ball, line_t line, Angle gyro) {
 			}
 		}
 		if(absoluteDI.isRight(45)) {
-			if(line.canPause && diff.inside(180 - 30, 180 + 30)) {
+			if(line.canPause && diff.inside(180 - 45, 180 + 45)) {
 				// 停止
 				*dir = Angle(false);
 				return true;
@@ -173,7 +176,7 @@ bool detectBallOutside(Angle *dir, vectorRT_t ball, line_t line, Angle gyro) {
 				return true;
 			}
 		}else if(absoluteDI.isLeft(45)) {
-			if(line.canPause && diff.inside(180 - 30, 180 + 30)) {
+			if(line.canPause && diff.inside(180 - 45, 180 + 45)) {
 				// 停止
 				*dir = Angle(false);
 				return true;

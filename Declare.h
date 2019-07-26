@@ -15,9 +15,9 @@ bool willCarryBall = false;
 uint64_t timeStartCB;
 uint16_t powerCB;
 
-Count cLineForward(60);
+Count cLineForward(90);
 Side sideLF = CENTER;
 
-Count cLineBackward(30);
+Count cLineBackward(45);
 
 #endif
