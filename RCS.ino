@@ -37,7 +37,7 @@ void loop() {
 	// 駆動重複リセット
 	Motor.setHaveRun(false);
 	Motor.setRateVolt(INA219.getRate());
-	Motor.setRatePower(isFW ? 0.75 : 0.9);
+	Motor.setRatePower(isFW ? 1.0 : 1.0);
 	Kicker.setHaveChecked(false);
 	Kicker.setPower();
 	Buzzer.reset();

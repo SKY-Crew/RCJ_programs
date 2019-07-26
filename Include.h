@@ -52,7 +52,7 @@ Cam Cam(1, 55, 3, POINT_CAM, ROT_CAM, 0.04);
 double POINT_GYRO[3] = {0, 10, 50};
 double ROT_GYRO[3] = {0, 18, 250};
 #include "Gyro.h"
-Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 0.3, 30, 30, 60);
+Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 1.1, 30, 30, 60);
 // P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_POINT, POINT, ROT, Kd,
 // BROKEN_THRE, STOP_FRAMES, STAY_THRE
 

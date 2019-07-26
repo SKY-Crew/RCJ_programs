@@ -31,7 +31,7 @@ void get(data_t *d) {
 
 	d->ball = Ball.get();
 	if(bool(d->line.dirInside) && bool(d->ball.t) && (d->ball.t - d->line.dirInside).isDown(70)) {
-		d->ball.r = mean(THRE_DIST_BALL, 2);
+		d->ball.r = THRE_DIST_BALL[0] + 50;
 	}
 
 	d->distBall = compare(d->ball.r, THRE_DIST_BALL, 3, CLOSE);
@@ -56,7 +56,7 @@ Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vec
 		Dist distBall, bool catchingBall, bool isBallForward, bool isOnLine) {
 	Angle targetDir = 0;
 	if(isFW) {
-		if(Cam.getCanUse() && bool(goal.rotOpp) &&
+		if(Cam.getCanUse() && bool(goal.rotOpp) && bool(ball.t) &&
 				(!bool(gyro) || (distGoal >= FAR && (ball.t - gyro).isUp(90)))) {
 			// camのみ
 			*rot = Cam.calRot(goal.rotOpp);
