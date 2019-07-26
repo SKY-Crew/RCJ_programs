@@ -4,7 +4,7 @@ void get(data_t *d) {
 	d->line = Line.get(d->gyro, bool(d->gyro) ? Gyro.getDiff() : 0);
 
 	d->goal = Cam.get(d->line.isInAir);
-	Cam.send(double(d->gyro), isFW);
+	if(techCha != 4) { Cam.snd((uint8_t) map(double(d->gyro), -180, 180, 0, 127) + (isFW << 7)); }
 
 	d->enemyStands[0] = frontPSD.getBool(false);
 	d->enemyStands[1] = backPSD[0].getBool(false) & backPSD[1].getBool(false);
@@ -31,12 +31,32 @@ void get(data_t *d) {
 
 	d->ball = Ball.get();
 	if(bool(d->line.dirInside) && bool(d->ball.t) && (d->ball.t - d->line.dirInside).isDown(70)) {
-		d->ball.r = mean(THRE_DIST_BALL, 2);
+		d->ball.r = ((isSuperField && !IS_SKY) ? THRE_DIST_BALL_SF[0] : THRE_DIST_BALL[0]) + 50;
 	}
 
-	d->distBall = compare(d->ball.r, THRE_DIST_BALL, 3, CLOSE);
-	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15) && Ball.getForward() >= (isFW ? 450 : 550);
+	d->distBall = compare(d->ball.r, (isSuperField && !IS_SKY) ? THRE_DIST_BALL_SF : THRE_DIST_BALL, 3, CLOSE);
+	if(techCha == 5) {
+		d->ball.t = Cam.ball_t;
+		d->goal.rotOwn = 180;
+		d->distBall = Dist(int16_t(d->goal.isInCorner) + 1 + int16_t(CLOSE));
+		d->distBall = bool(d->ball.t) ? d->distBall : FAR;
+		switch(d->distBall) {
+			case CLOSE: d->ball.r = THRE_DIST_BALL[0] + 50; break;
+			case PROPER: d->ball.r = mean(THRE_DIST_BALL, 2); break;
+			case FAR: d->ball.r = THRE_DIST_BALL[1] - 30; break;
+			default: break;
+		}
+		d->goal.isInCorner = CENTER;
+	}
+	d->isBallForward = d->distBall == CLOSE && d->ball.t.isUp(15) && Ball.getForward() >= ((isSuperField && !IS_SKY) ? 550 : (isFW ? 450 : 550));
 	d->catchingBall = Ball.getCatch() && d->ball.t.isUp(30) && d->distBall == CLOSE;
+	if(techCha == 5) {
+		d->catchingBall |= Ball.getCatch() && !bool(d->ball.t);
+		if(d->catchingBall) {
+			d->ball.t = 0;
+			d->distBall = CLOSE;
+		}
+	}
 	d->catchFreely = Ball.getMayKick() && d->catchingBall && !d->enemyStands[0]
 			&& (isFW || d->distGoal >= FAR || !Cam.getCanUse());
 	Buzzer.set(50, 50, d->catchFreely, 20);
@@ -56,7 +76,10 @@ Angle calRot(int16_t *rot, bool isFW, cam_t goal, Dist distGoal, Angle gyro, vec
 		Dist distBall, bool catchingBall, bool isBallForward, bool isOnLine) {
 	Angle targetDir = 0;
 	if(isFW) {
-		if(Cam.getCanUse() && bool(goal.rotOpp) &&
+		if(techCha == 1 || techCha == 6 || (techCha == 4 && !isFW)) {
+			*rot = Gyro.calRot(goal.rotOpp);
+			targetDir = goal.rotOpp;
+		}else if(Cam.getCanUse() && bool(goal.rotOpp) && bool(ball.t) &&
 				(!bool(gyro) || (distGoal >= FAR && (ball.t - gyro).isUp(90)))) {
 			// camのみ
 			*rot = Cam.calRot(goal.rotOpp);

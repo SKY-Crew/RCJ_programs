@@ -37,13 +37,26 @@ void loop() {
 	// 駆動重複リセット
 	Motor.setHaveRun(false);
 	Motor.setRateVolt(INA219.getRate());
-	Motor.setRatePower(isFW ? 0.75 : 0.9);
+	if(isSuperField) { Motor.setRatePower(isFW ? 0.9 : 1.0);
+	}else if(techCha == 2) { Motor.setRatePower(1.0);
+	}else { Motor.setRatePower(isFW ? 1.0 : 1.0); }
+	// }else { Motor.setRatePower(isFW ? 0.6 : 0.6); }
 	Kicker.setHaveChecked(false);
 	Kicker.setPower();
 	Buzzer.reset();
 	// 走行可か
 	prvCanRun = canRun;
-	canRun = digitalRead(P_START);
+	if(techCha != 3) {
+		canRun = digitalRead(P_START);
+	}else {
+		switch(Comc.getCommand()) {
+			case 1: canRun = false; break;
+			case 2: canRun = true; break;
+			case 3: Motor.run(90, Gyro.calRot(0), 150); break;
+			default: break;
+		}
+	}
+	canStartRunning &= canRun;
 	// Role変更禁止
 	cBecomeFW.increase(isFW && (!prvIsFW || (canRun && !prvCanRun)));
 	// Role表示LED

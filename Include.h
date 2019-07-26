@@ -7,7 +7,10 @@
 #include "Dist.h"
 #include "Debug.h"
 
-const bool IS_SKY = true;
+const bool isSuperField = false;
+const uint8_t techCha = 4;
+
+const bool IS_SKY = false;
 bool isFW = IS_SKY;
 
 const bool CAN_MOVE = true;
@@ -30,9 +33,10 @@ Kicker Kicker(29, 7, 5, 40, 100);
 #include "Ball.h"
 uint8_t P_IR[16] = {36, 35, 53, 52, 51, 50, 49, 48, 47, 40, 41, 42, 43, 44, 45, 46};
 double THRE_DIST_BALL[2] = {240, 100};
+double THRE_DIST_BALL_SF[2] = {800, 600};
 double* p_DIR[2] = {DIR[0], DIR[1]};
 double* p_PLUS_DIR[2] = {PLUS_DIR[0], PLUS_DIR[1]};
-Ball Ball(16, P_IR, 2, 200, 1.0, 0.1, IS_SKY ? 0 : 0, 2, THRE_DIST_BALL, 5, p_DIR, p_PLUS_DIR, A20, 200, 25, 15);
+Ball Ball(16, P_IR, 2, 200, 1.0, 0.1, IS_SKY ? 0 : 0, 2, (isSuperField && !IS_SKY) ? THRE_DIST_BALL_SF : THRE_DIST_BALL, 5, p_DIR, p_PLUS_DIR, A20, 200, 25, 15);
 // QTY, PORT,
 // MEASURING_COUNT, THRE_WEAK, CHANGE_RATE, CHANGE_RATE_T, PLUS_T
 // SIZE_THRE_DIST, THRE_DIST, SIZE_DIR, DIR, PLUS_DIR,
@@ -40,7 +44,7 @@ Ball Ball(16, P_IR, 2, 200, 1.0, 0.1, IS_SKY ? 0 : 0, 2, THRE_DIST_BALL, 5, p_DI
 
 #include "Line.h"
 uint8_t P_LINE[16] = {A9, A8, A7, A6, A5, A4, A3, A2, A1, A0, A22, A21, A10, A11, A26, A25};
-Line Line(true, 16, P_LINE, 5, 120, 300, 12, 0.9);
+Line Line(techCha != 1, 16, P_LINE, 5, 120, 300, 12, 0.9);
 // CAN_LEAVE_LINE, QTY, PORT, MAX_CIIA, THRE_BLACK, THRE_WHITE, THRE_IS_IN_AIR, CHANGE_RATE
 
 #include "Cam.h"
@@ -49,10 +53,15 @@ double ROT_CAM[3] = {0, 7, 120};
 Cam Cam(1, 55, 3, POINT_CAM, ROT_CAM, 0.04);
 // P_SERIAL, P_ONOFF, SIZE_POINT, POINT, ROT, Kd
 
+double POINT_GYRO_TC[3] = {2, 12, 50};
+double ROT_GYRO_TC[3] = {0, 7, 80};
 double POINT_GYRO[3] = {0, 10, 50};
 double ROT_GYRO[3] = {0, 18, 250};
 #include "Gyro.h"
-Gyro Gyro(2, 0x68, 56, 2, 3, POINT_GYRO, ROT_GYRO, 0.3, 30, 30, 60);
+Gyro Gyro(2, 0x68, 56, 2, 3,
+		(techCha == 1 || techCha == 6) ? POINT_GYRO_TC : POINT_GYRO,
+		(techCha == 1 || techCha == 6) ? ROT_GYRO_TC : ROT_GYRO,
+		(techCha == 1 || techCha == 6) ? 3.9 : 1.1, 30, 30, 60);
 // P_WIRE, PORT, ONOFF_PIN, RESET_PIN, SIZE_POINT, POINT, ROT, Kd,
 // BROKEN_THRE, STOP_FRAMES, STAY_THRE
 

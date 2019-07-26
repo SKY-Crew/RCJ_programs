@@ -11,6 +11,9 @@ void process() {
 			d.line.isOutside = false;
 			LCD.clear(true);
 			LCD.write("Running!", 0, 0);
+			if(techCha == 6) {
+				for(int i = 0; i < 7; i ++) { delay(1000); }
+			}
 		}
 		if(d.line.isOutside) {
 			// ライン復帰
@@ -55,7 +58,7 @@ void process() {
 					d.distBall, d.catchingBall, d.isBallForward, bool(d.line.dirInside));
 			calDir(&dir, isFW, d.ball, d.gyro, targetDir, d.valBackPSD);
 			// dir計算
-			if(isFW) {
+			if(isFW && (techCha == 0 || techCha == 2 || techCha == 3 || techCha == 5)) {
 				if(avoidMulDef(&dir, d.fellow, d.ball, d.distGoal)) {
 					// マルチ対策
 				}else if(detectLineBackward(&dir, d.ball, d.gyro)) {
@@ -69,12 +72,59 @@ void process() {
 					// 真後ろ敵
 				}
 			}
-			/* if(!carryingBall) {
+			if(techCha == 1) {
+				if(detectEnemyBack(&dir, d.ball, d.distBall, d.enemyStands[1])) {
+					// 真後ろ敵
+				}
+			}
+			if(!carryingBall) {
 				// 姿勢その場修正
 				correctRot(isFW, d.gyro);
-			}*/
+			}
 			// 駆動
-			run(&d, isFW, dir, rot);
+			switch(techCha) {
+				case 1:
+					cCarryBall4TC6.increase(d.goal.isOppWide);
+					if(d.catchFreely && cCarryBall4TC6.compare(0)) {
+						Motor.run(0, rot, 140);
+					}
+					Motor.run(dir, rot, conMap(double(abs(d.ball.t)), 10, 45, 40, 100));
+					Kicker.run(d.catchFreely&& bool(cCarryBall4TC6));
+					break;
+				case 6:
+					cCarryBall4TC6.increase(d.goal.isOppWide);
+					if(d.catchFreely && cCarryBall4TC6.compare(0)) {
+						Motor.run(0, rot, 140);
+					}
+					if(d.distBall > CLOSE) {
+						Motor.run(dir, rot, conMap(double(abs(d.ball.t)), 10, 45, 70, 120));
+					}else {
+						Motor.run(dir, rot, conMap(double(abs(d.ball.t)), 10, 45, 30, 70));
+					}
+					Kicker.run(d.catchFreely && bool(cCarryBall4TC6));
+					break;
+				case 4:
+					if(isFW) {
+						if(canStartRunning) {
+							run(&d, isFW, dir, rot);
+						}
+						Cam.snd(canStartRunning ? 255 : 128);
+						canStartRunning |= Comc.rcv4TC4() == 255;
+					}else {
+						if(d.distBall >= FAR) {
+							Motor.run(false, 0, 0);
+						}else {
+							Motor.run(dir, rot, conMap(double(abs(d.ball.t)), 10, 45, 40, 100));
+						}
+						Cam.snd(0);
+						Kicker.run(d.catchFreely && d.goal.rotOpp.isUp(5));
+						if(Kicker.getIsKicking()) { Comc.snd4TC4(255); }
+					}
+					break;
+				default:
+					run(&d, isFW, dir, rot);
+					break;
+			}
 		}
 	}else {
 		// 待機

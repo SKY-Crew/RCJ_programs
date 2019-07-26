@@ -8,7 +8,7 @@ bool prvChangeRole = false;
 bool prvIsFW = isFW;
 Count cBecomeFW(100, false);
 
-// Count cCorrectRot(3);
+Count cCorrectRot(3);
 
 bool carryingBall = false;
 bool willCarryBall = false;
@@ -19,5 +19,8 @@ Count cLineForward(90);
 Side sideLF = CENTER;
 
 Count cLineBackward(45);
+
+bool canStartRunning = false;
+Count cCarryBall4TC6(30);
 
 #endif
